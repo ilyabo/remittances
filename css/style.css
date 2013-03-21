@@ -1,3 +1,4 @@
-.land {fill:#689; stroke:#ccc; stroke-width:0.5px; }
+.land {fill: #38505d; stroke: #b9b9b9; stroke-width:0.3px; }
 body { background-color: black; }
-circle { stroke:black; stroke-width:0.25px; }
+circle { fill:#ccc; stroke:black; stroke-width:0.25px; }
+g.years text { fill: #c1c1c1; cursor:pointer;  }
