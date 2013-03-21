@@ -1,1 +1,3 @@
 .idea
+*.sassc
+.DS_Store
