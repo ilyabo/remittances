@@ -1,0 +1,72 @@
+[
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Migrant remittance Inflows (US$ million) to Name",
+    "oldColumnName": "Migrant remittance Inflows (US$ million)",
+    "newColumnName": "Name"
+  },
+  {
+    "op": "core/column-addition-by-fetching-urls",
+    "description": "Create column country_json at index 1 by fetching URLs based on column Name using expression grel:\"http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=\" + escape(value, 'url')",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "country_json",
+    "columnInsertIndex": 1,
+    "baseColumnName": "Name",
+    "urlExpression": "grel:\"http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=\" + escape(value, 'url')",
+    "onError": "set-to-blank",
+    "delay": 300
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column lat at index 2 based on column country_json using expression grel:value.parseJson().results[0].geometry.location.lat",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "lat",
+    "columnInsertIndex": 2,
+    "baseColumnName": "country_json",
+    "expression": "grel:value.parseJson().results[0].geometry.location.lat",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column long at index 2 based on column country_json using expression grel:value.parseJson().results[0].geometry.location.lng",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "long",
+    "columnInsertIndex": 2,
+    "baseColumnName": "country_json",
+    "expression": "grel:value.parseJson().results[0].geometry.location.lng",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column long to lon",
+    "oldColumnName": "long",
+    "newColumnName": "lon"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column iso2 at index 2 based on column country_json using expression grel:value.parseJson().results[0].address_components[0].short_name",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "newColumnName": "iso2",
+    "columnInsertIndex": 2,
+    "baseColumnName": "country_json",
+    "expression": "grel:value.parseJson().results[0].address_components[0].short_name",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column country_json",
+    "columnName": "country_json"
+  }
+]
