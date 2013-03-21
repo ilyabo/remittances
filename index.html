@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  </head>
+  <body>
+    <div id="chart"></div>
+    <div id="legend"></div>
+    <script>
+
+var width = 960,
+    height = 500;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+
+var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
+    .rotate([-10, -45])
+    .scale(160);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var countries = svg.append("g").attr("class", "countries");
+
+
+d3.json("data/world-countries.json", function(error, world) {
+  countries.selectAll("path")
+    .data(world.features)
+    .enter().append("path")
+    .attr("class", "land")
+    .attr("d", path);
+
+});
+
+    </script>
+  </body>
+</html>
