@@ -349,18 +349,20 @@ d3.json("data/world-countries.json", function(error, world) {
                 var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
                 land
                  .transition()
-                    .duration(300)
+                    .duration(200)
                       .attr("fill", function(d) { 
                         return migrationsColor(+m[selectedYear]);
                        })
               });
 
               svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
-                 .attr("stroke", "red");
+                 .transition()
+                  .duration(200)
+                     .attr("stroke", "red");
 
               gcountries.selectAll("circle.country")
                  .transition()
-                  .duration(300)
+                  .duration(200)
                     .attr("opacity", 0);
             }
 
@@ -369,14 +371,14 @@ d3.json("data/world-countries.json", function(error, world) {
         })
         .on("mouseout", function(d) {
           svg.selectAll("path.land")
-            .attr("fill",landColor);
-
-          svg.selectAll("path.land")
-             .attr("stroke", "none");
+             .transition()
+                .duration(300)
+                  .attr("fill",landColor)
+                  .attr("stroke", "none");
 
           gcountries.selectAll("circle.country")
              .transition()
-              .duration(200)
+              .duration(300)
                 .attr("opacity", 1);
         })
         .append("svg:title")
