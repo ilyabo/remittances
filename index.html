@@ -41,14 +41,15 @@ var path = d3.geo.path()
 
 
 
-var migrationYears = [ "1960", "1970", "1980", "1990", "2000"];
-var remittanceYears = [
-  "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
-  "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
-  "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
-  "2003","2004","2005","2006","2007","2008",
-  "2009","2010","2011","2012e",
-];
+var migrationYears = [ /*"1960",*/ "1970", "1980", "1990", "2000"];
+var remittanceYears = migrationYears;
+//[
+//  "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
+//  "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
+//  "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
+//  "2003","2004","2005","2006","2007","2008",
+//  "2009","2010","2011","2012e",
+//];
 
 
 var selectedYear = "2000";
@@ -160,7 +161,7 @@ d3.json("data/world-countries.json", function(error, world) {
 
 
 
-   var migrationsColor = d3.scale.log()
+   var migrationsColor = d3.scale.linear()
      .range(["#221C03", "#E9D35A"])
      .interpolate(d3.interpolateHcl);
 
@@ -187,7 +188,7 @@ d3.json("data/world-countries.json", function(error, world) {
 
     var maxMagnitude = d3.max(migrations, function(d) { return d.max; });
 
-    migrationsColor.domain([0, maxMagnitude]);
+    migrationsColor.domain([1, maxMagnitude]);
 
 
     var links = [];
@@ -320,15 +321,27 @@ d3.json("data/world-countries.json", function(error, world) {
         .on("mouseover", function(d) {
           var iso3 = getIso3(d);
           if (iso3 !== undefined) {
+            var migs = migrationsByOriginCode[iso3];
+            if (migs === undefined) {
+              console.log("No migrations for " + iso3);
+            } else {
+//              var destCodes = migrationsByOriginCode[iso3].map(function(m) { return m.Dest; });
+//
+//              var land = svg.selectAll("path.land").filter(function(l) { return m.Dest in destCodes; });
+//              land.attr("fill", function(d, i) { 
+//                return migrationsColor(+m[selectedYear]);
+//               });
 
-            migrationsByOriginCode[iso3].forEach(function(m) {
-              var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
-              //console.log(land);
-
-              land.attr("fill", function(d) { 
-                return migrationsColor(+d[selectedYear]);
-               });
-            });
+              migrationsByOriginCode[iso3].forEach(function(m) {
+                var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
+                land
+                 .transition()
+                    .duration(300)
+                      .attr("fill", function(d) { 
+                        return migrationsColor(+m[selectedYear]);
+                       })
+              });
+            }
 
 
           }
@@ -370,7 +383,7 @@ d3.json("data/world-countries.json", function(error, world) {
         .duration(300)
         .attr("opacity", 1)
 
-    var yearLen = 8;
+    var yearLen = 50;
 
     yearsg = svg.append("g")
       .attr("class", "years")
@@ -398,20 +411,25 @@ d3.json("data/world-countries.json", function(error, world) {
             update();
           });
 
+     d3.selectAll("text.remy")
+      .filter(function(d) {
+        return d == selectedYear; })
+      .classed("sel", true);
 
-    yearsg.selectAll("text.migy")
-        .data(migrationYears)
-        .enter()
-        .append("svg:text")
-          .attr("class", "migy")
-          .attr("y", -25)
-          .attr("x", function(d, i) { return (i-1)*yearLen*10; })
-          .attr("text-anchor", "middle")
-          .text(function(d) { return d; })
-          .on("mouseover", function(d) {
-            selectedYear = d;
-            update();
-          });
+//
+//    yearsg.selectAll("text.migy")
+//        .data(migrationYears)
+//        .enter()
+//        .append("svg:text")
+//          .attr("class", "migy")
+//          .attr("y", -25)
+//          .attr("x", function(d, i) { return (i-1)*yearLen*10; })
+//          .attr("text-anchor", "middle")
+//          .text(function(d) { return d; })
+//          .on("mouseover", function(d) {
+//            selectedYear = d;
+//            update();
+//          });
 
 
   });
