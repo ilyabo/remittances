@@ -21,6 +21,7 @@ GDP data is from WDI 2012
 
     <div id="chart"></div>
     <div id="legend"></div>
+    <div id="details"></div>
     <script>
 
 
@@ -350,6 +351,11 @@ d3.json("data/world-countries.json", function(error, world) {
 //                return migrationsColor(+m[selectedYear]);
 //               });
 
+              d3.select("#details")
+                  .html("Migrants from <b>" + d.Name + "</b><br>" +
+                    "sent home US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M" +
+                    "<br> in " + selectedYear );
+
               migrationsByOriginCode[selectedIso3].forEach(function(m) {
                 var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
                 land
@@ -379,6 +385,7 @@ d3.json("data/world-countries.json", function(error, world) {
           }
         })
         .on("mouseout", function(d) {
+          d3.select("#details").text("");
           svg.selectAll("path.land")
              .transition()
                 .duration(300)
