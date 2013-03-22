@@ -151,6 +151,8 @@ d3.json("data/world-countries.json", function(error, world) {
       .data(world.features)
       .enter().append("path")
       .attr("class", "land")
+      .attr("fill", "#1e2b32")
+      .attr("data-code", function(d) { return d.id; })
       .attr("d", path);
 
 
@@ -158,7 +160,9 @@ d3.json("data/world-countries.json", function(error, world) {
 
 
 
-
+   var migrationsColor = d3.scale.log()
+     .range(["#221C03", "#E9D35A"])
+     .interpolate(d3.interpolateHcl);
 
 
 
@@ -167,6 +171,8 @@ d3.json("data/world-countries.json", function(error, world) {
   var arc = d3.geo.greatArc().precision(3) //3);
   var arcs = svg.append("g").attr("class", "arcs");
   var minPathWidth = 1, maxPathWidth = 30;
+
+  var migrationsByOriginCode = {};
 
   d3.csv("data/migration-100K-plus.csv", function(error, migrations) {
 
@@ -177,61 +183,67 @@ d3.json("data/world-countries.json", function(error, world) {
       d.max = d3.max(migrationYears.map(function(y) { return +d[y]; } ));
     });
 
-    //migrations = migrations.filter(function(d) { return d.max >= 200000});
+    // migrations = migrations.filter(function(d) { return d.max >= 250000});
 
     var maxMagnitude = d3.max(migrations, function(d) { return d.max; });
 
+    migrationsColor.domain([0, maxMagnitude]);
 
 
     var links = [];
+
 
     var flows = migrations.forEach(function(flow) {
       var o = featuresByCode[flow.Origin], co;
       var d = featuresByCode[flow.Dest], cd;
 
-
-      if (o && d) {
-        links.push({
-          data : flow,
-          origin:o, dest:d
-        });
+      if (migrationsByOriginCode[flow.Origin] === undefined) {
+        migrationsByOriginCode[flow.Origin] = [];
       }
+      migrationsByOriginCode[flow.Origin].push(flow);
+
+//      if (o && d) {
+//        links.push({
+//          data : flow,
+//          origin:o, dest:d
+//        });
+//      }
     });
 
 
 
-    var arcWidth = d3.scale.linear().domain([1, maxMagnitude])
-      .range([minPathWidth, maxPathWidth]);
-
-    var arcNodes = arcs.selectAll("path")
-      .data(links)
-      .enter().append("path")
-        .attr("data-name", function(d) { return d.origin.id + "->" + d.dest.id; })
-        .attr("data-magnitude", function(d) {
-          return d.data[selectedYear]; })
-        .attr("data-width", function(d) { return arcWidth(d.data[selectedYear]); })
-        .attr("d", function(d) {
-          return taperedPath(pointsFromPath(path({ "type": "LineString",
-            "coordinates": [
-              d.origin.centroid,
-              d.dest.centroid
-            ]
-          })), arcWidth(d.data[selectedYear]), false);
-        })
-        .sort(function(a, b) {
-          var a = a.data[selectedYear], b = b.data[selectedYear];
-          if (isNaN(a)) { if (isNaN(b)) return 0; else return -1; }
-          if (isNaN(b)) return 1;
-          return d3.descending(a, b);
-        })
-        ;
-
-    arcNodes.append("svg:title")
-      .text(function(d) {
-        return d.origin.properties.name+" -> "+d.dest.properties.name+"\n"+
-          "Migrants in " +selectedYear+": " +magnitudeFormat(d.data[selectedYear]);
-      })
-    ;
+//    var arcWidth = d3.scale.linear().domain([1, maxMagnitude])
+//      .range([minPathWidth, maxPathWidth]);
+//
+//    var arcNodes = arcs.selectAll("path")
+//      .data(links)
+//      .enter().append("path")
+//        .attr("data-name", function(d) { return d.origin.id + "->" + d.dest.id; })
+//        .attr("data-magnitude", function(d) {
+//          return d.data[selectedYear]; })
+//        .attr("data-width", function(d) { return arcWidth(d.data[selectedYear]); })
+//        .attr("d", function(d) {
+//          return taperedPath(pointsFromPath(path({ "type": "LineString",
+//            "coordinates": [
+//              d.origin.centroid,
+//              d.dest.centroid
+//            ]
+//          })), arcWidth(d.data[selectedYear]), false);
+//        })
+//        .sort(function(a, b) {
+//          var a = a.data[selectedYear], b = b.data[selectedYear];
+//          if (isNaN(a)) { if (isNaN(b)) return 0; else return -1; }
+//          if (isNaN(b)) return 1;
+//          return d3.descending(a, b);
+//        })
+//        ;
+//
+//    arcNodes.append("svg:title")
+//      .text(function(d) {
+//        return d.origin.properties.name+" -> "+d.dest.properties.name+"\n"+
+//          "Migrants in " +selectedYear+": " +magnitudeFormat(d.data[selectedYear]);
+//      })
+//    ;
 
   });
 
@@ -243,9 +255,35 @@ d3.json("data/world-countries.json", function(error, world) {
   var gcountries = svg.append("g")
      .attr("class", "countries");
 
+  var iso2To3 = {};
+  var countryNameToIso3 = {};
+
+
+  d3.csv("data/countries-iso2to3.csv", function(error, isocodes) {
+    isocodes.forEach(function(d) {
+      iso2To3[d.iso2] = d.iso3;
+      countryNameToIso3[d.name] = d.iso3;
+    });
+  });
+
+  function getIso3(remittance) {
+    var iso3 = iso2To3[remittance.iso2];
+    if (iso3 === undefined) {
+
+      iso3 = countryNameToIso3[remittance.Name];
+      if (iso3 === undefined) {
+        console.log("Could not find flows for code: " + d.iso2 + ", name: " + d.Name);
+      }
+    }
+
+    return iso3;
+  }
+
+
 
   d3.csv("data/RemittancesData_Inflows_Nov12.csv", function(error, remittances) {
     var name, r;
+
     remittances.forEach(function(r) {
       f = featuresByName[r.Name];
       if (f) {
@@ -279,6 +317,25 @@ d3.json("data/world-countries.json", function(error, world) {
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
+        .on("mouseover", function(d) {
+          var iso3 = getIso3(d);
+          if (iso3 !== undefined) {
+
+            migrationsByOriginCode[iso3].forEach(function(m) {
+              var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
+              //console.log(land);
+
+              land.attr("fill", function(d) { 
+                return migrationsColor(+d[selectedYear]);
+               });
+            });
+
+
+          }
+        })
+        .on("mouseout", function(d) {
+          svg.selectAll("path.land").attr("fill","#1e2b32");
+        })
         .append("svg:title")
           .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
 
