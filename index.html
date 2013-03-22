@@ -20,6 +20,8 @@ GDP data is from WDI 2012
     <div id="legend"></div>
     <script>
 
+
+var landColor = d3.rgb("#1e2b32").brighter(2);
 var width = 960,
     height = 600;
 
@@ -152,7 +154,7 @@ d3.json("data/world-countries.json", function(error, world) {
       .data(world.features)
       .enter().append("path")
       .attr("class", "land")
-      .attr("fill", "#1e2b32")
+      .attr("fill", landColor)
       .attr("data-code", function(d) { return d.id; })
       .attr("d", path);
 
@@ -161,7 +163,7 @@ d3.json("data/world-countries.json", function(error, world) {
 
 
 
-   var migrationsColor = d3.scale.linear()
+   var migrationsColor = d3.scale.log()
      .range(["#221C03", "#E9D35A"])
      .interpolate(d3.interpolateHcl);
 
@@ -175,7 +177,7 @@ d3.json("data/world-countries.json", function(error, world) {
 
   var migrationsByOriginCode = {};
 
-  d3.csv("data/migration-100K-plus.csv", function(error, migrations) {
+  d3.csv("data/migration-1K-plus.csv", function(error, migrations) {
 
 
     var magnitudeFormat = d3.format(",.0f");
@@ -347,7 +349,7 @@ d3.json("data/world-countries.json", function(error, world) {
           }
         })
         .on("mouseout", function(d) {
-          svg.selectAll("path.land").attr("fill","#1e2b32");
+          svg.selectAll("path.land").attr("fill",landColor);
         })
         .append("svg:title")
           .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
