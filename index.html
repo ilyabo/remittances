@@ -131,15 +131,26 @@ function perpendicularSegment(a, b, length, p) {
 
 
 
+var countryCentroidsByCode = {};
 
+d3.csv("data/country-centroids.csv", function(error, countryCentroids) {
+
+  countryCentroids.forEach(function(d) {
+    countryCentroidsByCode[d.Code] = [+d.lon, +d.lat];
+  });
 
 d3.json("data/world-countries.json", function(error, world) {
 
   var featuresByName = {}, featuresByCode = {}, f;
   for (var d in world.features) {
     f = world.features[d];
-    f.centroidp = path.centroid(f);
-    f.centroid = projection.invert(f.centroidp);
+
+    f.centroid = countryCentroidsByCode[f.id];
+    if (f.centroid !== undefined)
+      f.centroidp = projection(f.centroid);
+
+//    f.centroidp = path.centroid(f);
+//    f.centroid = projection.invert(f.centroidp);
 
     featuresByName[f.properties.name] = f;
     featuresByCode[f.id] = f;
@@ -321,11 +332,11 @@ d3.json("data/world-countries.json", function(error, world) {
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
         .on("mouseover", function(d) {
-          var iso3 = getIso3(d);
-          if (iso3 !== undefined) {
-            var migs = migrationsByOriginCode[iso3];
+          var selectedIso3 = getIso3(d);
+          if (selectedIso3 !== undefined) {
+            var migs = migrationsByOriginCode[selectedIso3];
             if (migs === undefined) {
-              console.log("No migrations for " + iso3);
+              console.log("No migrations for " + selectedIso3);
             } else {
 //              var destCodes = migrationsByOriginCode[iso3].map(function(m) { return m.Dest; });
 //
@@ -334,7 +345,7 @@ d3.json("data/world-countries.json", function(error, world) {
 //                return migrationsColor(+m[selectedYear]);
 //               });
 
-              migrationsByOriginCode[iso3].forEach(function(m) {
+              migrationsByOriginCode[selectedIso3].forEach(function(m) {
                 var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
                 land
                  .transition()
@@ -343,13 +354,30 @@ d3.json("data/world-countries.json", function(error, world) {
                         return migrationsColor(+m[selectedYear]);
                        })
               });
+
+              svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
+                 .attr("stroke", "red");
+
+              gcountries.selectAll("circle.country")
+                 .transition()
+                  .duration(300)
+                    .attr("opacity", 0);
             }
 
 
           }
         })
         .on("mouseout", function(d) {
-          svg.selectAll("path.land").attr("fill",landColor);
+          svg.selectAll("path.land")
+            .attr("fill",landColor);
+
+          svg.selectAll("path.land")
+             .attr("stroke", "none");
+
+          gcountries.selectAll("circle.country")
+             .transition()
+              .duration(200)
+                .attr("opacity", 1);
         })
         .append("svg:title")
           .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
@@ -439,6 +467,9 @@ d3.json("data/world-countries.json", function(error, world) {
   // Migrant remittance Inflows (US$ million)
 
 });
+
+});
+
 
     </script>
   </body>
