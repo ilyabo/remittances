@@ -5,6 +5,8 @@
     <meta charset="utf-8"/>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css' />
+
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <!--
 Remittances:
@@ -14,8 +16,9 @@ Note: All numbers are in current (nominal) US $.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 GDP data is from WDI 2012
 -->
   </head>
-  </head>
+
   <body>
+
     <div id="chart"></div>
     <div id="legend"></div>
     <script>
@@ -44,14 +47,14 @@ var path = d3.geo.path()
 
 
 var migrationYears = [ /*"1960",*/ "1970", "1980", "1990", "2000"];
-var remittanceYears = migrationYears;
-//[
-//  "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
-//  "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
-//  "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
-//  "2003","2004","2005","2006","2007","2008",
-//  "2009","2010","2011","2012e",
-//];
+var remittanceYears = //migrationYears;
+[
+  "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
+  "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
+  "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
+  "2003","2004","2005","2006","2007","2008",
+  "2009","2010","2011","2012e",
+];
 
 
 var selectedYear = "2000";
@@ -318,7 +321,7 @@ d3.json("data/world-countries.json", function(error, world) {
 
 
     var rscale = d3.scale.sqrt()
-      .range([0, 15])
+      .range([0, 25])
       .domain([0, max])
 
 
@@ -351,7 +354,11 @@ d3.json("data/world-countries.json", function(error, world) {
                  .transition()
                     .duration(200)
                       .attr("fill", function(d) { 
-                        return migrationsColor(+m[selectedYear]);
+                        var val = +m[selectedYear];
+                        if (!isNaN(val))
+                          return migrationsColor(val);
+                        else
+                          return landColor.darker(0.5);
                        })
               });
 
@@ -415,7 +422,7 @@ d3.json("data/world-countries.json", function(error, world) {
         .duration(300)
         .attr("opacity", 1)
 
-    var yearLen = 50;
+    var yearLen = 12;
 
     yearsg = svg.append("g")
       .attr("class", "years")
@@ -427,9 +434,11 @@ d3.json("data/world-countries.json", function(error, world) {
         .enter()
         .append("svg:text")
           .attr("class", "remy")
+          .classed("migrations", function(d) {
+            return (migrationYears.indexOf(d) > 0); })
           .attr("visibility", function(d,i) {
-            if ((parseInt(d) % 5) == 0)
-              return  "visible"
+            if ((+d % 5) == 0) //  ||  (+d > 2010))
+              return "visible";
            else return "hidden";
           })
           .attr("y", -5)

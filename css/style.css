@@ -1,11 +1,12 @@
-.land {}
+.land { stroke-width:1.0; }
 
 body { background-color: black; }
 circle { fill:#ccc; stroke:black; stroke-width:0.25px; }
 
 circle:hover { fill:red; }
 
-g.years text { fill: #c1c1c1; cursor:pointer;  }
+g.years text { fill: #c1c1c1; cursor:pointer; font-size:16px; font-family: 'Roboto Condensed',helvetica;    }
+g.years text.migrations { font-weight:bold; font-size:28px;}
 g.years text.migy { fill:rgb(166, 94, 79); cursor:pointer;  }
 
 g.years text.sel { fill:red;
