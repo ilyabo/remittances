@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Migration and Remittance Flows</title>
     <meta charset="utf-8"/>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
@@ -20,7 +21,7 @@ GDP data is from WDI 2012
     <script>
 
 var width = 960,
-    height = 500;
+    height = 600;
 
 var svg = d3.select("body").append("svg")
   .attr("width", width)
@@ -29,6 +30,7 @@ var svg = d3.select("body").append("svg")
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
     .rotate([-10, -45])
+    .translate([width/2.3,height/2])
     .scale(180);
 
 //var projection = d3.geo.winkel3();
@@ -36,69 +38,239 @@ var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
 var path = d3.geo.path()
     .projection(projection);
 
-var nameColumn = "Migrant remittance Inflows (US$ million)";
+
+
+
+var migrationYears = [ "1960", "1970", "1980", "1990", "2000"];
+var remittanceYears = [
+  "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
+  "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
+  "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
+  "2003","2004","2005","2006","2007","2008",
+  "2009","2010","2011","2012e",
+];
+
+
+var selectedYear = "2000";
+
+
+function pointsFromPath(path) {
+  var points = path.substr(path.lastIndexOf("M")).split("L");
+  // TODO: FIX: If the path consists of several segments we currently use only the last one
+  if (points.length < 2) return path;
+
+  var coords = points.map(function(d, i) {
+    if (d[0] == "M") d = d.substr(1);
+    c = d.split(",")
+    return [+c[0], +c[1]]; // remove M and split
+  });
+  return coords;
+}
+
+function taperedPath(coords, pathWidth, useHalfLines) {
+  var i, c;
+  var there = [], back = [], p, p_;
+
+  for (i = 1; i < coords.length; i++) {
+    c = coords[i];
+    if (pathWidth > 0) {
+      p = perpendicularSegment(c, coords[i-1], i * pathWidth / (coords.length - 1), c);
+    } else {
+      p = [c,c];
+    }
+    if (isNaN(p[0][0]))
+      console.log(p)
+    there.push(p[0].join(","));
+    back.push(p[1].join(","));
+  }
+
+  if (pathWidth > 0) {
+    p = perpendicularSegment(p[0], p[1], pathWidth, coords[coords.length - 1]);
+    p_ = perpendicularSegment(p[0], p[1], pathWidth/2, p[1]);
+  }
+
+  return "M" + coords[0].join(",") + " L" +
+    there.join(" L") +
+    (pathWidth > 0 ?
+        (useHalfLines ?
+            " Q" + p_[1].join(",")  + " " + p[1].join(",") + " L"
+          : " C" + p_[1].join(",") + " " + p_[0].join(",")
+        )
+      :
+        " L"
+    ) +
+    " " + (useHalfLines ? coords : back).reverse().join(" L") +
+    " L" + coords[0].join(",") +
+    "Z";
+}
+
+// Returns the vertexes of a segment which has its middle in point p
+// and is perpendicular to the line which passes through points a,b.
+// see http://math.stackexchange.com/questions/175896
+function perpendicularSegment(a, b, length, p) {
+  var v = [b[0] - a[0], b[1] - a[1]];
+  var vnorm = Math.sqrt( v[0] * v[0] + v[1] * v[1] );
+  var u = [v[0] / vnorm, v[1] / vnorm];
+
+  u = [ -u[1], u[0] ];  // rotate by 90 degrees
+
+  var d = [ u[0]*length/2, u[1]*length/2 ];
+
+  return [
+    [+p[0] + d[0], +p[1] + d[1] ],
+    [+p[0] - d[0], +p[1] - d[1] ]
+  ];
+}
+
+
+
+
+
+
+
+
 
 d3.json("data/world-countries.json", function(error, world) {
 
-  var featuresByName = {}, f;
+  var featuresByName = {}, featuresByCode = {}, f;
   for (var d in world.features) {
     f = world.features[d];
+    f.centroidp = path.centroid(f);
+    f.centroid = projection.invert(f.centroidp);
+
     featuresByName[f.properties.name] = f;
+    featuresByCode[f.id] = f;
   }
 
 
 
-  var years = [
-    "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
-    "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
-    "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
-    "2003","2004","2005","2006","2007","2008",
-    "2009","2010","2011","2012e",
-  ];
+
+  svg.append("g")
+     .attr("class", "map")
+    .selectAll("path")
+      .data(world.features)
+      .enter().append("path")
+      .attr("class", "land")
+      .attr("d", path);
+
+
+
+
+
+
+
+
+
+
+
+
+  var arc = d3.geo.greatArc().precision(3) //3);
+  var arcs = svg.append("g").attr("class", "arcs");
+  var minPathWidth = 1, maxPathWidth = 30;
+
+  d3.csv("data/migration-100K-plus.csv", function(error, migrations) {
+
+
+    var magnitudeFormat = d3.format(",.0f");
+
+    migrations.forEach(function(d) {
+      d.max = d3.max(migrationYears.map(function(y) { return +d[y]; } ));
+    });
+
+    //migrations = migrations.filter(function(d) { return d.max >= 200000});
+
+    var maxMagnitude = d3.max(migrations, function(d) { return d.max; });
+
+
+
+    var links = [];
+
+    var flows = migrations.forEach(function(flow) {
+      var o = featuresByCode[flow.Origin], co;
+      var d = featuresByCode[flow.Dest], cd;
+
+
+      if (o && d) {
+        links.push({
+          data : flow,
+          origin:o, dest:d
+        });
+      }
+    });
+
+
+
+    var arcWidth = d3.scale.linear().domain([1, maxMagnitude])
+      .range([minPathWidth, maxPathWidth]);
+
+    var arcNodes = arcs.selectAll("path")
+      .data(links)
+      .enter().append("path")
+        .attr("data-name", function(d) { return d.origin.id + "->" + d.dest.id; })
+        .attr("data-magnitude", function(d) {
+          return d.data[selectedYear]; })
+        .attr("data-width", function(d) { return arcWidth(d.data[selectedYear]); })
+        .attr("d", function(d) {
+          return taperedPath(pointsFromPath(path({ "type": "LineString",
+            "coordinates": [
+              d.origin.centroid,
+              d.dest.centroid
+            ]
+          })), arcWidth(d.data[selectedYear]), false);
+        })
+        .sort(function(a, b) {
+          var a = a.data[selectedYear], b = b.data[selectedYear];
+          if (isNaN(a)) { if (isNaN(b)) return 0; else return -1; }
+          if (isNaN(b)) return 1;
+          return d3.descending(a, b);
+        })
+        ;
+
+    arcNodes.append("svg:title")
+      .text(function(d) {
+        return d.origin.properties.name+" -> "+d.dest.properties.name+"\n"+
+          "Migrants in " +selectedYear+": " +magnitudeFormat(d.data[selectedYear]);
+      })
+    ;
+
+  });
+
+
+
+
+
+
+  var gcountries = svg.append("g")
+     .attr("class", "countries");
+
 
   d3.csv("data/RemittancesData_Inflows_Nov12.csv", function(error, remittances) {
     var name, r;
     remittances.forEach(function(r) {
       f = featuresByName[r.Name];
       if (f) {
-        r.centroid = path.centroid(f);
+        r.centroid = f.centroidp;
       }
 
-      for (i in years) {
-        y = years[i];
+      for (i in remittanceYears) {
+        y = remittanceYears[i];
         if (r[y] !== undefined)
           r[y] = +r[y].replace(",","")
       }
     });
 
-    svg.append("g")
-       .attr("class", "map")
-      .selectAll("path")
-        .data(world.features)
-        .enter().append("path")
-        .attr("class", "land")
-        .attr("d", path);
-
-
-    var gcountries = svg.append("g")
-       .attr("class", "countries");
-
-
-
-    var selectedYear = "2005";
 
     var max = d3.max(remittances, function(d) {
-        //console.log(d[selectedYear])
-        return d[selectedYear];
-      });
+      return d3.max(remittanceYears.map(function(y) { return +d[y]; } ));
+    });
 
-      console.log("max: " + max)
 
     var rscale = d3.scale.sqrt()
       .range([0, 15])
       .domain([0, max])
 
 
+    var remittancesMagnitudeFormat = d3.format(",.0f");
 
     circles = gcountries.selectAll("circle")
         .data(remittances)
@@ -108,7 +280,7 @@ d3.json("data/world-countries.json", function(error, world) {
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
         .append("svg:title")
-          .text(function(d) { return d.Name + ": " + d[selectedYear] + " US$ million"});
+          .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
 
 
 //        .attr(function(d) {
@@ -127,7 +299,10 @@ d3.json("data/world-countries.json", function(error, world) {
          c = c.transition()
           .duration(start ? 0 : 100)
 
-      c.attr("r", function(d) { return rscale(d[selectedYear]); })
+      c.attr("r", function(d) {
+        var r = rscale(d[selectedYear]);
+        return (isNaN(r) ? 0 : r);
+      })
     }
 
 
@@ -138,24 +313,42 @@ d3.json("data/world-countries.json", function(error, world) {
         .duration(300)
         .attr("opacity", 1)
 
-    var yearLen = 10;
+    var yearLen = 8;
 
     yearsg = svg.append("g")
       .attr("class", "years")
-     .attr("transform", "translate("+((width - years.length*yearLen)/2)+","+(height)+")")
+     .attr("transform", "translate("+((width - remittanceYears.length*yearLen)/2)+","+(height)+")")
 
 
-    yearsg.selectAll("text")
-        .data(years)
+    yearsg.selectAll("text.remy")
+        .data(remittanceYears)
         .enter()
         .append("svg:text")
+          .attr("class", "remy")
           .attr("visibility", function(d,i) {
             if ((parseInt(d) % 5) == 0)
               return  "visible"
            else return "hidden";
           })
-          .attr("y", 0)
+          .attr("y", -5)
           .attr("x", function(d, i) { return i*yearLen; })
+          .attr("text-anchor", "middle")
+          .text(function(d) { return d; })
+          .on("mouseover", function(d) {
+            selectedYear = d;
+            yearsg.selectAll("text.remy").classed("sel", false);
+            d3.select(this).classed("sel", true);
+            update();
+          });
+
+
+    yearsg.selectAll("text.migy")
+        .data(migrationYears)
+        .enter()
+        .append("svg:text")
+          .attr("class", "migy")
+          .attr("y", -25)
+          .attr("x", function(d, i) { return (i-1)*yearLen*10; })
           .attr("text-anchor", "middle")
           .text(function(d) { return d; })
           .on("mouseover", function(d) {

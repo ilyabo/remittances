@@ -1,4 +1,25 @@
-.land {fill: #38505d; stroke: #b9b9b9; stroke-width:0.3px; }
+.land {fill: #1e2b32; stroke: #000000; stroke-width:0.1px; }
 body { background-color: black; }
 circle { fill:#ccc; stroke:black; stroke-width:0.25px; }
+
+circle:hover { fill:red; }
+
 g.years text { fill: #c1c1c1; cursor:pointer;  }
+g.years text.migy { fill:rgb(166, 94, 79); cursor:pointer;  }
+
+g.years text.sel { fill:red;
+    /*text-shadow: 0px 0px 8px rgba(255, 255, 255, 1);*/
+    text-decoration: underline;
+     }
+
+g.arcs path,  #legend path {
+    stroke: #090909; stroke-width:0.1;
+    opacity: 1;
+    fill: rgb(166, 94, 79);
+}
+
+g.arcs path:hover {
+    fill:red;
+}
+
+
