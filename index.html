@@ -328,7 +328,9 @@ d3.json("data/world-countries.json", function(error, world) {
     var remittancesMagnitudeFormat = d3.format(",.0f");
 
     circles = gcountries.selectAll("circle")
-        .data(remittances)
+        .data(remittances.filter(function(d) {
+          return (d.centroid !== undefined  && d.centroid[0] !== undefined);
+        }))
       .enter().append("svg:circle")
         .attr("class", "country")
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
