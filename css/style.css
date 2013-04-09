@@ -4,28 +4,29 @@ body { font-family: 'Lato',helvetica;  }
 
 #details { position:absolute; top:60px; left:60px; color:white; }
 
-body { background-color: black; }
-circle { fill:#ccc; stroke:black; stroke-width:0.25px; }
+body { background-color: #111; }
+circle { stroke:white; fill: white; fill-opacity: 0; stroke-width:2px; }
+circle:hover { fill-opacity: 1; }
 
-circle:hover { fill:red; }
-
-g.years text { fill: #c1c1c1; cursor:pointer; font-size:16px;    }
-g.years text.migrations { font-weight:bold; font-size:28px;}
+g.years text,
+g.years text.migrations { fill: #bdc3c7; cursor:pointer; font-size:16px;    }
 g.years text.migy { fill:rgb(166, 94, 79); cursor:pointer;  }
 
-g.years text.sel { fill:red;
+g.years text.sel { fill:white;
     /*text-shadow: 0px 0px 8px rgba(255, 255, 255, 1);*/
-    text-decoration: underline;
+
      }
 
 g.arcs path,  #legend path {
     stroke: #090909; stroke-width:0.1;
     opacity: 1;
-    fill: rgb(166, 94, 79);
+    fill: white;
 }
 
 g.arcs path:hover {
-    fill:red;
+    fill:white;
 }
 
-
+.land:hover {
+	fill: #67F7C1;
+}

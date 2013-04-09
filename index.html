@@ -25,7 +25,7 @@ GDP data is from WDI 2012
     <script>
 
 
-var landColor = d3.rgb("#1e2b32").brighter(2);
+var landColor = d3.rgb("#666666");
 var width = 960,
     height = 600;
 
@@ -179,7 +179,7 @@ d3.json("data/world-countries.json", function(error, world) {
 
 
    var migrationsColor = d3.scale.log()
-     .range(["#221C03", "#E9D35A"])
+     .range(["#052021", "#67F7C1"])
      .interpolate(d3.interpolateHcl);
 
 
@@ -337,7 +337,22 @@ d3.json("data/world-countries.json", function(error, world) {
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
-        .on("mouseover", function(d) {
+        .on("click", function(d) {
+          
+          // Deselect the current country
+          d3.select("#details").text("");
+          svg.selectAll("path.land")
+             .transition()
+                .duration(300)
+                  .attr("fill",landColor)
+                  .attr("stroke", "none");
+
+          gcountries.selectAll("circle.country")
+             .transition()
+              .duration(300)
+                .attr("opacity", 1);
+        
+			        
           var selectedIso3 = getIso3(d);
           if (selectedIso3 !== undefined) {
             var migs = migrationsByOriginCode[selectedIso3];
@@ -360,30 +375,32 @@ d3.json("data/world-countries.json", function(error, world) {
                 var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
                 land
                  .transition()
-                    .duration(200)
+                    .duration(100)
                       .attr("fill", function(d) { 
                         var val = +m[selectedYear];
                         if (!isNaN(val))
                           return migrationsColor(val);
                         else
-                          return landColor.darker(0.5);
+                          return landColor.brighter(1);
                        })
               });
 
-              svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
-                 .transition()
-                  .duration(200)
-                     .attr("stroke", "red");
+              // svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
+              //   .transition()
+              //    .duration(100)
+              //       .attr("stroke", "red");
 
               gcountries.selectAll("circle.country")
                  .transition()
-                  .duration(200)
-                    .attr("opacity", 0);
+                  .duration(100)
+                    .attr("opacity", 1);
+                    
             }
 
 
           }
         })
+        /*
         .on("mouseout", function(d) {
           d3.select("#details").text("");
           svg.selectAll("path.land")
@@ -399,7 +416,7 @@ d3.json("data/world-countries.json", function(error, world) {
         })
         .append("svg:title")
           .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
-
+*/
 
 //        .attr(function(d) {
 //          console.log(d.Name);
