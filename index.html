@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <!--
@@ -18,12 +18,13 @@ GDP data is from WDI 2012
   </head>
 
   <body>
-
+  	<header>
+  		<h1>Der Anstieg der privaten Auslandshilfe</h1>
+  	</header>
     <div id="chart"></div>
     <div id="legend"></div>
     <div id="details"></div>
     <script>
-
 
 var landColor = d3.rgb("#666666");
 var width = 960,
@@ -43,7 +44,6 @@ var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
 
 var path = d3.geo.path()
     .projection(projection);
-
 
 
 
@@ -367,7 +367,7 @@ d3.json("data/world-countries.json", function(error, world) {
 //               });
 
               d3.select("#details")
-                  .html("Migrants from <b>" + d.Name + "</b><br>" +
+                  .html("<h2>" + d.Name + " <span>" + selectedYear + "</span></h2>Migrants from <b>" + d.Name + "</b><br>" +
                     "sent home US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M" +
                     "<br> in " + selectedYear );
 

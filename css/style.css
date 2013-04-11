@@ -1,8 +1,33 @@
 .land { stroke-width:1.0; }
 
-body { font-family: 'Lato',helvetica;  }
+body { font-family: 'Lato',Helvetica, sans-serif; text-shadow: 1px 1px 1px #111; font-weight: 300;  }
 
-#details { position:absolute; top:60px; left:60px; color:white; }
+header,
+#details {
+	position: absolute;
+	left:30px;
+}
+
+h1 {
+	color: white;
+	font-size: 30px;
+	font-weight: 300;
+}
+
+h2 {
+	font-weight: 300;
+	font-size: 70px;
+	color: #15b290;
+	margin: 0;
+	padding: 0;
+}
+
+	h2 span {
+		font-size: 50px;
+		color: #afafaf;
+	}
+
+#details { position:absolute; top:60px; color:white; }
 
 body { background-color: #111; }
 circle { stroke:white; fill: white; fill-opacity: 0; stroke-width:2px; }
