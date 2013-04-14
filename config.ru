@@ -1,6 +1,6 @@
 use Rack::Static,
-  :urls => ["/data", "/lib", "css"],
-  :root => "/"
+  :urls => ["/data", "/lib", "/css"],
+  :root => "."
 
 run lambda { |env|
   [
@@ -9,7 +9,7 @@ run lambda { |env|
       'Content-Type'  => 'text/html',
       'Cache-Control' => 'public, max-age=86400'
     },
-    File.open('index.html', File::RDONLY)
+    File.open('./index.html', File::RDONLY)
     
   ]
 }
