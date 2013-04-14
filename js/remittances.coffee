@@ -1,12 +1,13 @@
-landColor = d3.rgb("#1e2b32").brighter(2)
-width = 960
-height = 600
+landColor = d3.rgb("#666")   # ("#1e2b32") .brighter(2)
+width = $(document).width()
+height = $(document).height()
 svg = d3.select("body").append("svg").attr("width", width).attr("height", height)
 
 projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
   .rotate([-10, -45])
   .translate([width / 2.3, height / 2])
   .scale(180)
+
 
 #var projection = d3.geo.winkel3();
 
@@ -27,6 +28,8 @@ queue()
   .defer(d3.csv, "data/countries-iso2to3.csv")
   .defer(d3.csv, "data/RemittancesData_Inflows_Nov12.csv")
   .await (err, countryCentroids, world, migrations, isocodes, remittances) ->
+
+    fitProjection(projection, world, [[20,30], [width-40, height-60]], true)
 
     # migrations = migrations.filter(function(d) { return d.max >= 250000});
     getIso3 = (remittance) ->

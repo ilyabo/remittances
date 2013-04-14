@@ -2,11 +2,11 @@
 (function() {
   var countryCentroidsByCode, height, i, landColor, migrationYears, path, projection, remittanceYears, selectedYear, svg, width;
 
-  landColor = d3.rgb("#1e2b32").brighter(2);
+  landColor = d3.rgb("#666");
 
-  width = 960;
+  width = $(document).width();
 
-  height = 600;
+  height = $(document).height();
 
   svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 
@@ -31,6 +31,7 @@
 
   queue().defer(d3.csv, "data/country-centroids.csv").defer(d3.json, "data/world-countries.json").defer(d3.csv, "data/migration-1K-plus.csv").defer(d3.csv, "data/countries-iso2to3.csv").defer(d3.csv, "data/RemittancesData_Inflows_Nov12.csv").await(function(err, countryCentroids, world, migrations, isocodes, remittances) {
     var arcs, circles, countryNameToIso3, d, f, featuresByCode, featuresByName, flows, gcountries, getIso3, iso2To3, magnitudeFormat, max, maxMagnitude, migrationsByOriginCode, migrationsColor, name, r, remittancesMagnitudeFormat, rscale, update, yearLen, yearsg;
+    fitProjection(projection, world, [[20, 30], [width - 40, height - 60]], true);
     getIso3 = function(remittance) {
       var iso3;
       iso3 = iso2To3[remittance.iso2];

@@ -22,10 +22,10 @@ h2 {
 	padding: 0;
 }
 
-	h2 span {
-		font-size: 50px;
-		color: #afafaf;
-	}
+h2 span {
+    font-size: 50px;
+    color: #afafaf;
+}
 
 #details { position:absolute; top:60px; color:white; }
 
@@ -53,5 +53,6 @@ g.arcs path:hover {
 }
 
 .land:hover {
-	fill: #67F7C1;
+	stroke: #a2000c;  /* #67F7C1; */
+    stroke-width:2;
 }
