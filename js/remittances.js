@@ -286,9 +286,15 @@ queue()
 
     var yearLen = 12;
 
-    yearsg = svg.append("g")
+
+    var timeline = d3.select("#timeline").append("svg");
+
+    yearsg = timeline.append("g")
       .attr("class", "years")
-     .attr("transform", "translate("+((width - remittanceYears.length*yearLen)/2)+","+(height)+")")
+     .attr("transform", "translate("+((width - remittanceYears.length*yearLen)/2)+","+30+")")
+
+
+
 
 
     yearsg.selectAll("text.remy")
