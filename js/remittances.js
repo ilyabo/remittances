@@ -1,4 +1,4 @@
-(function() {
+// (function() {
 
 var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
 var width = $(document).width() - 40,
@@ -8,6 +8,9 @@ var width = $(document).width() - 40,
 var svg = d3.select("body").append("svg")
   .attr("width", width)
   .attr("height", height);
+
+var timelineWidth = Math.min(width, 600),
+    timelineHeight = 70;
 
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
@@ -31,6 +34,9 @@ var remittanceYears = [
   "2003","2004","2005","2006","2007","2008",
   "2009","2010","2011","2012e"
 ];
+
+var remittanceYearsDomain = [1970, 2012];
+
 
 
 var selectedYear = "2000";
@@ -264,11 +270,11 @@ queue()
 
 
 
-    function update(start) {
+    function update(no_animation) {
       var c = gcountries.selectAll("circle")
-      if (!start)
+      if (!no_animation)
          c = c.transition()
-          .duration(start ? 0 : 100)
+          .duration(100)
 
       c.attr("r", function(d) {
         var r = rscale(d[selectedYear]);
@@ -289,16 +295,43 @@ queue()
 
     var timeline = d3.select("#timeline").append("svg");
 
-    yearsg = timeline.append("g")
+
+
+    var year_scale = d3.scale.linear()
+      .domain(remittanceYearsDomain)
+      .range ([
+        (width - timelineWidth) / 2,
+        (width + timelineWidth) / 2
+      ]);
+
+
+    var year_axis = d3.svg.axis()
+      .scale(year_scale)
+      .orient("top")
+      .ticks(timelineWidth / 70)
+      .tickSize(10, 5, timelineHeight)
+      .tickSubdivide(4)
+      .tickPadding(15)
+      .tickFormat(function(d) { return d; });
+
+
+    timeline_group = timeline.append("g")
       .attr("class", "years")
-     .attr("transform", "translate("+((width - remittanceYears.length*yearLen)/2)+","+30+")")
+      //.attr("transform", "translate("+((width - remittanceYears.length*yearLen)/2)+","+30+")")
+      .attr("transform", "translate(0,"+timelineHeight+")")
 
 
+    timeline_group.call(year_axis)
+    timeline_group.on("mousemove", function(d) {
+      var c = d3.mouse(this);
+      selectedYear = Math.round(year_scale.invert(c[0]));
+      update(true);
+    });
 
 
-
-    yearsg.selectAll("text.remy")
-        .data(remittanceYears)
+    /*
+    timeline_group.selectAll("text.remy")
+      .data(remittanceYears)
         .enter()
         .append("svg:text")
           .attr("class", "remy")
@@ -310,12 +343,12 @@ queue()
            else return "hidden";
           })
           .attr("y", -5)
-          .attr("x", function(d, i) { return i*yearLen; })
+          .attr("x", year_scale)
           .attr("text-anchor", "middle")
           .text(function(d) { return d; })
           .on("mouseover", function(d) {
             selectedYear = d;
-            yearsg.selectAll("text.remy").classed("sel", false);
+            timeline_group.selectAll("text.remy").classed("sel", false);
             d3.select(this).classed("sel", true);
             update();
           });
@@ -325,10 +358,11 @@ queue()
         return d == selectedYear; })
       .classed("sel", true);
 
+    */
 
 
 });
 
 
 
-})();
+// })();

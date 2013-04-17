@@ -66,5 +66,9 @@ g.arcs path:hover {
     height:70px;
     bottom:0px;
     width:100%;
-    background-color: #222;
+
 }
+
+#timeline .tick line { stroke:#999; }
+#timeline line.tick.minor  { stroke:#999; }
+#timeline path.domain { fill:#999; fill-opacity:0.05;  }
