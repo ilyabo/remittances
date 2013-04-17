@@ -1,5 +1,12 @@
 .land { stroke-width:1.0; }
 
+.land:hover {
+	/* fill: #67F7C1; */
+	stroke: #67F7C1;
+    stroke-width:1;
+}
+
+
 body { font-family: 'Lato',Helvetica, sans-serif; text-shadow: 1px 1px 1px #111; font-weight: 300;  }
 
 header,
@@ -10,7 +17,7 @@ header,
 
 h1 {
 	color: white;
-	font-size: 25px;
+	font-size: 30px;
 	font-weight: 300;
 }
 
@@ -22,10 +29,10 @@ h2 {
 	padding: 0;
 }
 
-h2 span {
-    font-size: 50px;
-    color: #afafaf;
-}
+	h2 span {
+		font-size: 50px;
+		color: #afafaf;
+	}
 
 #details { position:absolute; top:60px; color:white; }
 
@@ -52,7 +59,12 @@ g.arcs path:hover {
     fill:white;
 }
 
-.land:hover {
-	stroke: #a2000c;  /* #67F7C1; */
-    stroke-width:2;
+
+
+#timeline {
+    position:fixed;
+    height:70px;
+    bottom:0px;
+    width:100%;
+    background-color: #222;
 }
