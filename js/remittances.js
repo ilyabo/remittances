@@ -1,8 +1,9 @@
 (function() {
 
 var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
-var width = 960,
-    height = 600;
+var width = $(document).width() - 40,
+    height = $(document).height() - 40;
+
 
 var svg = d3.select("body").append("svg")
   .attr("width", width)
@@ -50,6 +51,8 @@ queue()
   .defer(d3.csv, "data/countries-iso2to3.csv")
   .defer(d3.csv, "data/RemittancesData_Inflows_Nov12.csv")
   .await(function(err, countryCentroids, world, migrations, isocodes, remittances) {
+
+    fitProjection(projection, world, [[20,30], [width-40, height-60]], true);
 
 
     countryCentroids.forEach(function(d) {
