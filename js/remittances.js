@@ -27,18 +27,30 @@ var rscale = d3.scale.sqrt()
   .range([0, 25]);
 
 
+var timeline_pad_horiz = 20;
+var timeline = d3.select("#timeline")
+    //.style("height", timelineHeight)
+  .append("svg")
+    .attr("width", timelineWidth + timeline_pad_horiz * 2);
 
 
-var migrationYears = [ "1960", "1970", "1980", "1990", "2000"];
+
+
+var migrationYears = [ 1960, 1970, 1980, 1990, 2000];
 var remittanceYears = [
-  "1970","1971","1972","1973","1974","1975","1976","1977","1978","1979","1980",
-  "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991",
-  "1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002",
-  "2003","2004","2005","2006","2007","2008",
-  "2009","2010","2011","2012"
+  1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,
+  1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,
+  1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,
+  2003,2004,2005,2006,2007,2008,
+  2009,2010,2011,2012
 ];  // year 2012 is an estimation
 
 var remittanceYearsDomain = [1970, 2012];
+
+var remittanceTotals = null;
+
+var remittancesMagnitudeFormat = d3.format(",.1f");
+
 
 var year_scale = d3.scale.linear()
   .domain(remittanceYearsDomain);
@@ -51,7 +63,7 @@ var remittance_tseries_line = d3.svg.line()
   .interpolate("monotone");
 
 
-var selectedYear = "2000";
+var selectedYear = null;
 
 
 var countryCentroidsByCode = {};
@@ -120,8 +132,43 @@ function renderTimeSeries(remittances, remittanceTotals, selectedCountry) {
     .select("path.remittances")
       .attr("d", remittance_tseries_line);
 
-
 }
+
+
+var selectedCountry = null;
+
+function updateDetails() {
+  var details = d3.select("#details");
+
+  details.select(".year")
+    .text(selectedYear);
+
+  var totalRemittances = remittanceTotals[remittanceYears.indexOf(selectedYear)];
+
+  details.select(".remittances")
+    .text("$" + remittancesMagnitudeFormat(totalRemittances / 1000)+" Milliarden");
+
+  details.select(".country")
+    .text("Total" );
+}
+
+function setSelectedYear(year, no_animation) {
+  var r = d3.extent(year_scale.domain());
+  if (year < r[0]) year = r[0];
+  if (year > r[1]) year = r[1];
+  selectedYear = year;
+  timeline.select("g.selectorHand")
+//        .transition()
+//        .duration(4)
+      .attr("transform", "translate("+(year_scale(year))+",0)");
+  updateCirclesOnMap(no_animation);
+  updateDetails();
+}
+
+
+
+
+
 
 
 queue()
@@ -132,7 +179,7 @@ queue()
   .defer(d3.csv, "data/RemittancesData_Inflows_Nov12.csv")
   .await(function(err, countryCentroids, world, migrations, isocodes, remittances) {
 
-    var remittanceTotalsByYear = calcRemittanceTotalsByYear(remittances);
+    remittanceTotals = calcRemittanceTotalsByYear(remittances);
 
 
 
@@ -279,7 +326,6 @@ queue()
     rscale.domain([0, max]);
 
 
-    var remittancesMagnitudeFormat = d3.format(",.0f");
 
     circles = gcountries.selectAll("circle")
         .data(remittances.filter(function(d) {
@@ -297,11 +343,11 @@ queue()
             if (migs === undefined) {
               console.log("No migrations for " + selectedIso3);
             } else {
-
-              d3.select("#details")
-                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
-                    " US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M<br>nach Hause"
-                      );
+//
+//              d3.select("#description")
+//                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
+//                    " US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M<br>nach Hause"
+//                      );
 
               migrationsByOriginCode[selectedIso3].forEach(function(m) {
                 var land = chart_svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
@@ -332,7 +378,7 @@ queue()
           }
         })
         .on("mouseout", function(d) {
-          d3.select("#details").text("");
+          d3.select("#description").text("");
           chart_svg.selectAll("path.land")
              .transition()
                 .duration(300)
@@ -351,32 +397,9 @@ queue()
 
 
 
-    updateCirclesOnMap(true);
 
-     gcountries.selectAll("circle")
-      .transition()
-        .duration(300)
-        .attr("opacity", 1)
-
-    var yearLen = 12;
-
-
-    var timeline_pad_horiz = 20;
-    var timeline = d3.select("#timeline")
-        //.style("height", timelineHeight)
-      .append("svg")
-        .attr("width", timelineWidth + timeline_pad_horiz * 2);
-
-
-
-//      .range ([
-//        (width - timelineWidth) / 2,
-//        (width + timelineWidth) / 2
-//      ]);
     year_scale.range ([timeline_pad_horiz, timelineWidth + timeline_pad_horiz]);
 
-
-    renderTimeSeries(remittances, remittanceTotalsByYear, null);
 
 
     var selector_hand = timeline.append("g")
@@ -416,20 +439,18 @@ queue()
     });
 
 
-    function setSelectedYear(year, no_animation) {
-      var r = d3.extent(year_scale.domain());
-      if (year < r[0]) year = r[0];
-      if (year > r[1]) year = r[1];
-      selectedYear = year;
-      timeline.select("g.selectorHand")
-//        .transition()
-//        .duration(4)
-          .attr("transform", "translate("+(year_scale(year))+",0)");
-      updateCirclesOnMap(no_animation);
-    }
 
 
+    setSelectedYear(2000);
 
+    updateCirclesOnMap(true);
+
+     gcountries.selectAll("circle")
+      .transition()
+        .duration(300)
+        .attr("opacity", 1)
+
+    renderTimeSeries(remittances, remittanceTotals, null);
 
 });
 
