@@ -64,9 +64,11 @@ body { background-color: #111; }
     position:fixed;
     bottom:0px;
     width:100%;
-    height:90px;
+    height:150px;
     text-align: center;
+    background-color: rgba(0,0,0,0.1);
 }
+
 
 
 
@@ -76,3 +78,5 @@ body { background-color: #111; }
 #timeline path.domain { fill:#999; fill-opacity:0.0;  }
 #timeline g.selectorHand line { stroke:#999; stroke-width:2;  }
 #timeline g.selectorHand circle {  fill:#fff; stroke:#666; stroke-width:2; }
+
+#timeline g.tseries path { stroke:#00b48f; stroke-width:2.5;  }

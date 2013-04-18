@@ -5,12 +5,12 @@ var width = $(document).width(),
     height = $(document).height() - 40;
 
 
-var svg = d3.select("#chart").append("svg")
+var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height);
 
 var timelineWidth = Math.min(width - 50, 1000),
-    timelineHeight = 90;  // if you change this, also change the #timeline CSS class
+    timelineHeight = 150;  // if you change this, also change the #timeline CSS class
 
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
@@ -22,6 +22,9 @@ var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
 
 var path = d3.geo.path()
     .projection(projection);
+
+var rscale = d3.scale.sqrt()
+  .range([0, 25]);
 
 
 
@@ -37,17 +40,88 @@ var remittanceYears = [
 
 var remittanceYearsDomain = [1970, 2012];
 
+var year_scale = d3.scale.linear()
+  .domain(remittanceYearsDomain);
+
+
+var remittance_tseries_scale = d3.scale.linear()
+  .range([timelineHeight - 50, 2]);
+
+var remittance_tseries_line = d3.svg.line()
+  .interpolate("monotone");
 
 
 var selectedYear = "2000";
 
 
-
-
-
-
-
 var countryCentroidsByCode = {};
+
+
+function calcRemittanceTotalsByYear(remittances) {
+  var totals = [], i, yi, countryData, y, val, max = NaN;
+
+  for (i=0; i<remittances.length; i++) {
+    countryData = remittances[i];
+
+    for (yi=0; yi<remittanceYears.length; yi++) {
+      y = remittanceYears[yi];
+      if (totals[yi] === undefined) totals[yi] = 0;
+
+      val = +countryData[y];
+      if (!isNaN(val)) {
+        totals[yi] += val;
+      }
+    }
+  }
+
+  return totals;
+}
+
+
+function updateCirclesOnMap(no_animation) {
+
+  var c = d3.selectAll("#chart g.countries circle")
+  if (!no_animation)
+     c = c.transition()
+      .duration(100)
+
+  c.attr("r", function(d) {
+    var r = rscale(d[selectedYear]);
+    return (isNaN(r) ? 0 : r);
+  })
+}
+
+
+
+
+
+function renderTimeSeries(remittances, remittanceTotals, selectedCountry) {
+
+  var timeline = d3.select("#timeline svg");
+
+  var g = timeline.select("g.tseries");
+  if (g.empty()) {
+    g = timeline.append("g")
+      .attr("class", "tseries");
+
+    remittance_tseries_scale.domain([0, d3.max(remittanceTotals)]);
+
+    remittance_tseries_line
+      .x(function(d, i) {
+        return year_scale(remittanceYears[i]); })
+      .y(function(d) { return remittance_tseries_scale(d); });
+
+    g.append("path")
+      .attr("class", "remittances")
+      .attr("fill", "none");
+  }
+
+  g.datum(remittanceTotals)
+    .select("path.remittances")
+      .attr("d", remittance_tseries_line);
+
+
+}
 
 
 queue()
@@ -58,7 +132,14 @@ queue()
   .defer(d3.csv, "data/RemittancesData_Inflows_Nov12.csv")
   .await(function(err, countryCentroids, world, migrations, isocodes, remittances) {
 
+    var remittanceTotalsByYear = calcRemittanceTotalsByYear(remittances);
+
+
+
+
     fitProjection(projection, world, [[20,30], [width-40, height-60]], true);
+
+
 
 
     countryCentroids.forEach(function(d) {
@@ -80,7 +161,7 @@ queue()
 
 
 
-    svg.append("g")
+    chart_svg.append("g")
        .attr("class", "map")
       .selectAll("path")
         .data(world.features)
@@ -104,7 +185,7 @@ queue()
 
 
     var arc = d3.geo.greatArc().precision(3) //3);
-    var arcs = svg.append("g").attr("class", "arcs");
+    var arcs = chart_svg.append("g").attr("class", "arcs");
     var minPathWidth = 1, maxPathWidth = 30;
 
     var migrationsByOriginCode = {};
@@ -147,7 +228,7 @@ queue()
 
 
 
-    var gcountries = svg.append("g")
+    var gcountries = chart_svg.append("g")
        .attr("class", "countries");
 
     var iso2To3 = {};
@@ -195,9 +276,7 @@ queue()
     });
 
 
-    var rscale = d3.scale.sqrt()
-      .range([0, 25])
-      .domain([0, max])
+    rscale.domain([0, max]);
 
 
     var remittancesMagnitudeFormat = d3.format(",.0f");
@@ -220,12 +299,12 @@ queue()
             } else {
 
               d3.select("#details")
-                  .html("Migrants from <b>" + d.Name + "</b><br>" +
-                    "sent home US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M" +
-                    "<br> in " + selectedYear );
+                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
+                    " US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M<br>nach Hause"
+                      );
 
               migrationsByOriginCode[selectedIso3].forEach(function(m) {
-                var land = svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
+                var land = chart_svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
                 land
                  .transition()
                     .duration(200)
@@ -238,7 +317,7 @@ queue()
                        })
               });
 
-              svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
+              chart_svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
                  .transition()
                   .duration(200)
                      .attr("stroke", "red");
@@ -254,7 +333,7 @@ queue()
         })
         .on("mouseout", function(d) {
           d3.select("#details").text("");
-          svg.selectAll("path.land")
+          chart_svg.selectAll("path.land")
              .transition()
                 .duration(300)
                   .attr("fill",landColor)
@@ -271,20 +350,8 @@ queue()
 
 
 
-    function update(no_animation) {
-      var c = gcountries.selectAll("circle")
-      if (!no_animation)
-         c = c.transition()
-          .duration(100)
 
-      c.attr("r", function(d) {
-        var r = rscale(d[selectedYear]);
-        return (isNaN(r) ? 0 : r);
-      })
-    }
-
-
-    update(true);
+    updateCirclesOnMap(true);
 
      gcountries.selectAll("circle")
       .transition()
@@ -302,14 +369,14 @@ queue()
 
 
 
-    var year_scale = d3.scale.linear()
-      .domain(remittanceYearsDomain)
 //      .range ([
 //        (width - timelineWidth) / 2,
 //        (width + timelineWidth) / 2
 //      ]);
-      .range ([timeline_pad_horiz, timelineWidth + timeline_pad_horiz]);
+    year_scale.range ([timeline_pad_horiz, timelineWidth + timeline_pad_horiz]);
 
+
+    renderTimeSeries(remittances, remittanceTotalsByYear, null);
 
 
     var selector_hand = timeline.append("g")
@@ -358,7 +425,7 @@ queue()
 //        .transition()
 //        .duration(4)
           .attr("transform", "translate("+(year_scale(year))+",0)");
-      update(no_animation);
+      updateCirclesOnMap(no_animation);
     }
 
 
