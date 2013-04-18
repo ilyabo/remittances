@@ -9,6 +9,7 @@
     <script src="lib/queue.min.js"></script>
     <script src="lib/jquery-1.9.1.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/idangerous.swiper.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <!--
 Remittances:
@@ -20,20 +21,46 @@ GDP data is from WDI 2012
   </head>
 
   <body>
-  	<header>
-  		<h1>Der Anstieg der Geldsendungen von Migranten</h1>
-  	</header>
-    <div id="chart"></div>
-    <div id="timeline"></div>
-    <div id="legend"></div>
-    <div id="details">
-      <div class="country"></div>
-      <div class="year"></div>
-      <div class="description"></div>
-      <div class="remittances"></div>
-      <div class="remittancesTitle">Gesendet von Migranten nach <br> ihre Herkunftsländer </div>
-      <div class="remittancesComment">aktuelle US $</div>
-    </div>
+  	<section id="visualisation">
+		<header>
+			<h1>Der Anstieg der Geldsendungen von Migranten</h1>
+		</header>
+		<div id="chart"></div>
+		<div id="timeline"></div>
+		<div id="legend"></div>
+		<div id="details">
+		  <div class="country"></div>
+		  <div class="year"></div>
+		  <div class="description"></div>
+		  <div class="remittances"></div>
+		  <div class="remittancesTitle">Gesendet von Migranten nach <br> ihre Herkunftsländer </div>
+		  <div class="remittancesComment">aktuelle US $</div>
+		</div>
+    </section>
+	<section id="guide" class="swiper-container">
+		<div class="swiper-wrapper">
+		  <div class="swiper-slide">
+			  <aside>
+				  <h2></h2>
+			  </aside>
+		  </div>
+		  
+		  <!--Second Slide-->
+		  <div class="swiper-slide">
+			  <aside>
+				  <h2></h2>
+			  </aside>
+		  </div>
+		  
+		  <!--Third Slide-->
+		  <div class="swiper-slide">
+			  <aside>
+				  <h2></h2>
+			  </aside>
+		  </div>
+		</div>
+	</section>
+     <script src="lib/idangerous.swiper-1.9.min.js" ></script>
     <script src="js/remittances.js" ></script>
   </body>
 </html>
