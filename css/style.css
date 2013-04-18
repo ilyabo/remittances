@@ -55,6 +55,7 @@ h2 {
 body { background-color: #111; }
 
 
+#chart { text-align: center; }
 #chart circle { stroke:white; fill: white; fill-opacity: 0; stroke-width:2px; }
 #chart circle:hover { fill-opacity: 1; }
 
