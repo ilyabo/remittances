@@ -57,7 +57,7 @@ var year_scale = d3.scale.linear()
 
 
 var remittance_tseries_scale = d3.scale.linear()
-  .range([timelineHeight - 50, 2]);
+  .range([timelineHeight, 2]);
 
 var remittance_tseries_line = d3.svg.line()
   .interpolate("monotone");
@@ -428,15 +428,7 @@ queue()
 
 
 
-    timeline_axis_group = timeline.append("g")
-      .attr("transform", "translate(0,"+timelineHeight+")");
 
-    timeline_axis_group.call(year_axis);
-    timeline_axis_group.on("mousemove", function(d) {
-      var c = d3.mouse(this);
-      var year = Math.round(year_scale.invert(c[0]));
-      setSelectedYear(year, true);
-    });
 
 
 
@@ -451,6 +443,16 @@ queue()
         .attr("opacity", 1)
 
     renderTimeSeries(remittances, remittanceTotals, null);
+
+    timeline_axis_group = timeline.append("g")
+      .attr("transform", "translate(0,"+timelineHeight+")");
+
+    timeline_axis_group.call(year_axis);
+    timeline_axis_group.on("mousemove", function(d) {
+      var c = d3.mouse(this);
+      var year = Math.round(year_scale.invert(c[0]));
+      setSelectedYear(year, true);
+    });
 
 });
 
