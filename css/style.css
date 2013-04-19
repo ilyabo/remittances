@@ -81,6 +81,9 @@ body { background-color: #111; }
     background-color: rgba(0,0,0,0.1);
 }
 
+#guide {
+	display: none;
+}
 
 
 
