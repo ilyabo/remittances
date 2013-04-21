@@ -6,6 +6,9 @@
     stroke-width:1;
 }
 
+html, body {
+	height: 100%;
+}
 
 body {
     font-family: 'Lato',Helvetica, sans-serif; text-shadow: 1px 1px 1px #111;
@@ -21,6 +24,10 @@ header,
     pointer-events:none;
 }
 
+header {
+	z-index: 200;
+}
+
 h1 {
 	color: white;
 	font-size: 30px;
@@ -33,6 +40,7 @@ h2 {
 	color: #15b290;
 	margin: 0;
 	padding: 0;
+	line-height: 52px;
 }
 
 	h2 span {
@@ -40,9 +48,48 @@ h2 {
 		color: #afafaf;
 	}
 
+a {
+	color: white;
+	text-decoration: none;
+}
+	
+/* INTRO STUFF */
+
+aside {
+	padding: 60px 30px;
+	width: 424px;
+	height: 100%;
+	color: white;
+}
+
+aside p {
+	line-height: 24px;
+	width: 80%;
+}
+
+#skip {
+	background: url('../images/skip.png') no-repeat;
+	height: 31px;
+	display: block;
+	line-height: 31px;
+	padding-left: 45px;
+	margin-left: 20px;
+}
+
+#next {
+	background: url('../images/next.png') no-repeat;
+	height: 76px;
+	display: block;
+	line-height: 76px;
+	padding-left: 90px;
+	margin-bottom: 20px;
+}
+
+/* MAP STUFF */
+
 #details { position:absolute; top:60px; color:white;  }
-#details .country {
-    color:#00b48f; font-size:40pt;
+#details .country, h2 {
+    color:#00b48f; font-size:50px;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
     display:inline-block;
     margin-right: 10px;
@@ -77,11 +124,17 @@ body { background-color: #111; }
     width:100%;
     height:120px;
     text-align: center;
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.1);	
+    -webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 #guide {
-	display: none;
+	/*display: none;*/
 }
 
 
@@ -94,3 +147,84 @@ body { background-color: #111; }
 #timeline g.selectorHand circle {  fill:#fff; stroke:#666; stroke-width:2; }
 
 #timeline g.tseries path { stroke:#00b48f; stroke-width:2.5;  }
+
+
+/*
+ * Swiper - Mobile Touch Slider CSS
+ * http://www.idangero.us/sliders/swiper
+ *
+ * Vladimir Kharlampidi, The iDangero.us
+ * http://www.idangero.us/
+ * 
+ * Copyright 2012, Vladimir Kharlampidi
+ * The iDangero.us
+ * http://www.idangero.us
+ *
+ * Licensed under GPL & MIT
+ *
+*/
+
+/* Swiper Styles */
+.swiper-container {
+	margin:0 auto;
+	position:absolute;
+	top: 0;
+	left: 0;
+	overflow:hidden;
+	-webkit-backface-visibility:hidden;
+	-moz-backface-visibility:hidden;
+	-ms-backface-visibility:hidden;
+	-o-backface-visibility:hidden;
+	backface-visibility:hidden;
+	/* Fix of Webkit flickering */
+		
+	background: url(../images/aside_bg.png) repeat-y left;
+	z-index:1;
+}
+.swiper-wrapper {
+	position:relative;
+	width:100%;
+	-webkit-transition-property:-webkit-transform, left, top;
+	-webkit-transition-duration:0s;
+	-webkit-transform:translate3d(0px,0,0);
+	-webkit-transition-timing-function:ease;
+	
+	-moz-transition-property:-moz-transform, left, top;
+	-moz-transition-duration:0s;
+	-moz-transform:translate3d(0px,0,0);
+	-moz-transition-timing-function:ease;
+	
+	-o-transition-property:-o-transform, left, top;
+	-o-transition-duration:0s;
+	-o-transform:translate3d(0px,0,0);
+	-o-transition-timing-function:ease;
+	-o-transform:translate(0px,0px);
+	
+	-ms-transition-property:-ms-transform, left, top;
+	-ms-transition-duration:0s;
+	-ms-transform:translate3d(0px,0,0);
+	-ms-transition-timing-function:ease;
+	
+	transition-property:transform, left, top;
+	transition-duration:0s;
+	transform:translate3d(0px,0,0);
+	transition-timing-function:ease;
+	
+}
+.swiper-slide {
+	float: left;
+}
+
+/* IE10 Windows Phone 8 Fixes */
+.swiper-wp8-horizontal {
+	-ms-touch-action: pan-y;
+}
+.swiper-wp8-vertical {
+	-ms-touch-action: pan-x;
+}
+
+/* Specify Swiper's Size: */
+.swiper-container, .swiper-slide {
+	width: 100%;
+	height: 100%;
+}
