@@ -1,4 +1,15 @@
+// Init Intro/Tour/Guide Slider
+document.addEventListener('DOMContentLoaded', function(){ 
+	var mySwiper = new Swiper('#guide',{
+		//Your options here:
+		mode:'horizontal'
+	});
+}, false);
+
 // (function() {
+
+
+
 
 var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
 var width = $(document).width(),
@@ -455,7 +466,6 @@ queue()
     });
 
 });
-
 
 
 // })();
