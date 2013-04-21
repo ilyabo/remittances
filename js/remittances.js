@@ -9,9 +9,16 @@ var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height);
 
-var timelineWidth = Math.min(width - 50, 1000),
-    timelineHeight = 150;  // if you change this, also change the #timeline CSS class
+var timelineWidth = Math.min(width - 50, 600),
+    timelineHeight = 120;  // if you change this, also change the #timeline CSS class
 
+var migrationsColor =
+  // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/54FDE2
+  //  d3.scale.quantize()
+  //    .range(["#052021", "#124646", "#1F6F6C", "#2F9C94", "#40CBBB", "#54FDE2"]);
+  d3.scale.linear()
+    .range(["#052021", "#54FDE2"])
+    .interpolate(d3.interpolateHcl);
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
     .rotate([-10, -45])
@@ -33,6 +40,9 @@ var timeline = d3.select("#timeline")
   .append("svg")
     .attr("width", timelineWidth + timeline_pad_horiz * 2);
 
+var arc = d3.geo.greatArc().precision(3) //3);
+var migrationsByOriginCode = {};
+var magnitudeFormat = d3.format(",.0f");
 
 
 
@@ -64,6 +74,7 @@ var remittance_tseries_line = d3.svg.line()
 
 
 var selectedYear = null;
+var selectedCountry = null, highlightedCountry = null;
 
 
 var countryCentroidsByCode = {};
@@ -90,7 +101,7 @@ function calcRemittanceTotalsByYear(remittances) {
 }
 
 
-function updateCirclesOnMap(no_animation) {
+function updateBubbleSizes(no_animation) {
 
   var c = d3.selectAll("#chart g.countries circle")
   if (!no_animation)
@@ -107,7 +118,8 @@ function updateCirclesOnMap(no_animation) {
 
 
 
-function renderTimeSeries(remittances, remittanceTotals, selectedCountry) {
+
+function renderTimeSeries(remittances, remittanceTotals) {
 
   var timeline = d3.select("#timeline svg");
 
@@ -135,13 +147,12 @@ function renderTimeSeries(remittances, remittanceTotals, selectedCountry) {
 }
 
 
-var selectedCountry = null;
 
 function updateDetails() {
   var details = d3.select("#details");
 
   details.select(".year")
-    .text(selectedYear);
+    .text("im Jahr " + selectedYear);
 
   var totalRemittances = remittanceTotals[remittanceYears.indexOf(selectedYear)];
 
@@ -149,10 +160,10 @@ function updateDetails() {
     .text("$" + remittancesMagnitudeFormat(totalRemittances / 1000)+" Milliarden");
 
   details.select(".country")
-    .text("Total" );
+    .text("Gesamt" );
 }
 
-function setSelectedYear(year, no_animation) {
+function selectYear(year, no_animation) {
   var r = d3.extent(year_scale.domain());
   if (year < r[0]) year = r[0];
   if (year > r[1]) year = r[1];
@@ -161,9 +172,99 @@ function setSelectedYear(year, no_animation) {
 //        .transition()
 //        .duration(4)
       .attr("transform", "translate("+(year_scale(year))+",0)");
-  updateCirclesOnMap(no_animation);
+  updateBubbleSizes(no_animation);
   updateDetails();
+  updateChoropleth();
 }
+
+function selectCountry(code) {
+  if (selectedCountry === code) {
+    selectedCountry = null;
+  } else {
+    selectedCountry = code;
+  }
+  updateChoropleth();
+}
+
+function highlightCountry(code) {
+  highlightedCountry = code;
+  updateChoropleth();
+}
+
+
+function updateChoropleth() {
+
+  var gcountries = chart_svg.select("g.countries");
+
+  if (selectedCountry === null  &&  highlightedCountry == null) {
+    d3.select("#description").text("");
+    chart_svg.selectAll("path.land")
+       .classed("highlighted", false)
+//       .transition()
+//          .duration(50)
+            .attr("fill",landColor)
+            .attr("stroke", "none");
+
+    gcountries.selectAll("circle.country")
+//       .transition()
+//        .duration(50)
+          .attr("opacity", 1);
+
+  } else {
+
+    var code = ( selectedCountry !== null ? selectedCountry : highlightedCountry);
+
+
+    var migs = migrationsByOriginCode[code];
+    if (migs === undefined) {
+      console.log("No migrations for " + code);
+    } else {
+//
+//              d3.select("#description")
+//                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
+//                    " US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M<br>nach Hause"
+//                      );
+
+      var migrantsFromCountry = migrationsByOriginCode[code];
+      var max =
+        // calc max over time for country
+        d3.max(migrantsFromCountry, function(d) {
+          return d3.max(migrationYears.map(function(y) { return +d[y]; }));
+        });
+
+      migrationsColor.domain([0, max]);
+
+
+      var migrantsByDest = d3.nest()
+        .key(function(d) { return d.Dest; })
+        .rollup(function(d) { return d[0]; })
+        .map(migrantsFromCountry);
+
+
+      chart_svg.selectAll("path.land")
+        .classed("highlighted", function(d) { return d.id === highlightedCountry; })
+        .classed("selected", function(d) { return d.id === selectedCountry; })
+        .attr("fill", function(d) {
+
+          var m = migrantsByDest[d.id];
+          var val = (m !== undefined ? val = +m[selectedYear] : NaN);
+
+          if (!isNaN(val))
+            return migrationsColor(val);
+          else
+            return landColor;   //.darker(0.5);
+         })
+
+      gcountries.selectAll("circle.country")
+//         .transition()
+//          .duration(50)
+            .attr("opacity", 0);
+      }
+
+  }
+}
+
+
 
 
 
@@ -207,7 +308,6 @@ queue()
 
 
 
-
     chart_svg.append("g")
        .attr("class", "map")
       .selectAll("path")
@@ -216,30 +316,20 @@ queue()
         .attr("class", "land")
         .attr("fill", landColor)
         .attr("data-code", function(d) { return d.id; })
-        .attr("d", path);
+        .attr("d", path)
+        .on("click", function(d) { selectCountry(d.id); })
+        .on("mouseover", function(d) { highlightCountry(d.id); })
+        .on("mouseout", function(d) { highlightCountry(null); });
 
 
 
 
 
 
-     var migrationsColor = d3.scale.log()
-       .range(["#221C03", "#E9D35A"])
-       .interpolate(d3.interpolateHcl);
 
 
 
-
-
-    var arc = d3.geo.greatArc().precision(3) //3);
     var arcs = chart_svg.append("g").attr("class", "arcs");
-    var minPathWidth = 1, maxPathWidth = 30;
-
-    var migrationsByOriginCode = {};
-
-
-
-    var magnitudeFormat = d3.format(",.0f");
 
     migrations.forEach(function(d) {
       d.max = d3.max(migrationYears.map(function(y) { return +d[y]; } ));
@@ -336,62 +426,12 @@ queue()
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
-        .on("mouseover", function(d) {
-          var selectedIso3 = getIso3(d);
-          if (selectedIso3 !== undefined) {
-            var migs = migrationsByOriginCode[selectedIso3];
-            if (migs === undefined) {
-              console.log("No migrations for " + selectedIso3);
-            } else {
-//
-//              d3.select("#description")
-//                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
-//                    " US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M<br>nach Hause"
-//                      );
+        .on("click", function(d) { selectCountry(getIso3(d)); })
+        .on("mouseover", function(d) { highlightCountry(getIso3(d)); })
+        .on("mouseout", function(d) { highlightCountry(null); })
 
-              migrationsByOriginCode[selectedIso3].forEach(function(m) {
-                var land = chart_svg.selectAll("path.land").filter(function(l) { return l.id == m.Dest; });
-                land
-                 .transition()
-                    .duration(200)
-                      .attr("fill", function(d) {
-                        var val = +m[selectedYear];
-                        if (!isNaN(val))
-                          return migrationsColor(val);
-                        else
-                          return landColor.darker(0.5);
-                       })
-              });
-
-              chart_svg.selectAll("path.land").filter(function(l) { return l.id == selectedIso3; })
-                 .transition()
-                  .duration(200)
-                     .attr("stroke", "red");
-
-              gcountries.selectAll("circle.country")
-                 .transition()
-                  .duration(200)
-                    .attr("opacity", 0);
-            }
-
-
-          }
-        })
-        .on("mouseout", function(d) {
-          d3.select("#description").text("");
-          chart_svg.selectAll("path.land")
-             .transition()
-                .duration(300)
-                  .attr("fill",landColor)
-                  .attr("stroke", "none");
-
-          gcountries.selectAll("circle.country")
-             .transition()
-              .duration(300)
-                .attr("opacity", 1);
-        })
-        .append("svg:title")
-          .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
+//        .append("svg:title")
+//          .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
 
 
 
@@ -433,11 +473,11 @@ queue()
 
 
 
-    setSelectedYear(2000);
+    selectYear(2000);
 
-    updateCirclesOnMap(true);
+    updateBubbleSizes(true);
 
-     gcountries.selectAll("circle")
+    gcountries.selectAll("circle")
       .transition()
         .duration(300)
         .attr("opacity", 1)
@@ -451,7 +491,7 @@ queue()
     timeline_axis_group.on("mousemove", function(d) {
       var c = d3.mouse(this);
       var year = Math.round(year_scale.invert(c[0]));
-      setSelectedYear(year, true);
+      selectYear(year, true);
     });
 
 });
