@@ -26,7 +26,7 @@ var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height);
 
-var timelineWidth = Math.min(width - 50, 600),
+var timelineWidth = Math.min(width - 50, 800),
     timelineHeight = 120;  // if you change this, also change the #timeline CSS class
 
 var migrationsColor =
