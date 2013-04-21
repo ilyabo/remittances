@@ -17,12 +17,6 @@ body {
     margin:0;
 }
 
-header,
-#details {
-	position: absolute;
-	left:30px;
-    pointer-events:none;
-}
 
 header {
 	z-index: 200;
@@ -67,7 +61,7 @@ aside p {
 	width: 80%;
 }
 
-#skip {
+#guide .skip {
 	background: url('../images/skip.png') no-repeat;
 	height: 31px;
 	display: block;
@@ -76,7 +70,7 @@ aside p {
 	margin-left: 20px;
 }
 
-#next {
+#guide .next {
 	background: url('../images/next.png') no-repeat;
 	height: 76px;
 	display: block;
@@ -86,8 +80,17 @@ aside p {
 }
 
 /* MAP STUFF */
+header,
+#details {
+	position: absolute;
+	left:30px;
+    pointer-events:none;
+}
 
-#details { position:absolute; top:60px; color:white;  }
+#details {
+    display: none;
+    position:absolute; top:100px; color:white;
+}
 #details .country, h2 {
     color:#00b48f; font-size:50px;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
@@ -135,6 +138,7 @@ body { background-color: #111; }
 
 #guide {
 	/*display: none;*/
+    margin-top:40px;
 }
 
 

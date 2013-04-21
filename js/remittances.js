@@ -1,10 +1,16 @@
 // Init Intro/Tour/Guide Slider
-document.addEventListener('DOMContentLoaded', function(){ 
+$(function() {
 	var mySwiper = new Swiper('#guide',{
 		//Your options here:
 		mode:'horizontal'
 	});
-}, false);
+
+  $("#guide .next").click(function() { mySwiper.swipeNext(); })
+  $("#guide .skip").click(function() {
+    $("#guide").fadeOut();
+    $("#details").fadeIn();
+  })
+});
 
 // (function() {
 
