@@ -2,12 +2,13 @@
 
 .land:hover, .land.highlighted {
 	/* fill: #67F7C1; */
-	stroke: #67F7C1;
-    stroke-width:1;
+	fill: #9D7C37;
+
 }
 
-html, body {
-	height: 100%;
+.land.selected {
+    stroke:#F2D59A;
+    stroke-width:1;
 }
 
 body {
@@ -15,6 +16,7 @@ body {
     font-weight: 300;
     padding:0;
     margin:0;
+    background-color: #111;
 }
 
 
@@ -25,7 +27,7 @@ header {
 h1 {
 	color: white;
 	font-size: 30px;
-	font-weight: 300;
+	font-weight: bold;
 }
 
 h2 {
@@ -49,14 +51,22 @@ a {
 	
 /* INTRO STUFF */
 
-aside {
-	padding: 60px 30px;
+#guide {
+	/*display: none;*/
+    height: 100%;
+}
+
+#guide aside {
+	padding: 20% 30px 60px 30px;
 	width: 424px;
-	height: 100%;
 	color: white;
 }
 
-aside p {
+#guide aside h2 { font-size:30pt; font-weight: bold; }
+
+#guide  aside p {
+    padding-top:0px;
+    padding-bottom:20px;
 	line-height: 24px;
 	width: 80%;
 }
@@ -103,10 +113,10 @@ header,
 #details .remittancesComment { margin-left:5px; display:inline; font-size:8pt; color:#999;}
 #details .remittancesTitle {  font-size:10pt; color:white; margin-top:5px; }
 
-body { background-color: #111; }
 
 
-#chart { text-align: center; }
+
+#chart { text-align: center;  }
 #chart circle { stroke:white; fill: white; fill-opacity: 0; stroke-width:2px; }
 /* #chart circle:hover { fill-opacity: 1; } */
 
@@ -136,10 +146,6 @@ body { background-color: #111; }
 	user-select: none;
 }
 
-#guide {
-	/*display: none;*/
-    margin-top:40px;
-}
 
 
 
@@ -182,7 +188,8 @@ body { background-color: #111; }
 	backface-visibility:hidden;
 	/* Fix of Webkit flickering */
 		
-	background: url(../images/aside_bg.png) repeat-y left;
+	background: url(../images/aside_bg_darker.png) repeat-y left;
+    background-size:600px 1px;
 	z-index:1;
 }
 .swiper-wrapper {

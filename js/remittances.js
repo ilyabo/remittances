@@ -6,10 +6,17 @@ $(function() {
 	});
 
   $("#guide .next").click(function() { mySwiper.swipeNext(); })
-  $("#guide .skip").click(function() {
+
+  var hideGuide = function() {
     $("#guide").fadeOut();
     $("#details").fadeIn();
-  })
+  };
+
+  $("#guide .skip").click(hideGuide);
+  $("#guide .last").click(hideGuide);
+
+  $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
+
 });
 
 // (function() {
@@ -25,6 +32,11 @@ var width = $(document).width(),
 var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height);
+
+var background = chart_svg.append("rect")
+  .attr("width", width)
+  .attr("height", height)
+  .attr("fill", "#111");
 
 var timelineWidth = Math.min(width - 50, 800),
     timelineHeight = 120;  // if you change this, also change the #timeline CSS class
@@ -95,7 +107,9 @@ var selectedCountry = null, highlightedCountry = null;
 
 
 var countryCentroidsByCode = {};
+var countryFeaturesByName = {}, countryFeaturesByCode = {};
 
+var countCommas = 0;
 
 function calcRemittanceTotalsByYear(remittances) {
   var totals = [], i, yi, countryData, y, val, max = NaN;
@@ -106,6 +120,10 @@ function calcRemittanceTotalsByYear(remittances) {
     for (yi=0; yi<remittanceYears.length; yi++) {
       y = remittanceYears[yi];
       if (totals[yi] === undefined) totals[yi] = 0;
+
+      if (countryData[y].indexOf(",") >= 0) {
+        countCommas++;
+      }
 
       val = +countryData[y];
       if (!isNaN(val)) {
@@ -176,9 +194,12 @@ function updateDetails() {
   details.select(".remittances")
     .text("$" + remittancesMagnitudeFormat(totalRemittances / 1000)+" Milliarden");
 
-  details.select(".country")
-    .text("Gesamt" );
+  details.select(".country").text(
+    highlightedCountry !== null ? countryFeaturesByCode[highlightedCountry].properties.name : "Gesamt"
+  );
 }
+
+
 
 function selectYear(year, no_animation) {
   var r = d3.extent(year_scale.domain());
@@ -190,8 +211,8 @@ function selectYear(year, no_animation) {
 //        .duration(4)
       .attr("transform", "translate("+(year_scale(year))+",0)");
   updateBubbleSizes(no_animation);
-  updateDetails();
   updateChoropleth();
+  updateDetails();
 }
 
 function selectCountry(code) {
@@ -199,13 +220,26 @@ function selectCountry(code) {
     selectedCountry = null;
   } else {
     selectedCountry = code;
+    chart_svg.selectAll("path.land")
+      .sort(function(a, b) {
+         if (a.id === code) return 1;
+         if (b.id === code) return -1;
+        return 0;
+      });
   }
   updateChoropleth();
+  updateDetails();
 }
+
+$(document).keyup(function(e) { if (e.keyCode == 27) selectCountry(null); });
+background.on("click", function() { selectCountry(null); });
+
+
 
 function highlightCountry(code) {
   highlightedCountry = code;
   updateChoropleth();
+  updateDetails();
 }
 
 
@@ -217,14 +251,15 @@ function updateChoropleth() {
     d3.select("#description").text("");
     chart_svg.selectAll("path.land")
        .classed("highlighted", false)
-//       .transition()
-//          .duration(50)
+       .classed("selected", false)
+       .transition()
+          .duration(50)
             .attr("fill",landColor)
             .attr("stroke", "none");
 
     gcountries.selectAll("circle.country")
-//       .transition()
-//        .duration(50)
+       .transition()
+        .duration(50)
           .attr("opacity", 1);
 
   } else {
@@ -261,6 +296,8 @@ function updateChoropleth() {
       chart_svg.selectAll("path.land")
         .classed("highlighted", function(d) { return d.id === highlightedCountry; })
         .classed("selected", function(d) { return d.id === selectedCountry; })
+         .transition()
+          .duration(50)
         .attr("fill", function(d) {
 
           var m = migrantsByDest[d.id];
@@ -273,8 +310,8 @@ function updateChoropleth() {
          })
 
       gcountries.selectAll("circle.country")
-//         .transition()
-//          .duration(50)
+         .transition()
+          .duration(50)
             .attr("opacity", 0);
       }
 
@@ -289,12 +326,13 @@ function updateChoropleth() {
 
 
 
+
 queue()
   .defer(d3.csv, "data/country-centroids.csv")
   .defer(d3.json, "data/world-countries.json")
   .defer(d3.csv, "data/migration-1K-plus.csv")
   .defer(d3.csv, "data/countries-iso2to3.csv")
-  .defer(d3.csv, "data/RemittancesData_Inflows_Nov12.csv")
+  .defer(d3.csv, "data/remittances.csv")
   .await(function(err, countryCentroids, world, migrations, isocodes, remittances) {
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
@@ -302,7 +340,8 @@ queue()
 
 
 
-    fitProjection(projection, world, [[20,30], [width-40, height-60]], true);
+    var leftMargin = Math.max(120, width*0.2);
+    fitProjection(projection, world, [[leftMargin, 60], [width, height-120]], true);
 
 
 
@@ -311,7 +350,7 @@ queue()
       countryCentroidsByCode[d.Code] = [+d.lon, +d.lat];
     });
 
-    var featuresByName = {}, featuresByCode = {}, f;
+    var f;
     for (var d in world.features) {
       f = world.features[d];
 
@@ -319,8 +358,8 @@ queue()
       if (f.centroid !== undefined)
         f.centroidp = projection(f.centroid);
 
-      featuresByName[f.properties.name] = f;
-      featuresByCode[f.id] = f;
+      countryFeaturesByName[f.properties.name] = f;
+      countryFeaturesByCode[f.id] = f;
     }
 
 
@@ -363,8 +402,8 @@ queue()
 
 
     var flows = migrations.forEach(function(flow) {
-      var o = featuresByCode[flow.Origin], co;
-      var d = featuresByCode[flow.Dest], cd;
+      var o = countryFeaturesByCode[flow.Origin], co;
+      var d = countryFeaturesByCode[flow.Dest], cd;
 
       if (migrationsByOriginCode[flow.Origin] === undefined) {
         migrationsByOriginCode[flow.Origin] = [];
@@ -412,7 +451,7 @@ queue()
     var name, r;
 
     remittances.forEach(function(r) {
-      f = featuresByName[r.Name];
+      f = countryFeaturesByName[r.Name];
       if (f) {
         r.centroid = f.centroidp;
       }
