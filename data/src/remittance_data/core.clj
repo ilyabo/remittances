@@ -55,18 +55,32 @@
 
 
 
-(defn my-distance [name name-official]
+;(defn my-distance [name name-official]
+;  (let [
+;     d        (diff/diff name name-official)
+;     len      (count name)
+;     common   (- len (count (:- d)))
+;    ]
+;
+;    (*
+;      (+ 0.1 (- 1 (/ common len)))
+;      (count (:+ d)))
+;      (* 0.1 (reduce + 0  (map count (:+ d))))
+;    ))
+
+
+(defn my-distance [name1 name2]
   (let [
-     d        (diff/diff name name-official)
-     len      (count name)
-     common   (- len (count (:- d)))
+     common      (common-word-prefixes (.toLowerCase name1) (.toLowerCase name2) 2)
+     common-len  (map count common)
     ]
 
-    (*
-      (+ 0.1 (- 1 (/ common len)))
-      (count (:+ d)))
-      (* 0.1 (reduce + 0  (map count (:+ d))))
-    ))
+    (reduce - 0 (map #(pow 2 %) common-len))
+ ))
+
+
+
+
 
 
 (defn find-closest-country-code [name]

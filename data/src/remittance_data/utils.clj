@@ -1,4 +1,5 @@
 (ns remittance-data.utils)
+  ;(:import clj_diff.FastStringOps))
 
 
 
@@ -21,6 +22,29 @@
 
 
 
+(defn words [text]
+  (re-seq #"\p{Alpha}+" text))
 
 
+; https://github.com/technomancy/swank-clojure/blob/master/src/swank/util/string.clj
+(defn largest-common-prefix
+  "Returns the largest common prefix of two strings."
+  ([#^String a, #^String b]
+     (apply str (take-while (comp not nil?) (map #(when (= %1 %2) %1) a b))))
+  {:tag String})
+
+
+;(FastStringOps/commonPrefix "abc" "abd")
+
+
+(defn common-word-prefixes [text1 text2 min-length]
+  (let [
+     words1  (words text1)
+     words2  (words text2)]
+
+    (filter #(>= (count %) min-length)
+      (for [w1 words1  w2 words2]
+        (largest-common-prefix w1 w2)
+      )))
+  )
 
