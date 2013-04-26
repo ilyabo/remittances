@@ -39,7 +39,9 @@ var background = chart_svg.append("rect")
   .attr("fill", "#111");
 
 var timelineWidth = Math.min(width - 50, 800),
-    timelineHeight = 120;  // if you change this, also change the #timeline CSS class
+    timelineHeight = Math.min(300, height * 0.2);
+
+$("#timeline").css("height", timelineHeight);
 
 var migrationsColor =
   // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/54FDE2
@@ -341,7 +343,7 @@ queue()
 
 
     var leftMargin = Math.max(120, width*0.2);
-    fitProjection(projection, world, [[leftMargin, 60], [width, height-120]], true);
+    fitProjection(projection, world, [[leftMargin, 60], [width - 25, height-120]], true);
 
 
 
@@ -541,14 +543,29 @@ queue()
     renderTimeSeries(remittances, remittanceTotals, null);
 
     timeline_axis_group = timeline.append("g")
+      .attr("class", "timeline_axis")
       .attr("transform", "translate(0,"+timelineHeight+")");
 
     timeline_axis_group.call(year_axis);
-    timeline_axis_group.on("mousemove", function(d) {
-      var c = d3.mouse(this);
-      var year = Math.round(year_scale.invert(c[0]));
-      selectYear(year, true);
+
+    $("#timeline").mousedown(function(){
+      $(this).css("cursor","ew-resize");
+      return false;
     });
+
+    var selectYearOnDragOrClick = function(event) {
+      if (d3.event.which > 0) {
+          // any mouse button pressed (will always be true in firefox :( )
+        var c = d3.mouse(this);
+
+        var year = Math.round(year_scale.invert(c[0]));
+        selectYear(year, true);
+      }
+    };
+    timeline_axis_group
+      .on("mousedown", selectYearOnDragOrClick)
+      .on("mousemove", selectYearOnDragOrClick);
+
 
 });
 

@@ -57,7 +57,7 @@ a {
 }
 
 #guide aside {
-	padding: 20% 30px 60px 30px;
+	padding: 15% 30px 60px 30px;
 	width: 424px;
 	color: white;
 }
@@ -135,9 +135,9 @@ header,
     position:fixed;
     bottom:0px;
     width:100%;
-    height:120px;
+    /*height:120px;*/
     text-align: center;
-    background-color: rgba(0,0,0,0.1);	
+    /*background-color: rgba(0,0,0,0.1);*/
     -webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -152,8 +152,9 @@ header,
 #timeline g.tick.major line { stroke:#999; }
 #timeline g.tick.major text { stroke:#999; font-size:16px; pointer-events:none; }
 #timeline line.tick.minor  { stroke:#999; }
-#timeline path.domain { fill:#999; fill-opacity:0.0;  }
-#timeline g.selectorHand line { stroke:#999; stroke-width:2;  }
+#timeline path.domain { fill:#999; fill-opacity:0.0; cursor:ew-resize; }
+#timeline g.selectorHand { cursor:ew-resize; }
+#timeline g.selectorHand line { stroke:#999; stroke-width:2;   }
 #timeline g.selectorHand circle {  fill:#fff; stroke:#666; stroke-width:2; }
 
 #timeline g.tseries path { stroke:#00b48f; stroke-width:2.5;  }
