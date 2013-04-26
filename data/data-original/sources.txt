@@ -1,0 +1,19 @@
+Remittances, migrations:
+http://econ.worldbank.org/WBSITE/EXTERNAL/EXTDEC/EXTDECPROSPECTS/0,,contentMDK:22759429~pagePK:64165401~piPK:64165026~theSitePK:476883,00.html
+
+
+OECD development aid:
+http://stats.oecd.org/Index.aspx?DataSetCode=REF_TOTAL_ODF#
+http://stats.oecd.org/FileView2.aspx?IDFile=1f7783e1-d073-406c-8c8d-b3cbf70eb71e
+
+Official Development Financing (ODF), measured for recipient countries only,
+is defined as the sum of their receipts of bilateral ODA,
+concessional and non-concessional resources from multilateral sources,
+and bilateral other official flows made available for reasons unrelated to trade,
+in particular loans to refinance debt.
+
+
+
+
+UN country codes:
+http://unstats.un.org/unsd/methods/m49/m49alpha.htm
