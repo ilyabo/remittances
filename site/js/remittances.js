@@ -29,6 +29,8 @@ var width = $(document).width(),
     height = $(document).height() - 40;
 
 
+$("#guide aside").css("padding-top", (height * 0.2) + "px");
+
 var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height);
@@ -41,7 +43,7 @@ var background = chart_svg.append("rect")
 var timelineWidth = Math.min(width - 50, 800),
     timelineHeight = Math.min(300, height * 0.2);
 
-$("#timeline").css("height", timelineHeight);
+$("#timeline").css("height", timelineHeight + "px");
 
 var migrationsColor =
   // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/54FDE2
