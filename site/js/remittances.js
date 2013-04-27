@@ -110,8 +110,8 @@ var selectedYear = null;
 var selectedCountry = null, highlightedCountry = null;
 
 
-var countryCentroidsByCode = {};
-var countryFeaturesByName = {}, countryFeaturesByCode = {};
+var countryFeaturesByCode = {}, countryNamesByCode = {};
+
 
 var countCommas = 0;
 
@@ -199,7 +199,7 @@ function updateDetails() {
     .text("$" + remittancesMagnitudeFormat(totalRemittances / 1000)+" Milliarden");
 
   details.select(".country").text(
-    highlightedCountry !== null ? countryFeaturesByCode[highlightedCountry].properties.name : "Gesamt"
+    highlightedCountry !== null ? countryNamesByCode[highlightedCountry] : "Gesamt"
   );
 }
 
@@ -332,12 +332,10 @@ function updateChoropleth() {
 
 
 queue()
-  .defer(d3.csv, "data/country-centroids.csv")
   .defer(d3.json, "data/world-countries.json")
-  .defer(d3.csv, "data/migration-1K-plus.csv")
-  .defer(d3.csv, "data/countries-iso2to3.csv")
   .defer(d3.csv, "data/remittances.csv")
-  .await(function(err, countryCentroids, world, migrations, isocodes, remittances) {
+  .defer(d3.csv, "data/migration-1K-plus.csv")
+  .await(function(err, world, remittances, migrations) {
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
 
@@ -350,21 +348,15 @@ queue()
 
 
 
-    countryCentroids.forEach(function(d) {
-      countryCentroidsByCode[d.Code] = [+d.lon, +d.lat];
+    remittances.forEach(function(r) {
+      r.centroid = projection([+r.lon, +r.lat]);
+      countryNamesByCode[r.iso3] = r.name_de;
     });
 
-    var f;
-    for (var d in world.features) {
-      f = world.features[d];
 
-      f.centroid = countryCentroidsByCode[f.id];
-      if (f.centroid !== undefined)
-        f.centroidp = projection(f.centroid);
-
-      countryFeaturesByName[f.properties.name] = f;
+    world.features.forEach(function(f) {
       countryFeaturesByCode[f.id] = f;
-    }
+    });
 
 
 
@@ -402,9 +394,6 @@ queue()
     migrationsColor.domain([1, maxMagnitude]);
 
 
-    var links = [];
-
-
     var flows = migrations.forEach(function(flow) {
       var o = countryFeaturesByCode[flow.Origin], co;
       var d = countryFeaturesByCode[flow.Dest], cd;
@@ -428,52 +417,17 @@ queue()
     var gcountries = chart_svg.append("g")
        .attr("class", "countries");
 
-    var iso2To3 = {};
-    var countryNameToIso3 = {};
-
-
-    isocodes.forEach(function(d) {
-      iso2To3[d.iso2] = d.iso3;
-      countryNameToIso3[d.name] = d.iso3;
-    });
-
-    function getIso3(remittance) {
-      var iso3 = iso2To3[remittance.iso2];
-      if (iso3 === undefined) {
-
-        iso3 = countryNameToIso3[remittance.Name];
-        if (iso3 === undefined) {
-          console.log("Could not find flows for code: " + d.iso2 + ", name: " + d.Name);
-        }
-      }
-
-      return iso3;
-    }
 
 
 
-    var name, r;
-
-    remittances.forEach(function(r) {
-      f = countryFeaturesByName[r.Name];
-      if (f) {
-        r.centroid = f.centroidp;
-      }
-
-      for (i in remittanceYears) {
-        y = remittanceYears[i];
-        if (r[y] !== undefined)
-          r[y] = +r[y].replace(",","")
-      }
-    });
 
 
-    var max = d3.max(remittances, function(d) {
+    var maxRemittanceValue = d3.max(remittances, function(d) {
       return d3.max(remittanceYears.map(function(y) { return +d[y]; } ));
     });
 
 
-    rscale.domain([0, max]);
+    rscale.domain([0, maxRemittanceValue]);
 
 
 
@@ -486,8 +440,8 @@ queue()
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
-        .on("click", function(d) { selectCountry(getIso3(d)); })
-        .on("mouseover", function(d) { highlightCountry(getIso3(d)); })
+        .on("click", function(d) { selectCountry(d.iso3); })
+        .on("mouseover", function(d) { highlightCountry(d.iso3); })
         .on("mouseout", function(d) { highlightCountry(null); })
 
 //        .append("svg:title")
