@@ -1,5 +1,7 @@
-(ns remittance-data.utils)
-  ;(:import clj_diff.FastStringOps))
+(ns remittance-data.utils
+  (:import [java.net URLEncoder])
+  ;(:import clj_diff.FastStringOps)
+  )
 
 
 
@@ -48,3 +50,8 @@
       )))
   )
 
+
+(defn encode-url-params [request-params]
+  (let [encode #(URLEncoder/encode (str %) "UTF-8")
+        coded (for [[n v] request-params] (str (encode n) "=" (encode v)))]
+    (apply str (interpose "&" coded))))
