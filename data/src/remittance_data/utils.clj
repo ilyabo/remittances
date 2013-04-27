@@ -1,8 +1,27 @@
 (ns remittance-data.utils
   (:import [java.net URLEncoder])
+  (:require [clojure.data.csv :as csv])
+  (:require [clojure.java.io  :as io])
+  (:require [clojure.data.json :as json])
+  (:use clojure.set)
   ;(:import clj_diff.FastStringOps)
   )
 
+
+
+
+(defn save-to-json [data output-file]
+  (with-open [wrtr (io/writer output-file)]
+      (json/write data wrtr)))
+
+
+(defn save-to-csv [data output-file]
+  (let [columns (sort (apply union (map #(-> % keys set) data)))]
+  (with-open [wrtr (io/writer output-file)]
+      (csv/write-csv wrtr
+        (concat
+          [(map #(if (keyword? %) (name %) (str %)) columns)]
+          (for [row data]  (map #(get row %) columns)))))))
 
 
 (defn fetch-url [address]

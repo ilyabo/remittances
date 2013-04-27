@@ -1,5 +1,4 @@
 (ns remittance-data.core
-  (:use clojure.set)
   (:use [remittance-data.utils])
   (:use [incanter.core])
   (:use [incanter.io])
@@ -29,6 +28,13 @@
 
 (def remittances-dataset (read-xls "data-original/RemittancesData_Inflows_Nov12.xlsx"))
 
+(def aid-dataset (read-dataset
+   "data-original/oecd/REF_TOTAL_ODF_Data_a83fb694-6ff5-4883-91cf-f79a5e557c69.csv"
+   :header true))
+
+
+
+
 
 (def un-country-codes (read-dataset
    "data-original/un-country-codes.csv"
@@ -45,9 +51,7 @@
       nil)
   )))
 
-(def aid (read-dataset
-   "data-original/oecd/REF_TOTAL_ODF_Data_a83fb694-6ff5-4883-91cf-f79a5e557c69.csv"
-   :header true))
+
 
 ; to get the rows use   (:rows aid)
 
@@ -133,9 +137,11 @@
       "Kyrgyz Republic"         "KGZ"
       "Slovak Republic"         "SVK"
       "United States"           "USA"
-      "West Bank and Gaza"      "PSE"
+      ("West Bank and Gaza"
+       "West Bank & Gaza Strip")  "PSE"
 
 
+      ; countries found by distance search  (added to avoid warnings)
       "Bahamas, The"  "BHS"
       "Bolivia"   "BOL"
       "Congo, Dem. Rep."  "COD"
@@ -161,6 +167,43 @@
       "Vietnam"   "VNM"
       "Virgin Islands (U.S.)"   "VIR"
       "Yemen, Rep."   "YEM"
+
+
+      "Virgin Islands (UK)"  "VIR"
+      "Cote d'Ivoire"  "CIV"
+      "Bosnia-Herzegovina"   "BIH"
+      "Syria"  "SYR"
+      "Hong Kong, China"   "HKG"
+      "Central African Rep."   "CAF"
+      "Wallis & Futuna"  "WLF"
+      "Korea"  "KOR"
+      "Sao Tome & Principe"  "STP"
+      "Brunei"   "BRN"
+      "St.Vincent & Grenadines"  "VCT"
+      "Northern Marianas"  "MNP"
+      "Micronesia, Fed. States"  "FSM"
+      "Iran"   "IRN"
+      "Laos"   "LAO"
+      "Venezuela"  "VEN"
+      "St. Helena"   "SHN"
+      "Macao"  "MAC"
+      "St. Kitts-Nevis"  "KNA"
+
+
+
+      ; countries to ignore (from OECD aid)
+      (
+        "Netherlands Antilles"
+        "Mekong Delta Project"
+        "States Ex-Yugoslavia"
+        "Chinese Taipei"
+        "Indus Basin"
+        "East African Community"
+
+      ) "-"
+
+      "All recipients, Total" "-ALL-"
+
       nil
       )
 
@@ -226,23 +269,39 @@
 
 
 
-(defn save-to-json [data output-file]
-  (with-open [wrtr (io/writer output-file)]
-      (json/write data wrtr)))
 
 
-(defn save-to-csv [data output-file]
-  (let [columns (sort (apply union (map #(-> % keys set) data)))]
-  (with-open [wrtr (io/writer output-file)]
-      (csv/write-csv wrtr
-        (concat
-          [(map #(if (keyword? %) (name %) (str %)) columns)]
-          (for [row data]  (map #(get row %) columns)))))))
+(def aid
+  (let [rows (filter
+              #(= "Current Prices (USD millions)" (get % (keyword "Amount type")))
+              (:rows aid-dataset))
+
+        rows (remove #(.contains (:Recipient %) ", regional") rows)
+
+        by-recipient (group-by :Recipient rows)
+
+        accepted-countries  (concat (map :iso3 remittances) ["-ALL-"])
+     ]
+
+    (into {}
+      (remove nil?
+        (for [[recipient, records] by-recipient]
+          (let [iso3 (find-country-code recipient)]
+            (if (in? accepted-countries iso3)
+              [
+                iso3
+
+                (into {} (for [r records]
+                  [ (keyword (str (get r :Year)))  (get r :Value) ]))
+              ]
+            )))))))
 
 
-;(save-to-json remittances "../site/data/remittances.json")
 
-(save-to-csv remittances "../site/data/remittances.csv")
+(save-to-json aid "../site/data/oecd-aid.json")
+
+(defn transform []
+  (save-to-csv remittances "../site/data/remittances.csv"))
 
 
 (comment
@@ -258,6 +317,11 @@
 
 
   (find-country-memo "Congo" "de")
+
+
+  (count (filter #(= "Current Prices (USD millions)"
+                    (get % (keyword "Amount type")))
+           (:rows aid)))
 
 )
 

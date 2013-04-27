@@ -334,8 +334,9 @@ function updateChoropleth() {
 queue()
   .defer(d3.json, "data/world-countries.json")
   .defer(d3.csv, "data/remittances.csv")
+  .defer(d3.json, "data/oecd-aid.json")  // NOTE: 1. -ALL-   2. negative values (MEX)
   .defer(d3.csv, "data/migration-1K-plus.csv")
-  .await(function(err, world, remittances, migrations) {
+  .await(function(err, world, remittances, aid, migrations) {
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
 
