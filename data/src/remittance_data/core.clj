@@ -74,9 +74,9 @@
    ]
     (if (empty? country-results)
       (do
-        (println (str
-          "WARNING! Could not obtain country info for '" country
-                   "' through Google Maps API. URL: " url))
+;        (println (str
+;          "WARNING! Could not obtain country info for '" country
+;                   "' through Google Maps API. URL: " url))
         nil
       )
 
@@ -182,8 +182,14 @@
    country-key       "Migrant remittance Inflows (US$ million)"
    value-columns     (filter #(or (number? %) (= % "2012e")) (:column-names remittances-dataset))
    has-value?        (fn [row col] (number? (get row col)))
+   keep-row?         (fn [row]
+                         ;(some #(has-value? row %) value-columns)  ;keep only non-empty value rows
+                         (get row "2012e")  ;keep only rows where "2012e" has a value
+                                             ; (which may be empty)
+                     )
+
    prepare-remittances (fn [rows]
-    (for [row rows :when (some #(has-value? row %) value-columns)]
+    (for [row rows :when (keep-row? row)]
        (let [
          name   (get row country-key)
          iso3   (find-country-code name)
