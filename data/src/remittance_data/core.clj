@@ -1,9 +1,11 @@
 (ns remittance-data.core
+  (:use clojure.set)
   (:use [remittance-data.utils])
   (:use [incanter.core])
   (:use [incanter.io])
 ;  (:use [incanter.stats])
   (:use [incanter.excel])
+  (:require [clojure.data.csv :as csv])
   (:require [clojure.java.io  :as io])
   (:require [clojure.data.json :as json])
 ;  (:require [clj-diff.core :as diff])
@@ -175,6 +177,7 @@
 
 
 
+
 (let [
    country-key       "Migrant remittance Inflows (US$ million)"
    value-columns     (filter #(or (number? %) (= % "2012e")) (:column-names remittances-dataset))
@@ -185,7 +188,15 @@
          name   (get row country-key)
          iso3   (find-country-code name)
          iso2   (get-iso2 iso3)
-         info   (get-maps-api-country-info name iso2 "de")
+         info   (or
+           (case iso3
+             "LAO"  (get-maps-api-country-info "Laos" "" "de")
+             nil)
+           (get-maps-api-country-info name iso2 "de")
+           (get-maps-api-country-info "" iso2 "de")
+           (get-maps-api-country-info name "" "de")
+           (println (str "WARNING! No info for country '" name "', '" iso2 "'"))
+         )
        ]
        (merge
          {
@@ -196,7 +207,10 @@
           :lon     (-> info first (get ,,, "geometry") (get ,,, "location") (get ,,, "lng"))
           }
          (into {}  (for [year  value-columns :when (has-value? row year)]
-            [(keyword (.substring (str year) 0 4))  (get row year) ]
+            [
+                (keyword (.substring (str year) 0 4))
+                (round (get row year) :precision 3)
+            ]
          ))
        ))
      )
@@ -211,11 +225,23 @@
       (json/write data wrtr)))
 
 
-(save-to-json remittances "../site/data/remittances.json")
+(defn save-to-csv [data output-file]
+  (let [columns (sort (apply union (map #(-> % keys set) data)))]
+  (with-open [wrtr (io/writer output-file)]
+      (csv/write-csv wrtr
+        (concat
+          [(map #(if (keyword? %) (name %) (str %)) columns)]
+          (for [row data]  (map #(get row %) columns)))))))
 
+
+;(save-to-json remittances "../site/data/remittances.json")
+
+(save-to-csv remittances "../site/data/remittances.csv")
 
 
 (comment
+
+  (filter #(not (second %)) (map (fn [r] [(:name r) (:name_de r)]) remittances))
 
   (prepare-remittances (take 2 (:rows remittances-dataset)))
 

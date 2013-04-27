@@ -14,11 +14,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Leiningen: clj-diff:clj-diff:1.0.0-20110104.084027-9" level="project" />
     <orderEntry type="library" name="Leiningen: incanter:incanter-core:1.5.0-20121231.123323-2" level="project" />
     <orderEntry type="library" name="Leiningen: incanter:incanter-excel:1.5.0-20121231.123534-2" level="project" />
     <orderEntry type="library" name="Leiningen: incanter:incanter-io:1.5.0-20121231.123349-2" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure:clojure:1.4.0" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure:data.csv:0.1.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure:data.json:0.2.2" level="project" />
     <orderEntry type="library" name="Leiningen: com.quantisan:clatrix:0.2.2" level="project" />
     <orderEntry type="library" name="Leiningen: net.sourceforge.parallelcolt:parallelcolt:0.10.0" level="project" />

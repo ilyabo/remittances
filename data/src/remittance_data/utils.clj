@@ -55,3 +55,11 @@
   (let [encode #(URLEncoder/encode (str %) "UTF-8")
         coded (for [[n v] request-params] (str (encode n) "=" (encode v)))]
     (apply str (interpose "&" coded))))
+
+
+(defn round
+   [x & {p :precision}]
+   (if p
+     (let [scale (Math/pow 10 p)]
+       (-> x (* scale) Math/round (/ scale)))
+     (Math/round x)))

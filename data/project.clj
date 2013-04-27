@@ -8,4 +8,4 @@
                  [incanter/incanter-io "1.5.0-SNAPSHOT"]
                  [incanter/incanter-excel "1.5.0-SNAPSHOT"]
                  [org.clojure/data.json "0.2.2"]
-                 [clj-diff "1.0.0-SNAPSHOT"]])
+                 [org.clojure/data.csv "0.1.2"]])
