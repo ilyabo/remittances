@@ -102,13 +102,13 @@ header,
     position:absolute; top:80px; color:white;
 }
 #details .country, h2 {
-    color:#00b48f; font-size:50px;
+    color:#00b48f; font-size:40px;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
     display:inline-block;
     margin-right: 10px;
     margin-bottom:5px;
 }
-#details .year { color:#999; font-size:25pt; display:inline-block; }
+#details .year { color:#999; font-size:25pt; margin-bottom:10px; }
 #details .remittances {  display:inline; font-size:14pt; color:white;}
 #details .remittancesComment { margin-left:5px; display:inline; font-size:8pt; color:#999;}
 #details .remittancesTitle {  font-size:10pt; color:white; margin-top:5px; }
