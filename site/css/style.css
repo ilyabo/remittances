@@ -2,13 +2,13 @@
 
 .land:hover, .land.highlighted {
 	/* fill: #67F7C1; */
-	fill: #9D7C37;
+    stroke:#F2D59A;
+    stroke-width:1;
 
 }
 
 .land.selected {
-    stroke:#F2D59A;
-    stroke-width:1;
+	fill: #9D7C37;
 }
 
 body {

@@ -224,12 +224,6 @@ function selectCountry(code) {
     selectedCountry = null;
   } else {
     selectedCountry = code;
-    chart_svg.selectAll("path.land")
-      .sort(function(a, b) {
-         if (a.id === code) return 1;
-         if (b.id === code) return -1;
-        return 0;
-      });
   }
   updateChoropleth();
   updateDetails();
@@ -242,6 +236,12 @@ background.on("click", function() { selectCountry(null); });
 
 function highlightCountry(code) {
   highlightedCountry = code;
+  chart_svg.selectAll("path.land")
+    .sort(function(a, b) {
+       if (a.id === code) return 1;
+       if (b.id === code) return -1;
+      return 0;
+    });
   updateChoropleth();
   updateDetails();
 }
