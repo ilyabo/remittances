@@ -29,9 +29,38 @@
 (def remittances-dataset (read-xls "data-original/RemittancesData_Inflows_Nov12.xlsx"))
 
 (def aid-dataset (read-dataset
-   "data-original/oecd/REF_TOTAL_ODF_Data_a83fb694-6ff5-4883-91cf-f79a5e557c69.csv"
+        "data-original/oecd/REF_TOTAL_ODF_Data_a83fb694-6ff5-4883-91cf-f79a5e557c69.csv"
    :header true))
 
+
+
+(def migrations-years [ :1960 :1970 :1980 :1990 :2000 ])
+(def migrations-columns
+  (apply vector (concat [ :dummy1 :origin :origin-code :gender :gender-code :dummy2 :dest :dest-code ]
+         migrations-years)))
+
+
+
+(def migrations-rows
+  (filter #(= "Total" (:gender %))
+    (:rows (col-names (read-dataset
+      "data-original/world-bank-migration.csv" :header true) migrations-columns ))))
+
+
+
+
+
+(def migrations-totals-by-origin
+  (let [ grouped-by-origin     (group-by :origin-code migrations-rows)
+         get-years-values      (fn [row] (map #(get row %) migrations-years))
+         nan-is-zero           #(if (number? %) % 0)
+         plus                  (fn [& args] (apply + (map nan-is-zero args)))
+         sum-years-values      (fn [migrations] (apply map plus (map get-years-values migrations)))
+         totals-by-origin      (fmap sum-years-values grouped-by-origin)
+         result-columns        (concat [:origin] migrations-years)
+        ]
+      (map #(zipmap result-columns (flatten %)) totals-by-origin)
+    ))
 
 
 
@@ -298,10 +327,12 @@
 
 
 
-(save-to-json aid "../site/data/oecd-aid.json")
 
 (defn transform []
-  (save-to-csv remittances "../site/data/remittances.csv"))
+  (dorun
+    (save-to-csv remittances "../site/data/remittances.csv")
+    (save-to-csv migrations-totals-by-origin "../site/data/migration-totals.csv")
+    (save-to-json aid "../site/data/oecd-aid.json")))
 
 
 (comment
@@ -324,6 +355,7 @@
            (:rows aid)))
 
 )
+
 
 
 

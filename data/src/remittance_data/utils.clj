@@ -82,3 +82,11 @@
      (let [scale (Math/pow 10 p)]
        (-> x (* scale) Math/round (/ scale)))
      (Math/round x)))
+
+
+
+; see https://github.com/clojure/algo.generic/blob/master/src/main/clojure/clojure/algo/generic/functor.clj
+; and http://stackoverflow.com/questions/1676891/mapping-a-function-on-the-values-of-a-map-in-clojure
+(defn fmap [f m]
+  "Applies function f to each value of the map m."
+  (into (empty m) (for [[k v] m] [k (f v)])))
