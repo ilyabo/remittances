@@ -35,7 +35,7 @@
   },
 
   "en" : {
-    "title" : "Remittance flows",
+    "title" : "Worldwide remittance flows",
     "details.remittances.title" : "sent to home country by migrants",
     "details.remittances.units" : "current US $",
     "details.remittances.total" : "Total",
