@@ -547,7 +547,7 @@ queue()
 
 
 
-    selectYear(2000);
+    selectYear(2010);
 
     updateBubbleSizes(true);
     updateDetails();
