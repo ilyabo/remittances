@@ -1,5 +1,59 @@
-// Init Intro/Tour/Guide Slider
+
+var msg = (function() {
+  if (!String.prototype.format) {
+    String.prototype.format = function() {
+      var args = arguments;
+      return this.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+      });
+    };
+  }
+
+  var messages = null, lang = null;
+  var getter = function(id) {
+    if (messages !== null) {
+      var m = messages[lang][id];
+      if (m !== undefined  &&  arguments.length > 1) {
+        return m.format.apply(m, Array.prototype.slice.call(arguments).splice(1));
+      }
+      return m;
+    }
+  };
+
+  var update = function() {
+    $("[data-msg]").each(function() {
+      $(this).html(getter($(this).data("msg")));
+    });
+  };
+
+  getter.load = function(url) {
+    $.getJSON(url, function(data) {
+      messages = data; update(); });
+    return getter;
+  };
+  getter.lang = function(code) {
+    if (code === undefined) {
+      return lang;
+    } else {
+      lang = code; update();
+      return getter;
+    }
+  };
+
+  return getter;
+})();
+
+
 $(function() {
+
+  var language = window.location.search.substr(1,3);
+  if (language.length == 0) language = "de";
+  msg.lang(language).load("js/messages.json");
+
+
 	var mySwiper = new Swiper('#guide',{
 		//Your options here:
 		mode:'horizontal'
@@ -191,15 +245,15 @@ function updateDetails() {
   var details = d3.select("#details");
 
   details.select(".year")
-    .text("im Jahr " + selectedYear);
+    .text(msg("details.remittances.year", selectedYear));
 
   var totalRemittances = remittanceTotals[remittanceYears.indexOf(selectedYear)];
 
   details.select(".remittances")
-    .text("$" + remittancesMagnitudeFormat(totalRemittances / 1000)+" Milliarden");
+    .text(msg("details.remittances.amount", remittancesMagnitudeFormat(totalRemittances / 1000)));
 
   details.select(".country").text(
-    highlightedCountry !== null ? countryNamesByCode[highlightedCountry] : "Gesamt"
+    highlightedCountry !== null ? countryNamesByCode[highlightedCountry] : msg("details.remittances.total")
   );
 }
 
@@ -351,7 +405,7 @@ queue()
 
     remittances.forEach(function(r) {
       r.centroid = projection([+r.lon, +r.lat]);
-      countryNamesByCode[r.iso3] = r.name_de;
+      countryNamesByCode[r.iso3] = r["name"+(msg.lang() == "en" ? "" : "_"+msg.lang())];
     });
 
 

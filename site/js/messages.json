@@ -1,0 +1,72 @@
+{
+  "de" : {
+    "title" : "Die Geldsendungen von Migranten in ihre Heimat",
+    "details.remittances.title" : "Gesendet von Migranten in ihre Heimat",
+    "details.remittances.units" : "aktuelle US $",
+    "details.remittances.total" : "Gesamt",
+    "details.remittances.amount" : "${0} Milliarden",
+    "details.remittances.year" : "Im Jahr {0}",
+
+    "intro.next" : "Weiter",
+    "intro.skip" : "Einführung überspringen",
+    "intro.start-exploring" : "Jetzt beginnen",
+
+    "intro.1.title" : "Massiver Anstieg",
+    "intro.1.text" : "Seit Beginn der Datenerhebung 1970 ist die Summe der Gelder, die Emigranten in ihre Heimat zurückschicken, stetig angestiegen. Geradezu explodiert sind die sogenannten Remittances aber erst um die Jahrtausendwende. Von 130 Millarden USD im Jahr 2000 sind sie auf 513 Milliarden im Jahr 2011 angestiegen. Hierbei handelt es sich nur um Geld, das überwiesen wurde. Über inoffizielle Kanäle, so schätzen Experten, dürften weitere 250 Milliarden fliessen.",
+
+    "intro.2.title" : "Viermal mehr als Entwicklungshilfe",
+    "intro.2.text" : "Das entspricht dem Vierfachen dessen, was weltweit an Entwicklungshilfe überwiesen wird.",
+
+    "intro.3.title" : "Pro Kopf",
+    "intro.3.text" : "",
+
+    "intro.4.title" : "Indien und China weit vorneweg",
+    "intro.4.text" : "Die beiden mit Abstand bevölkerungsreichsten Länder der Welt, Indien und China, liegen auch auf der Rangliste der meisten Remittances weit vorne. Je über 60 Millarden US-Dollar schickten Inder und Chinesen aus aller Welt in ihre Heimat zurück. Auf den weiteren Plätzen folgen Mexiko, die Philippinen und Nigeria. Direkt danach folgt mit Frankreich das erste europäische Land.",
+
+    "intro.5.title" : "Weniger Geld für Griechenland und die Türkei",
+    "intro.5.text" : "Nur bei neun Ländern ist die Summe der Überweisungen in die Heimat seit 2000 eindeutig rückläufig (bei einigen weiteren ist eine negative Tendenz sichtbar, Zahlen aus den letzten Jahren aber nicht verfügbar). Den stärksten Rückgang haben Griechenland (-46%) und die Türkei (-76%) zu verzeichnen. 2000 wurden noch über 4.5 Milliaden USD von Auslandtürken in die Türkei geschickt, 2011 nur noch eine Milliarde.",
+
+    "intro.6.title" : "Krise? Welche Krise?",
+    "intro.6.text" : "Die globale Finanz- und Wirtschaftskrise ab 2008 hat sich auf das Wachstum der Remittances nur sehr kurzfristig ausgewirkt. 2009 gingen die Zahlungen weltweit um 30 Milliarden zurück, der erste nenneswerte Rückgang seit Beginn der Datenerhebung überhaupt. Besonders betroffen waren Länder in Europa, Mittel- und Südamerika sowie Australien. Bereits im Folgejahr setzte sich das rasante Wachstum, das um die Jahrtausendwende eingesetzt hatte, fort.",
+
+    "intro.7.title" : "Erkunden Sie die Daten selber!",
+    "intro.7.text" : "Klicken Sie die Länder an, die Sie besonders interessieren! Sie sehen dann, wie sich die Remittances seit 1970 absolut und pro Auswanderer entwickelt haben und wo auf der Welt die Auswanderer leben. Je heller die Farbe, desto mehr Auswanderer des angewählten Landes leben dort."
+
+  },
+
+  "en" : {
+    "title" : "Remittance flows",
+    "details.remittances.title" : "",
+    "details.remittances.units" : "current US $",
+    "details.remittances.total" : "Total",
+    "details.remittances.amount" : "${0} Billion",
+    "details.remittances.year" : "In {0}",
+
+    "intro.next" : "Next",
+    "intro.skip" : "Skip",
+    "intro.start-exploring" : "Start now",
+
+    "intro.1.title" : "Incredible Rise",
+    "intro.1.text" : "",
+
+    "intro.2.title" : "",
+    "intro.2.text" : "",
+
+    "intro.3.title" : "",
+    "intro.3.text" : "",
+
+    "intro.4.title" : "",
+    "intro.4.text" : "",
+
+    "intro.5.title" : "",
+    "intro.5.text" : "",
+
+    "intro.6.title" : "",
+    "intro.6.text" : "",
+
+    "intro.7.title" : "",
+    "intro.7.text" : ""
+
+  }
+
+}
