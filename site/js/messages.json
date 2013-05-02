@@ -1,7 +1,7 @@
 {
   "de" : {
-    "title" : "Die Geldsendungen von Migranten in ihre Heimat",
-    "details.remittances.title" : "Gesendet von Migranten in ihre Heimat",
+    "title" : "Geldsendungen von Migranten in ihre Heimat",
+    "details.remittances.title" : "von Migranten in ihre Heimat gesendet",
     "details.remittances.units" : "aktuelle US $",
     "details.remittances.total" : "Gesamt",
     "details.remittances.amount" : "${0} Milliarden",
@@ -11,14 +11,14 @@
     "intro.skip" : "Einführung überspringen",
     "intro.start-exploring" : "Jetzt beginnen",
 
-    "intro.1.title" : "Massiver Anstieg",
+    "intro.1.title" : "Massiver Anstieg seit 2000",
     "intro.1.text" : "Seit Beginn der Datenerhebung 1970 ist die Summe der Gelder, die Emigranten in ihre Heimat zurückschicken, stetig angestiegen. Geradezu explodiert sind die sogenannten Remittances aber erst um die Jahrtausendwende. Von 130 Millarden USD im Jahr 2000 sind sie auf 513 Milliarden im Jahr 2011 angestiegen. Hierbei handelt es sich nur um Geld, das überwiesen wurde. Über inoffizielle Kanäle, so schätzen Experten, dürften weitere 250 Milliarden fliessen.",
 
     "intro.2.title" : "Viermal mehr als Entwicklungshilfe",
     "intro.2.text" : "Geht es um Geldzahlungen an ärmere Länder, so steht oft die staatliche Entwicklungshilfe im Fokus der Diskussion. Tatsache ist aber: Weltweit floss 2011 mindestens viermal mehr Geld über Remittances als über offizielle Entwicklungshilfe, sprich: Viele Länder werden stärker von ihren eigenen Landsleuten als von anderen Ländern unterstützt. In 30% aller Länder, die von der Schweiz Entwicklungshilfe erhalten, floss 2011 mehr Geld über Remittances, im Falle der Philippinen sogar fünfzig Mal mehr.",
 
     "intro.3.title" : "Pro Kopf",
-    "intro.3.text" : "Setzt man die Remittances, die in ein Land fliessen, in Relation zur Anzahl Auswanderer, so erhält man eine Schätzung, wie viel Geld ein Emigrant durchschnittlich zurückschickt. Die tatsächlichen Beträge dürften etwas tiefer sein, da eingebürgerte Emigranten in der Statistik der Auswanderer nicht berücksichtigt sind. ",
+    "intro.3.text" : "Setzt man die Remittances, die in ein Land fliessen, in Relation zur Anzahl Auswanderer, so erhält man eine Schätzung, wie viel Geld ein Emigrant durchschnittlich zurückschickt. Die tatsächlichen Beträge dürften etwas tiefer sein, da eingebürgerte Emigranten in der Statistik der Auswanderer nicht berücksichtigt sind.",
 
     "intro.4.title" : "Indien und China weit vorneweg",
     "intro.4.text" : " Die beiden mit Abstand bevölkerungsreichsten Länder der Welt, Indien und China, liegen auch auf der Rangliste der meisten Remittances weit vorne. Je über 60 Millarden US-Dollar schickten Inder und Chinesen 2011 aus aller Welt in ihre Heimat zurück. Auf den weiteren Plätzen folgen Mexiko, die Philippinen und Nigeria. Direkt danach folgt mit Frankreich das erste europäische Land.",
@@ -36,35 +36,35 @@
 
   "en" : {
     "title" : "Remittance flows",
-    "details.remittances.title" : "",
+    "details.remittances.title" : "sent to home country by migrants",
     "details.remittances.units" : "current US $",
     "details.remittances.total" : "Total",
-    "details.remittances.amount" : "${0} Billion",
+    "details.remittances.amount" : "${0} billion",
     "details.remittances.year" : "In {0}",
 
     "intro.next" : "Next",
-    "intro.skip" : "Skip",
+    "intro.skip" : "Skip intro",
     "intro.start-exploring" : "Start now",
 
-    "intro.1.title" : "Incredible Rise",
+    "intro.1.title" : "Incredible rise since 2000",
     "intro.1.text" : "",
 
-    "intro.2.title" : "",
+    "intro.2.title" : "Four times bigger than foreign aid",
     "intro.2.text" : "",
 
-    "intro.3.title" : "",
+    "intro.3.title" : "per capita",
     "intro.3.text" : "",
 
-    "intro.4.title" : "",
+    "intro.4.title" : "India and China far ahead",
     "intro.4.text" : "",
 
-    "intro.5.title" : "",
+    "intro.5.title" : "Declining flows to Greece and Turkey",
     "intro.5.text" : "",
 
-    "intro.6.title" : "",
+    "intro.6.title" : "Crisis? What crisis?",
     "intro.6.text" : "",
 
-    "intro.7.title" : "",
+    "intro.7.title" : "Explore the data yourself",
     "intro.7.text" : ""
 
   }
