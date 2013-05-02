@@ -34,42 +34,15 @@
 
 
 
-(def migrations-years [ :1960 :1970 :1980 :1990 :2000 ])
-(def migrations-columns
-  (apply vector (concat [ :dummy1 :origin :origin-code :gender :gender-code :dummy2 :dest :dest-code ]
-         migrations-years)))
 
 
-
-(def migrations-rows
-  (filter #(= "Total" (:gender %))
-    (:rows (col-names (read-dataset
-      "data-original/world-bank-migration.csv" :header true) migrations-columns ))))
-
-
-(def migrations-2010-dataset (read-xls "data-original/T1.Estimates_of_Migrant_Stocks_2010.xls"))
-
-
-(def mcol)
-(def mmatrix (take 5 (:rows migrations-2010-dataset)))
-
-(for [row mmatrix   cell row]
-  cell
-  )
-
-
-
-
-(def migrations-totals-by-origin
-  (let [ grouped-by-origin     (group-by :origin-code migrations-rows)
-         get-years-values      (fn [row] (map #(get row %) migrations-years))
-         nan-is-zero           #(if (number? %) % 0)
-         plus                  (fn [& args] (apply + (map nan-is-zero args)))
-         sum-years-values      (fn [migrations] (apply map plus (map get-years-values migrations)))
-         totals-by-origin      (fmap sum-years-values grouped-by-origin)
-         result-columns        (concat [:origin] migrations-years)
-        ]
-      (map #(zipmap result-columns (flatten %)) totals-by-origin)
+(def migrations-2010-dataset
+  (let [data (read-xls "data-original/T1.Estimates_of_Migrant_Stocks_2010.xls")]
+      (col-names data
+          (concat [:origin] (rest   ; replace the unpronounceable name of the first column by :origin
+          (replace { "TOTAL" :total
+                     "Other South" :other-south
+                     "Other North" :other-north } (:column-names data)))))
     ))
 
 
@@ -225,8 +198,9 @@
       "Laos"   "LAO"
       "Venezuela"  "VEN"
       "St. Helena"   "SHN"
-      "Macao"  "MAC"
+      ("Macao, China" "Macao")  "MAC"
       "St. Kitts-Nevis"  "KNA"
+
 
 
 
@@ -310,6 +284,76 @@
 
 
 
+
+
+(let [cols        (:column-names migrations-2010-dataset)
+      rows        (remove #(or (in? ["Other North" "Other South" "TOTAL"] (:origin %))
+                             (nil? (:total %))) (:rows migrations-2010-dataset))
+      origin-col  (first cols)
+      dest-cols   (remove keyword? cols)]
+
+(def migrations-2010-totals-by-origin
+  (into {} (for [row rows]
+    (let [origin  (find-country-code (:origin row))]
+      (let [val   (:total row)]
+        (if (number? val)
+          [ origin val ] ))))))
+
+(def migrations-2010-by-origin-dest
+  (into {} (apply concat (for [row rows]
+    (let [origin  (find-country-code (:origin row))]
+    (filter #(not (nil? %))
+    (for [dest-name dest-cols]
+      (let [val   (get row dest-name)
+            dest  (find-country-code dest-name) ]
+        (if (number? val)
+          [[origin dest] val] ))))))))))
+
+
+(def migrations-years [ :1960 :1970 :1980 :1990 :2000 ])
+(def migrations-columns
+  (apply vector (concat [ :dummy1 :origin :origin-code :gender :gender-code :dummy2 :dest :dest-code ]
+         migrations-years)))
+
+(def migrations-dataset
+  (filter #(= "Total" (:gender %))
+    (:rows (col-names (read-dataset
+      "data-original/world-bank-migration.csv" :header true) migrations-columns ))))
+
+
+(def migrations-totals-by-origin
+  (let [ grouped-by-origin     (group-by :origin-code migrations-dataset)
+         get-years-values      (fn [row] (map #(get row %) migrations-years))
+         nan-is-zero           #(if (number? %) % 0)
+         plus                  (fn [& args] (apply + (map nan-is-zero args)))
+         sum-years-values      (fn [migrations] (apply map plus (map get-years-values migrations)))
+         totals-by-origin      (fmap sum-years-values grouped-by-origin)
+         result-columns        (concat [:origin] migrations-years)
+         result-without-2010   (map #(zipmap result-columns (flatten %)) totals-by-origin)
+        ]
+      (map
+        #(merge % [:2010 (get migrations-2010-totals-by-origin (:origin %))])
+        result-without-2010
+        )
+    ))
+
+
+(def migrations
+  (let [migrations-with-2010
+          (map #(merge % [:2010 (get migrations-2010-by-origin-dest [(:origin-code %) (:dest-code %)])])
+               migrations-dataset)
+        cols              [:origin-code :dest-code :1960 :1970 :1980 :1990 :2000 :2010]
+        round-if-number   #(if (number? %) (round %) %)
+        pick-cols         (fn [row] (into {} (map #(vector % (round-if-number (% row))) cols))) ]
+
+    (map pick-cols migrations-with-2010)))
+
+
+(def migrations-filtered
+  (let [criteria  (fn [row] (some #(if (number? %) (> % 100)) (vals row)))]
+    (filter criteria migrations)))
+
+
 (def aid
   (let [rows (filter
               #(= "Current Prices (USD millions)" (get % (keyword "Amount type")))
@@ -339,13 +383,18 @@
 
 
 (defn transform []
-  (dorun
+  (dorun [
     (save-to-csv remittances "../site/data/remittances.csv")
+    (save-to-csv migrations-filtered "../site/data/migrations.csv"
+      :rename-columns { "origin-code" "Origin"
+                        "dest-code" "Dest" })
     (save-to-csv migrations-totals-by-origin "../site/data/migration-totals.csv")
-    (save-to-json aid "../site/data/oecd-aid.json")))
+    (save-to-json aid "../site/data/oecd-aid.json")]))
 
 
 (comment
+
+  (transform)
 
   (filter #(not (second %)) (map (fn [r] [(:name r) (:name_de r)]) remittances))
 
@@ -363,6 +412,10 @@
   (count (filter #(= "Current Prices (USD millions)"
                     (get % (keyword "Amount type")))
            (:rows aid)))
+
+
+  ; negative values in aid
+  (map first (filter (fn [country] (let [[iso3 value-map] country] (some #(< % 0) (vals value-map)))) aid))
 
 )
 

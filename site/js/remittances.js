@@ -138,7 +138,7 @@ var magnitudeFormat = d3.format(",.0f");
 
 
 
-var migrationYears = [ 1960, 1970, 1980, 1990, 2000];
+var migrationYears = [ 1960, 1970, 1980, 1990, 2000, 2010 ];
 var remittanceYears = [
   1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,
   1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,
@@ -394,7 +394,7 @@ queue()
   .defer(d3.json, "data/world-countries.json")
   .defer(d3.csv, "data/remittances.csv")
   .defer(d3.json, "data/oecd-aid.json")  // NOTE: 1. -ALL-   2. negative values (MEX)
-  .defer(d3.csv, "data/migration-1K-plus.csv")
+  .defer(d3.csv, "data/migrations.csv")
   .await(function(err, world, remittances, aid, migrations) {
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);

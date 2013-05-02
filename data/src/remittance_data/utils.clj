@@ -15,12 +15,16 @@
       (json/write data wrtr)))
 
 
-(defn save-to-csv [data output-file]
-  (let [columns (sort (apply union (map #(-> % keys set) data)))]
+(defn save-to-csv [data output-file & {renamings :rename-columns}]
+  "rename-columns is a map of renamings str->str"
+  (let [columns       (sort (apply union (map #(-> % keys set) data)))
+        column-names  (map #(if (keyword? %) (name %) (str %)) columns)
+        column-names  (if renamings (replace renamings column-names) column-names)
+        ]
   (with-open [wrtr (io/writer output-file)]
       (csv/write-csv wrtr
         (concat
-          [(map #(if (keyword? %) (name %) (str %)) columns)]
+          [column-names]
           (for [row data]  (map #(get row %) columns)))))))
 
 
@@ -78,10 +82,13 @@
 
 (defn round
    [x & {p :precision}]
-   (if p
-     (let [scale (Math/pow 10 p)]
-       (-> x (* scale) Math/round (/ scale)))
-     (Math/round x)))
+   (if (number? x)
+     (if (integer? x)
+       x
+       (if p
+         (let [scale (Math/pow 10 p)]
+           (-> x (* scale) Math/round (/ scale)))
+         (Math/round x)))))
 
 
 
@@ -90,3 +97,7 @@
 (defn fmap [f m]
   "Applies function f to each value of the map m."
   (into (empty m) (for [[k v] m] [k (f v)])))
+
+
+(defn parse-number [str]
+  (if-not (empty? str) (let [n (read-string str)] (if (number? n) n))))
