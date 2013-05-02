@@ -17,3 +17,11 @@ in particular loans to refinance debt.
 
 UN country codes:
 http://unstats.un.org/unsd/methods/m49/m49alpha.htm
+
+
+
+Deflators base 2011.xls:
+die remittance-dollarbeträge lassen sich am besten über den total dac deflator index bereinigen.
+du kannst die tabelle Deflators for Resource Flows from DAC Countries (2011=100) hier:
+http://www.oecd.org/dac/stats/reftables.htm herunterladen. ganz unten findest du das total,
+dort gilt es einfach den 2011-er wert als index=100 zu setzen.

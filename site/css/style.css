@@ -110,7 +110,7 @@ header,
 }
 #details .year { color:#999; font-size:25pt; margin-bottom:10px; }
 #details .remittances {  display:inline; font-size:14pt; color:white;}
-#details .remittancesComment { margin-left:5px; display:inline; font-size:8pt; color:#999;}
+#details .remittancesComment { margin-top:3px; display:block; font-size:8pt; color:#999;}
 #details .remittancesTitle {  font-size:10pt; color:white; margin-top:5px; }
 
 

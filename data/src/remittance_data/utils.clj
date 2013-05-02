@@ -10,6 +10,16 @@
 
 
 
+(defn read-csv [file-name & { header :header }]
+  (with-open [in-file (io/reader file-name)]
+      (let [rows (doall (csv/read-csv in-file))]
+      (if header
+        (let [cols (map keyword (first rows))
+              rows (rest rows)]
+            (map #(zipmap cols %) rows))
+        rows))))
+
+
 (defn save-to-json [data output-file]
   (with-open [wrtr (io/writer output-file)]
       (json/write data wrtr)))

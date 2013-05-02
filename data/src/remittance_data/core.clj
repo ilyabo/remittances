@@ -14,7 +14,6 @@
 
 
 
-
 ; what we need
 ;
 ; 1. remittances unilateral with country codes, german names (and optionally english),
@@ -28,11 +27,12 @@
 
 (def remittances-dataset (read-xls "data-original/RemittancesData_Inflows_Nov12.xlsx"))
 
-(def aid-dataset (read-dataset
-        "data-original/oecd/REF_TOTAL_ODF_Data_a83fb694-6ff5-4883-91cf-f79a5e557c69.csv"
-   :header true))
+(def aid-dataset (read-dataset "data-original/oecd-aid.csv" :header true))
 
 
+(def deflator
+  (fmap #(/ (read-string %) 100.0)
+    (first (read-csv "data-original/oecd-deflator-total.csv" :header true))))
 
 
 
@@ -269,10 +269,12 @@
           :lon     (-> info first (get ,,, "geometry") (get ,,, "location") (get ,,, "lng"))
           }
          (into {}  (for [year  value-columns :when (has-value? row year)]
+            (let [year-keyword   (keyword (.substring (str year) 0 4))
+                  deflator       (get deflator year-keyword)]
             [
-                (keyword (.substring (str year) 0 4))
-                (round (get row year) :precision 3)
-            ]
+                year-keyword
+                (round (/ (get row year) deflator) :precision 3)
+            ])
          ))
        ))
      )
@@ -356,7 +358,9 @@
 
 (def aid
   (let [rows (filter
-              #(= "Current Prices (USD millions)" (get % (keyword "Amount type")))
+              #(=  "Constant Prices (2011 USD millions)"
+                   ;"Current Prices (USD millions)"
+                 (get % (keyword "Amount type")))
               (:rows aid-dataset))
 
         rows (remove #(.contains (:Recipient %) ", regional") rows)

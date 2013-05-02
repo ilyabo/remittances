@@ -2,7 +2,7 @@
   "de" : {
     "title" : "Geldsendungen von Migranten in ihre Heimat",
     "details.remittances.title" : "von Migranten in ihre Heimat gesendet",
-    "details.remittances.units" : "aktuelle US $",
+    "details.remittances.units" : "inflationsbereinigte 2011 US-Dollar",
     "details.remittances.total" : "Gesamt",
     "details.remittances.amount" : "${0} Milliarden",
     "details.remittances.year" : "Im Jahr {0}",
@@ -37,7 +37,7 @@
   "en" : {
     "title" : "Worldwide remittance flows",
     "details.remittances.title" : "sent to home country by migrants",
-    "details.remittances.units" : "current US $",
+    "details.remittances.units" : "inflation adjusted 2011 US $",
     "details.remittances.total" : "Total",
     "details.remittances.amount" : "${0} billion",
     "details.remittances.year" : "In {0}",
