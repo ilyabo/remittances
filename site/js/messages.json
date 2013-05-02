@@ -15,7 +15,7 @@
     "intro.1.text" : "Seit Beginn der Datenerhebung 1970 ist die Summe der Gelder, die Emigranten in ihre Heimat zurückschicken, stetig angestiegen. Geradezu explodiert sind die sogenannten Remittances aber erst um die Jahrtausendwende. Von 130 Millarden USD im Jahr 2000 sind sie auf 513 Milliarden im Jahr 2011 angestiegen. Hierbei handelt es sich nur um Geld, das überwiesen wurde. Über inoffizielle Kanäle, so schätzen Experten, dürften weitere 250 Milliarden fliessen.",
 
     "intro.2.title" : "Viermal mehr als Entwicklungshilfe",
-    "intro.2.text" : "Geht es um Geldzahlungen an ärmere Länder, so steht oft die staatliche Entwicklungshilfe im Fokus der Diskussion. Tatsache ist aber: Weltweit floss 2011 mindestens viermal mehr Geld über Remittances als über offizielle Entwicklungshilfe, sprich: Viele Länder werden stärker von ihren eigenen Landsleuten als von anderen Ländern unterstützt. In 30% aller Länder, die von der Schweiz Entwicklungshilfe erhalten, floss 2011 mehr Geld über Remittances, im Falle der Philippinen sogar fünfzig Mal mehr.",
+    "intro.2.text" : "Geht es um Geldzahlungen an ärmere Länder, steht oft die staatliche Entwicklungshilfe im Fokus der Diskussion. Tatsache ist aber: Weltweit floss 2011 mindestens viermal mehr Geld über Remittances, sprich: Viele Länder werden stärker von ihren eigenen Landsleuten als von anderen Ländern unterstützt. In 30% aller Länder, die von der Schweiz Entwicklungshilfe erhalten, floss 2011 mehr Geld über Remittances, im Falle der Philippinen sogar fünfzig Mal mehr.",
 
     "intro.3.title" : "Pro Kopf",
     "intro.3.text" : "Setzt man die Remittances, die in ein Land fliessen, in Relation zur Anzahl Auswanderer, so erhält man eine Schätzung, wie viel Geld ein Emigrant durchschnittlich zurückschickt. Die tatsächlichen Beträge dürften etwas tiefer sein, da eingebürgerte Emigranten in der Statistik der Auswanderer nicht berücksichtigt sind.",
@@ -23,7 +23,7 @@
     "intro.4.title" : "Indien und China weit vorneweg",
     "intro.4.text" : " Die beiden mit Abstand bevölkerungsreichsten Länder der Welt, Indien und China, liegen auch auf der Rangliste der meisten Remittances weit vorne. Je über 60 Millarden US-Dollar schickten Inder und Chinesen 2011 aus aller Welt in ihre Heimat zurück. Auf den weiteren Plätzen folgen Mexiko, die Philippinen und Nigeria. Direkt danach folgt mit Frankreich das erste europäische Land.",
 
-    "intro.5.title" : "Weniger Geld für Griechenland und die Türkei",
+    "intro.5.title" : "Griechen und Türken schicken weniger",
     "intro.5.text" : " Nur bei neun Ländern ist die Summe der Überweisungen in die Heimat seit 2000 eindeutig rückläufig (bei einigen weiteren ist eine negative Tendenz sichtbar, Zahlen aus den letzten Jahren aber nicht verfügbar). Den stärksten Rückgang haben Griechenland (-46%) und die Türkei (-76%) zu verzeichnen. 2000 wurden noch über 4.5 Milliaden USD von Auslandtürken in die Türkei geschickt, 2011 nur noch eine Milliarde.",
 
     "intro.6.title" : "Krise? Welche Krise?",
@@ -35,7 +35,7 @@
   },
 
   "en" : {
-    "title" : "Remittance flows",
+    "title" : "Worldwide remittance flows",
     "details.remittances.title" : "sent to home country by migrants",
     "details.remittances.units" : "current US $",
     "details.remittances.total" : "Total",
@@ -47,25 +47,25 @@
     "intro.start-exploring" : "Start now",
 
     "intro.1.title" : "Incredible rise since 2000",
-    "intro.1.text" : "",
+    "intro.1.text" : "Remittances, money sent back home by migrants, have increased ever since data collection started in 1970. After 2000, however, the worldwide total downright skyrocketed from 130 billion USD to 513 billion in 2011. In fact, only official transactions are counted towards that total. Experts estimate that at least another 250 billion are sent through inofficial channels such as legmen.",
 
     "intro.2.title" : "Four times bigger than foreign aid",
-    "intro.2.text" : "",
+    "intro.2.text" : "Debates on financial support for developing countries usually center around development aid (ODA). However, in 2011, the worldwide total of remittances was four times the sum that was spent on ODA. A lot of countries receive more financial support from their own emigrants than from the international community.",
 
     "intro.3.title" : "per capita",
-    "intro.3.text" : "",
+    "intro.3.text" : "When we relate remittances inflows of a country to its number of emigrants, we get an estimate of the average amount sent home per emigrant. Actual numbers are likely to be lower, since naturalised emigrants (who might still send money home) are not counted towards the total number of emigrants.",
 
     "intro.4.title" : "India and China far ahead",
-    "intro.4.text" : "",
+    "intro.4.text" : "The two most populated countries in the world, India and China, are also way ahead of the rest when it comes to remittance inflows. Indians and Chinese sent home more than 60 billion USD to their respective home country in 2011. Next in the ranking are Mexico, the Philippines and Nigeria, followed by the first European country, France.",
 
     "intro.5.title" : "Declining flows to Greece and Turkey",
-    "intro.5.text" : "",
+    "intro.5.text" : "Only nine countries have seen a decline of remittances since 2000 (a few others had a negative trend, but no recent data is available). Remittances have fallen the most for Greece (-46%) and for Turkey (-76%). While Turkish emigrants had sent home more than 4.5 billion USD in 2000, in 2011 that number was down to 1 billion.",
 
     "intro.6.title" : "Crisis? What crisis?",
-    "intro.6.text" : "",
+    "intro.6.text" : "The global financial crisis that started in 2008 had only a short-term effect on remittances. In 2009, remittances decreased by 30 billion globally, the first notable decline ever. Mostly countries in Europe, Central and South America and Australia saw recorded a declide. One year later, though, rapid growth was back on track.",
 
     "intro.7.title" : "Explore the data yourself",
-    "intro.7.text" : ""
+    "intro.7.text" : "Now it's time for you to start exploring the data yourself. Click on the countries you're interested in the most and slide along the time axis. For each country, you will see how remittances have developed since 1970 (both in absolute numbers and per emigrant) and where most of those emigrants live. The brighter the colour, the more emigrants from the selected country."
 
   }
 
