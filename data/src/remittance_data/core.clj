@@ -47,6 +47,16 @@
       "data-original/world-bank-migration.csv" :header true) migrations-columns ))))
 
 
+(def migrations-2010-dataset (read-xls "data-original/T1.Estimates_of_Migrant_Stocks_2010.xls"))
+
+
+(def mcol)
+(def mmatrix (take 5 (:rows migrations-2010-dataset)))
+
+(for [row mmatrix   cell row]
+  cell
+  )
+
 
 
 
