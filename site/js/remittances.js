@@ -24,9 +24,11 @@ var msg = (function() {
   };
 
   var update = function() {
-    $("[data-msg]").each(function() {
-      $(this).html(getter($(this).data("msg")));
-    });
+    if (messages !== null) {
+      $("[data-msg]").each(function() {
+        $(this).html(getter($(this).data("msg")));
+      });
+    }
   };
 
   getter.load = function(url) {
@@ -34,6 +36,7 @@ var msg = (function() {
       messages = data; update(); });
     return getter;
   };
+  getter.update = update;
   getter.lang = function(code) {
     if (code === undefined) {
       return lang;
@@ -46,12 +49,14 @@ var msg = (function() {
   return getter;
 })();
 
+var language = window.location.search.substr(1,3);
+if (language.length == 0) language = "de";
+msg.lang(language).load("js/messages.json");
+
 
 $(function() {
 
-  var language = window.location.search.substr(1,3);
-  if (language.length == 0) language = "de";
-  msg.lang(language).load("js/messages.json");
+  msg.update();  // just to be sure the messages are set after the document is ready
 
 
 	var mySwiper = new Swiper('#guide',{
@@ -545,6 +550,7 @@ queue()
     selectYear(2000);
 
     updateBubbleSizes(true);
+    updateDetails();
 
     gcountries.selectAll("circle")
       .transition()
