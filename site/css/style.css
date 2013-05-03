@@ -1,16 +1,3 @@
-.land { stroke-width:1.0; }
-
-.land:hover, .land.highlighted {
-	/* fill: #67F7C1; */
-    stroke:#F2D59A;
-    stroke-width:1;
-
-}
-
-.land.selected {
-	fill: #9D7C37;
-}
-
 body {
     font-family: 'Lato',Helvetica, sans-serif; text-shadow: 1px 1px 1px #111;
     font-weight: 300;
@@ -19,6 +6,13 @@ body {
     background-color: #111;
 }
 
+#loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -12px;
+}
 
 header {
 	z-index: 200;
@@ -52,7 +46,7 @@ a {
 /* INTRO STUFF */
 
 #guide {
-	/*display: none;*/
+    visibility: hidden;
     height: 100%;
 }
 
@@ -147,6 +141,21 @@ header,
 
 
 
+#chart .map .land { stroke-width:1.0; }
+
+#chart .map .land:hover, .land.highlighted {
+	/* fill: #67F7C1; */
+    stroke:#F2D59A;
+    stroke-width:1;
+
+}
+
+#chart .map .land.selected {
+	fill: #9D7C37;
+}
+
+
+
 #timeline {
     position:fixed;
     bottom:0px;
@@ -181,6 +190,7 @@ header,
 #timeline g.tseries .legend .remittances  { fill:#00b48f; }
 #timeline g.tseries .legend .aid  { fill:#2c97df; }
 #timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; }
+
 
 
 /*

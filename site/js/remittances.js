@@ -85,6 +85,8 @@ $(function() {
 
   $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
 
+  d3.select("#guide").style("visibility", "visible");
+
 });
 
 // (function() {
@@ -452,6 +454,8 @@ queue()
   .defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
                                               // because migrations are filtered
   .await(function(err, world, remittances, aid, migrations) {
+
+    $("#loading").hide();
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
     aidTotals = aid.TOTAL;
