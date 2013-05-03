@@ -607,16 +607,16 @@ queue()
         });
 
     selectorHandHalo.append("stop")
-      .attr({ offset: "0%", "stop-color": "#999", "stop-opacity": "0.0" });
+      .attr({ offset: "0%", "stop-color": "#fff", "stop-opacity": "0.0" });
 
     selectorHandHalo.append("stop")
-      .attr({ offset: "30%", "stop-color": "#999", "stop-opacity": "0.05" });
+      .attr({ offset: "35%", "stop-color": "#fff", "stop-opacity": "0.05" });
 
     selectorHandHalo.append("stop")
-      .attr({ offset: "80%",  "stop-color": "#999", "stop-opacity": "0.23" });
+      .attr({ offset: "80%",  "stop-color": "#fff", "stop-opacity": "0.23" });
 
     selectorHandHalo.append("stop")
-      .attr({ offset: "100%",  "stop-color": "#999", "stop-opacity": "0.25" });
+      .attr({ offset: "100%",  "stop-color": "#fff", "stop-opacity": "0.25" });
 
 
     selectorHand.append("circle")
@@ -627,6 +627,7 @@ queue()
 
     selectorHand.append("circle")
       .attr("class", "halo")
+      .attr("opacity", "0.4")
       .attr("fill", "url(#selectorHandHalo)")
       .attr("cx", 0)
       .attr("cy", 10)
