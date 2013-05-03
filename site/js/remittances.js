@@ -573,21 +573,21 @@ queue()
 
 
 
-    var selector_hand = timeline.append("g")
+    var selectorHand = timeline.append("g")
       .attr("class", "selectorHand")
       .attr("transform", "translate("+(yearScale(selectedYear))+",0)");
 
-    selector_hand.append("line")
+    selectorHand.append("line")
       .attr("y1", 7)
       .attr("y2", timelineHeight);
 
-    selector_hand.append("circle")
+    selectorHand.append("circle")
       .attr("cx", 0)
       .attr("cy", 5)
       .attr("r", 4)
 
 
-    var year_axis = d3.svg.axis()
+    var yearAxis = d3.svg.axis()
       .scale(yearScale)
       .orient("top")
       .ticks(timelineWidth / 70)
@@ -616,29 +616,29 @@ queue()
         .attr("opacity", 1)
 
 
-    timeline_axis_group = timeline.append("g")
+    timelineAxisGroup = timeline.append("g")
       .attr("class", "timeline_axis")
       .attr("transform", "translate(0,"+timelineHeight+")");
 
-    timeline_axis_group.call(year_axis);
+    timelineAxisGroup.call(yearAxis);
 
     $("#timeline").mousedown(function(){
       $(this).css("cursor","ew-resize");
       return false;
     });
 
-    var selectYearOnDragOrClick = function(event) {
-      if (d3.event.which > 0) {
-          // any mouse button pressed (will always be true in firefox :( )
+    var selectYearOnMouseMoveOrClick = function(event) {
+//      if (d3.event.which > 0) {
+//          // any mouse button pressed (will always be true in firefox :( )
         var c = d3.mouse(this);
 
         var year = Math.round(yearScale.invert(c[0]));
         selectYear(year, true);
-      }
+//      }
     };
-    timeline_axis_group
-      .on("mousedown", selectYearOnDragOrClick)
-      .on("mousemove", selectYearOnDragOrClick);
+    timelineAxisGroup
+      .on("mousedown", selectYearOnMouseMoveOrClick)
+      .on("mousemove", selectYearOnMouseMoveOrClick);
 
 
 });
