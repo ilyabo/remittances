@@ -215,7 +215,7 @@
 
       ) "-"
 
-      "All recipients, Total" "-ALL-"
+      "All recipients, Total" "TOTAL"
 
       nil
       )
@@ -367,7 +367,7 @@
 
         by-recipient (group-by :Recipient rows)
 
-        accepted-countries  (concat (map :iso3 remittances) ["-ALL-"])
+        accepted-countries  (concat (map :iso3 remittances) ["TOTAL"])
      ]
 
     (into {}
@@ -388,12 +388,25 @@
 
 (defn transform []
   (dorun [
+    (println "Remittances...")
     (save-to-csv remittances "../site/data/remittances.csv")
+    (println "Migrations...")
     (save-to-csv migrations-filtered "../site/data/migrations.csv"
       :rename-columns { "origin-code" "Origin"
                         "dest-code" "Dest" })
+    (println "Migration totals...")
     (save-to-csv migrations-totals-by-origin "../site/data/migration-totals.csv")
-    (save-to-json aid "../site/data/oecd-aid.json")]))
+    (println "OECD aid...")
+    (save-to-json aid "../site/data/oecd-aid.json")
+    (println "Done.")
+    ]))
+
+
+
+(defn -main
+  [& args]
+  (println "Starting data transformations...")
+  (transform))
 
 
 (comment
