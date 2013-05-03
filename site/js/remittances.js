@@ -77,7 +77,7 @@ $(function() {
   var hideGuide = function() {
     $("#guide").fadeOut();
     $("#details").fadeIn();
-    $("#timeline g.tseries .legend").fadeIn();
+//    $("#timeline g.tseries .legend").fadeIn();
   };
 
   $("#guide .skip").click(hideGuide);
@@ -153,10 +153,10 @@ var remittanceYears = [
   1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,
   1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,
   2003,2004,2005,2006,2007,2008,
-  2009,2010,2011,2012
+  2009,2010,2011 //,2012
 ];  // year 2012 is an estimation
 
-var remittanceYearsDomain = [1970, 2012];
+var remittanceYearsDomain = [1970, 2011];
 
 var remittanceTotals = null, aidTotals = null;
 
@@ -243,6 +243,8 @@ function renderTimeSeries(name, data) {
 
     var legend = tseries.append("g")
       .attr("class", "legend")
+      .attr("transform",
+        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.3) +")");
 
     var gg = legend.append("g")
        .attr("class", "remittances")
