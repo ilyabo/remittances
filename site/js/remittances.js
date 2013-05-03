@@ -65,6 +65,7 @@ $(function() {
 	});
 
   $("#guide .next").click(function() { mySwiper.swipeNext(); })
+  $("#guide .prev").click(function() { mySwiper.swipePrev(); })
 
   var hideGuide = function() {
     $("#guide").fadeOut();
@@ -158,7 +159,7 @@ var year_scale = d3.scale.linear()
   .domain(remittanceYearsDomain);
 
 
-var remittance_tseries_scale = d3.scale.linear()
+var tseries_scale = d3.scale.linear()
   .range([timelineHeight, 2]);
 
 var remittance_tseries_line = d3.svg.line()
@@ -217,7 +218,7 @@ function updateBubbleSizes(no_animation) {
 
 
 
-function renderTimeSeries(remittances, remittanceTotals) {
+function renderTimeSeries() {
 
   var timeline = d3.select("#timeline svg");
 
@@ -226,12 +227,11 @@ function renderTimeSeries(remittances, remittanceTotals) {
     g = timeline.append("g")
       .attr("class", "tseries");
 
-    remittance_tseries_scale.domain([0, d3.max(remittanceTotals)]);
 
     remittance_tseries_line
       .x(function(d, i) {
         return year_scale(remittanceYears[i]); })
-      .y(function(d) { return remittance_tseries_scale(d); });
+      .y(function(d) { return tseries_scale(d); });
 
     g.append("path")
       .attr("class", "remittances")
@@ -244,6 +244,11 @@ function renderTimeSeries(remittances, remittanceTotals) {
 
 }
 
+
+function updateTimeSeries() {
+  tseries_scale.domain([0, d3.max(remittanceTotals)]);
+  renderTimeSeries();
+}
 
 
 function updateDetails() {
@@ -393,8 +398,10 @@ function updateChoropleth() {
 queue()
   .defer(d3.json, "data/world-countries.json")
   .defer(d3.csv, "data/remittances.csv")
-  .defer(d3.json, "data/oecd-aid.json")  // NOTE: 1. -ALL-   2. negative values (MEX)
-  .defer(d3.csv, "data/migrations.csv")
+  .defer(d3.json, "data/oecd-aid.json")  // NOTE: there are 1. -ALL- 2. negative values (MEX)
+  .defer(d3.csv, "data/migrations.csv") // filtered by > 100
+  .defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
+                                              // because migrations are filtered
   .await(function(err, world, remittances, aid, migrations) {
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
@@ -557,7 +564,8 @@ queue()
         .duration(300)
         .attr("opacity", 1)
 
-    renderTimeSeries(remittances, remittanceTotals, null);
+    updateTimeSeries();
+
 
     timeline_axis_group = timeline.append("g")
       .attr("class", "timeline_axis")

@@ -26,7 +26,7 @@ header {
 
 h1 {
 	color: white;
-	font-size: 30px;
+	font-size: 25pt;
 	font-weight: bold;
 }
 
@@ -62,7 +62,7 @@ a {
 	color: white;
 }
 
-#guide aside h2 { font-size:30pt; font-weight: bold; }
+#guide aside h2 { font-size:25pt; font-weight: bold; }
 
 #guide  aside p {
     padding-top:0px;
@@ -78,15 +78,31 @@ a {
 	line-height: 31px;
 	padding-left: 45px;
 	margin-left: 20px;
+    cursor:pointer;
 }
 
-#guide .next {
-	background: url('../images/next.png') no-repeat;
+#guide .next, #guide .prev {
 	height: 76px;
-	display: block;
+	display: inline-block;
 	line-height: 76px;
 	padding-left: 90px;
 	margin-bottom: 20px;
+    cursor:pointer;
+}
+
+/*#guide .next,       #guide .prev       { opacity:0.5; }*/
+/*#guide .next:hover, #guide .prev:hover { opacity:1.0; }*/
+
+#guide .next {
+	background: url('../images/next.png') no-repeat;
+}
+
+#guide .prev {
+	background: url('../images/prev.png') no-repeat;
+}
+
+#guide .content {
+    height:25em;
 }
 
 /* MAP STUFF */

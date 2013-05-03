@@ -7,6 +7,7 @@
     "details.remittances.amount" : "${0} Milliarden",
     "details.remittances.year" : "Im Jahr {0}",
 
+    "intro.prev" : "&nbsp;",
     "intro.next" : "Weiter",
     "intro.skip" : "Einführung überspringen",
     "intro.start-exploring" : "Jetzt beginnen",
@@ -42,6 +43,7 @@
     "details.remittances.amount" : "${0} billion",
     "details.remittances.year" : "In {0}",
 
+    "intro.prev" : "&nbsp;",
     "intro.next" : "Next",
     "intro.skip" : "Skip intro",
     "intro.start-exploring" : "Start now",
