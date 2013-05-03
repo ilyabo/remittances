@@ -77,6 +77,7 @@ $(function() {
   var hideGuide = function() {
     $("#guide").fadeOut();
     $("#details").fadeIn();
+    $("#timeline g.tseries .legend").fadeIn();
   };
 
   $("#guide .skip").click(hideGuide);
@@ -157,20 +158,19 @@ var remittanceYears = [
 
 var remittanceYearsDomain = [1970, 2012];
 
-var remittanceTotals = null;
+var remittanceTotals = null, aidTotals = null;
 
 var remittancesMagnitudeFormat = d3.format(",.1f");
 
 
-var year_scale = d3.scale.linear()
+var yearScale = d3.scale.linear()
   .domain(remittanceYearsDomain);
 
 
-var tseries_scale = d3.scale.linear()
+var tseriesScale = d3.scale.linear()
   .range([timelineHeight, 2]);
 
-var remittance_tseries_line = d3.svg.line()
-  .interpolate("monotone");
+var tseriesLine = d3.svg.line().interpolate("monotone");
 
 
 var selectedYear = null;
@@ -183,14 +183,14 @@ var countryFeaturesByCode = {}, countryNamesByCode = {};
 var countCommas = 0;
 
 function calcRemittanceTotalsByYear(remittances) {
-  var totals = [], i, yi, countryData, y, val, max = NaN;
+  var totals = {}, i, yi, countryData, y, val, max = NaN;
 
   for (i=0; i<remittances.length; i++) {
     countryData = remittances[i];
 
     for (yi=0; yi<remittanceYears.length; yi++) {
       y = remittanceYears[yi];
-      if (totals[yi] === undefined) totals[yi] = 0;
+      if (totals[y] === undefined) totals[y] = 0;
 
       if (countryData[y].indexOf(",") >= 0) {
         countCommas++;
@@ -198,10 +198,13 @@ function calcRemittanceTotalsByYear(remittances) {
 
       val = +countryData[y];
       if (!isNaN(val)) {
-        totals[yi] += val;
+        totals[y] += val;
       }
     }
   }
+
+
+//  return remittanceYears.map(function(d,i) { return { year:d, value: totals[i] } });
 
   return totals;
 }
@@ -225,36 +228,73 @@ function updateBubbleSizes(no_animation) {
 
 
 
-function renderTimeSeries() {
+
+function renderTimeSeries(name, data) {
 
   var timeline = d3.select("#timeline svg");
 
-  var g = timeline.select("g.tseries");
-  if (g.empty()) {
-    g = timeline.append("g")
+  var years = d3.keys(data).sort();
+
+  var tseries = timeline.select("g.tseries");
+
+  if (tseries.empty()) {
+    tseries = timeline.append("g")
       .attr("class", "tseries");
 
+    var legend = tseries.append("g")
+      .attr("class", "legend")
 
-    remittance_tseries_line
-      .x(function(d, i) {
-        return year_scale(remittanceYears[i]); })
-      .y(function(d) { return tseries_scale(d); });
+    var gg = legend.append("g")
+       .attr("class", "remittances")
+       .attr("transform", "translate(0, 10)");
 
-    g.append("path")
-      .attr("class", "remittances")
+    gg.append("circle")
+      .attr("cx", 5)
+      .attr("r", 5);
+    gg.append("text")
+      .attr("x", 15)
+      .text(msg("details.tseries.legend.remittances"));
+
+    gg = legend.append("g")
+       .attr("class", "aid")
+       .attr("transform", "translate(0, 30)");
+
+    gg.append("circle")
+      .attr("cx", 5)
+      .attr("r", 5);
+    gg.append("text")
+      .attr("x", 15)
+      .text(msg("details.tseries.legend.aid"));
+
+  }
+
+  var path = tseries.select("path." + name);
+  if (path.empty) {
+    tseriesLine
+      .x(function(d) { return yearScale(d); })
+      .y(function(d) { return tseriesScale(data[d]); });
+
+    tseries.append("path")
+      .attr("class", name)
       .attr("fill", "none");
   }
 
-  g.datum(remittanceTotals)
-    .select("path.remittances")
-      .attr("d", remittance_tseries_line);
+  tseries.datum(years)
+    .select("path." + name)
+      .attr("d", tseriesLine);
 
 }
 
 
 function updateTimeSeries() {
-  tseries_scale.domain([0, d3.max(remittanceTotals)]);
-  renderTimeSeries();
+  tseriesScale.domain([0,
+    Math.max(
+      d3.max(d3.values(remittanceTotals)),
+      d3.max(d3.values(aidTotals))
+    )
+  ]);
+  renderTimeSeries("aid", aidTotals);
+  renderTimeSeries("remittances", remittanceTotals);
 }
 
 
@@ -264,7 +304,7 @@ function updateDetails() {
   details.select(".year")
     .text(msg("details.remittances.year", selectedYear));
 
-  var totalRemittances = remittanceTotals[remittanceYears.indexOf(selectedYear)];
+  var totalRemittances = remittanceTotals[selectedYear];
 
   details.select(".remittances")
     .text(msg("details.remittances.amount", remittancesMagnitudeFormat(totalRemittances / 1000)));
@@ -277,14 +317,14 @@ function updateDetails() {
 
 
 function selectYear(year, no_animation) {
-  var r = d3.extent(year_scale.domain());
+  var r = d3.extent(yearScale.domain());
   if (year < r[0]) year = r[0];
   if (year > r[1]) year = r[1];
   selectedYear = year;
   timeline.select("g.selectorHand")
 //        .transition()
 //        .duration(4)
-      .attr("transform", "translate("+(year_scale(year))+",0)");
+      .attr("transform", "translate("+(yearScale(year))+",0)");
   updateBubbleSizes(no_animation);
   updateChoropleth();
   updateDetails();
@@ -412,6 +452,7 @@ queue()
   .await(function(err, world, remittances, aid, migrations) {
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
+    aidTotals = aid.TOTAL;
 
 
 
@@ -526,13 +567,13 @@ queue()
 
 
 
-    year_scale.range ([timeline_pad_horiz, timelineWidth + timeline_pad_horiz]);
+    yearScale.range ([timeline_pad_horiz, timelineWidth + timeline_pad_horiz]);
 
 
 
     var selector_hand = timeline.append("g")
       .attr("class", "selectorHand")
-      .attr("transform", "translate("+(year_scale(selectedYear))+",0)");
+      .attr("transform", "translate("+(yearScale(selectedYear))+",0)");
 
     selector_hand.append("line")
       .attr("y1", 7)
@@ -545,7 +586,7 @@ queue()
 
 
     var year_axis = d3.svg.axis()
-      .scale(year_scale)
+      .scale(yearScale)
       .orient("top")
       .ticks(timelineWidth / 70)
       .tickSize(10, 5, timelineHeight)
@@ -565,13 +606,12 @@ queue()
 
     updateBubbleSizes(true);
     updateDetails();
+    updateTimeSeries();
 
     gcountries.selectAll("circle")
       .transition()
         .duration(300)
         .attr("opacity", 1)
-
-    updateTimeSeries();
 
 
     timeline_axis_group = timeline.append("g")
@@ -590,7 +630,7 @@ queue()
           // any mouse button pressed (will always be true in firefox :( )
         var c = d3.mouse(this);
 
-        var year = Math.round(year_scale.invert(c[0]));
+        var year = Math.round(yearScale.invert(c[0]));
         selectYear(year, true);
       }
     };

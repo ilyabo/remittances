@@ -7,6 +7,9 @@
     "details.remittances.amount" : "${0} Milliarden",
     "details.remittances.year" : "Im Jahr {0}",
 
+    "details.tseries.legend.remittances" : "Geld Rücksendungen",
+    "details.tseries.legend.aid" : "Entwicklungshilfe",
+
     "intro.prev" : "&nbsp;",
     "intro.next" : "Weiter",
     "intro.skip" : "Einführung überspringen",
@@ -42,6 +45,9 @@
     "details.remittances.total" : "Total",
     "details.remittances.amount" : "${0} billion",
     "details.remittances.year" : "In {0}",
+
+    "details.tseries.legend.remittances" : "Remittances",
+    "details.tseries.legend.aid" : "Development aid",
 
     "intro.prev" : "&nbsp;",
     "intro.next" : "Next",
