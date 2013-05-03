@@ -139,10 +139,10 @@ var timelineWidth = Math.min(width - 200, 800),
 
 
 
-var timeline = d3.select("#timeline")
-  .append("svg")
-    .attr("width", timelineWidth + timelineMargins.left + timelineMargins.right)
-  .append("g")
+var timelineSvg = d3.select("#timeline").append("svg")
+    .attr("width", timelineWidth + timelineMargins.left + timelineMargins.right);
+
+var timeline = timelineSvg .append("g")
     .attr("transform","translate("+timelineMargins.left+","+timelineMargins.top+")");
 
 $("#timeline").css("height", (timelineHeight + timelineMargins.top + timelineMargins.bottom)+ "px");
@@ -595,14 +595,42 @@ queue()
       .attr("transform", "translate("+(yearScale(selectedYear))+",0)");
 
     selectorHand.append("line")
-      .attr("y1", 7)
+      .attr("y1", 12)
       .attr("y2", timelineHeight);
 
-    selectorHand.append("circle")
-      .attr("cx", 0)
-      .attr("cy", 5)
-      .attr("r", 4)
 
+    var selectorHandHalo = timelineSvg.append("defs")
+      .append("radialGradient")
+        .attr({
+          id : "selectorHandHalo",
+          cx : "50%", cy : "50%", r : "50%", fx : "50%", fy : "50%"
+        });
+
+    selectorHandHalo.append("stop")
+      .attr({ offset: "0%", "stop-color": "#999", "stop-opacity": "0.0" });
+
+    selectorHandHalo.append("stop")
+      .attr({ offset: "30%", "stop-color": "#999", "stop-opacity": "0.05" });
+
+    selectorHandHalo.append("stop")
+      .attr({ offset: "80%",  "stop-color": "#999", "stop-opacity": "0.23" });
+
+    selectorHandHalo.append("stop")
+      .attr({ offset: "100%",  "stop-color": "#999", "stop-opacity": "0.25" });
+
+
+    selectorHand.append("circle")
+      .attr("class", "center")
+      .attr("cx", 0)
+      .attr("cy", 10)
+      .attr("r", 4);
+
+    selectorHand.append("circle")
+      .attr("class", "halo")
+      .attr("fill", "url(#selectorHandHalo)")
+      .attr("cx", 0)
+      .attr("cy", 10)
+      .attr("r", 30);
 
 
 
