@@ -67,6 +67,13 @@ $(function() {
   $("#guide .next").click(function() { mySwiper.swipeNext(); })
   $("#guide .prev").click(function() { mySwiper.swipePrev(); })
 
+  $("body").keydown(function(e) {
+    if ($("#guide").is(":visible")) {
+      if (e.keyCode == 37) { mySwiper.swipePrev(); }
+      else if (e.keyCode == 39) { mySwiper.swipeNext(); }
+    }
+  });
+
   var hideGuide = function() {
     $("#guide").fadeOut();
     $("#details").fadeIn();
