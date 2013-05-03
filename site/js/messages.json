@@ -4,7 +4,11 @@
     "details.remittances.title" : "von Migranten in ihre Heimat gesendet",
     "details.remittances.units" : "inflationsbereinigte 2011 US-Dollar",
     "details.remittances.total" : "Gesamt",
-    "details.remittances.amount" : "${0} Milliarden",
+    "details.remittances.amount" : "${0}",
+    "details.remittances.amount.billions" : "${0} Milliarden",
+    "details.remittances.amount.millions" : "${0} Millionen",
+    "details.remittances.amount.thousands" : "${0} Tausend",
+
     "details.remittances.year" : "Im Jahr {0}",
 
     "details.tseries.legend.remittances" : "Geld Rücksendungen",
@@ -43,7 +47,10 @@
     "details.remittances.title" : "sent to home country by migrants",
     "details.remittances.units" : "inflation adjusted 2011 US $",
     "details.remittances.total" : "Total",
-    "details.remittances.amount" : "${0} billion",
+    "details.remittances.amount" : "${0}",
+    "details.remittances.amount.billions" : "${0} billion",
+    "details.remittances.amount.millions" : "${0} million",
+    "details.remittances.amount.thousands" : "${0} thousand",
     "details.remittances.year" : "In {0}",
 
     "details.tseries.legend.remittances" : "Remittances",

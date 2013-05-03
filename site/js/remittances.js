@@ -110,11 +110,6 @@ var background = chart_svg.append("rect")
   .attr("height", height)
   .attr("fill", "#111");
 
-var timelineWidth = Math.min(width - 50, 800),
-    timelineHeight = Math.min(300, height * 0.2);
-
-$("#timeline").css("height", timelineHeight + "px");
-
 var migrationsColor =
   // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/54FDE2
   //  d3.scale.quantize()
@@ -137,15 +132,35 @@ var rscale = d3.scale.sqrt()
   .range([0, 25]);
 
 
-var timeline_pad_horiz = 20;
+var timelineMargins = {left:40,top:20,bottom:0,right:100};
+
+var timelineWidth = Math.min(width - 200, 800),
+    timelineHeight = Math.min(260, height * 0.2);
+
+
+
 var timeline = d3.select("#timeline")
-    //.style("height", timelineHeight)
   .append("svg")
-    .attr("width", timelineWidth + timeline_pad_horiz * 2);
+    .attr("width", timelineWidth + timelineMargins.left + timelineMargins.right)
+  .append("g")
+    .attr("transform","translate("+timelineMargins.left+","+timelineMargins.top+")");
+
+$("#timeline").css("height", (timelineHeight + timelineMargins.top + timelineMargins.bottom)+ "px");
+
 
 var arc = d3.geo.greatArc().precision(3) //3);
 var migrationsByOriginCode = {};
-var magnitudeFormat = d3.format(",.0f");
+
+var moneyFormat = (function() {
+  var fmt = d3.format(",.0f");
+  return function(v) {
+    v *= 1e6;
+    if (v >= 1e9) return msg("details.remittances.amount.billions",  fmt(v / 1e9));
+    if (v >= 1e6) return msg("details.remittances.amount.millions",  fmt(v / 1e6));
+    if (v >= 1e3) return msg("details.remittances.amount.thousands", fmt(v / 1e3));
+    return msg("details.remittances.amount", fmt(v));
+  };
+})();
 
 
 
@@ -162,7 +177,7 @@ var remittanceYearsDomain = [1970, 2011];
 
 var remittanceTotals = null, aidTotals = null;
 
-var remittancesMagnitudeFormat = d3.format(",.1f");
+
 
 
 var yearScale = d3.scale.linear()
@@ -233,8 +248,6 @@ function updateBubbleSizes(no_animation) {
 
 function renderTimeSeries(name, data) {
 
-  var timeline = d3.select("#timeline svg");
-
   var years = d3.keys(data).sort();
 
   var tseries = timeline.select("g.tseries");
@@ -295,7 +308,7 @@ function updateTimeSeries() {
     Math.max(
       d3.max(d3.values(remittanceTotals)),
       d3.max(d3.values(aidTotals))
-    )
+    ) * 1.15
   ]);
   renderTimeSeries("aid", aidTotals);
   renderTimeSeries("remittances", remittanceTotals);
@@ -311,7 +324,7 @@ function updateDetails() {
   var totalRemittances = remittanceTotals[selectedYear];
 
   details.select(".remittances")
-    .text(msg("details.remittances.amount", remittancesMagnitudeFormat(totalRemittances / 1000)));
+    .text(moneyFormat(totalRemittances));
 
   details.select(".country").text(
     highlightedCountry !== null ? countryNamesByCode[highlightedCountry] : msg("details.remittances.total")
@@ -393,7 +406,7 @@ function updateChoropleth() {
 //
 //              d3.select("#description")
 //                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
-//                    " US$"  + remittancesMagnitudeFormat(d[selectedYear]) + "M<br>nach Hause"
+//                    " US$"  + moneyFormat(d[selectedYear]) + "M<br>nach Hause"
 //                      );
 
       var migrantsFromCountry = migrationsByOriginCode[code];
@@ -566,14 +579,14 @@ queue()
         .on("mouseout", function(d) { highlightCountry(null); })
 
 //        .append("svg:title")
-//          .text(function(d) { return d.Name + ": " + remittancesMagnitudeFormat(d[selectedYear]) + "M current US$"});
+//          .text(function(d) { return d.Name + ": " + moneyFormat(d[selectedYear]) + "M current US$"});
 
 
 
 
 
 
-    yearScale.range ([timeline_pad_horiz, timelineWidth + timeline_pad_horiz]);
+    yearScale.range([0, timelineWidth]);
 
 
 
@@ -589,16 +602,6 @@ queue()
       .attr("cx", 0)
       .attr("cy", 5)
       .attr("r", 4)
-
-
-    var yearAxis = d3.svg.axis()
-      .scale(yearScale)
-      .orient("top")
-      .ticks(timelineWidth / 70)
-      .tickSize(10, 5, timelineHeight)
-      .tickSubdivide(4)
-      .tickPadding(15)
-      .tickFormat(function(d) { return d; });
 
 
 
@@ -620,11 +623,41 @@ queue()
         .attr("opacity", 1)
 
 
-    timelineAxisGroup = timeline.append("g")
-      .attr("class", "timeline_axis")
+
+
+
+    var yearAxis = d3.svg.axis()
+      .scale(yearScale)
+      .orient("top")
+      .ticks(timelineWidth / 70)
+      .tickSize(10, 5, timelineHeight)
+      .tickSubdivide(4)
+      .tickPadding(15)
+      .tickFormat(function(d) { return d; });
+
+
+    var magnitudeAxis = d3.svg.axis()
+      .scale(tseriesScale)
+      .orient("right")
+      .ticks(timelineHeight / 40)
+      .tickSize(5, 0, 0)
+      .tickPadding(3)
+      .tickFormat(moneyFormat);
+
+
+
+    var timelineAxisGroup = timeline.append("g")
+      .attr("class", "timeAxis")
       .attr("transform", "translate(0,"+timelineHeight+")");
 
+    var timelineRightAxisGroup = timeline.append("g")
+      .attr("class", "magnitudeAxis")
+      .attr("transform", "translate("+(timelineWidth+5)+",0)");
+
     timelineAxisGroup.call(yearAxis);
+    timelineRightAxisGroup.call(magnitudeAxis);
+
+
 
     $("#timeline").mousedown(function(){
       $(this).css("cursor","ew-resize");
