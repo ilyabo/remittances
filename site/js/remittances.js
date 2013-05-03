@@ -375,6 +375,11 @@ function highlightCountry(code) {
 }
 
 
+
+/* t must be in the range [0,1] */
+function interpolate(t, a, b) { return a + (b - a) * t; }
+
+
 function updateChoropleth() {
 
   var gcountries = chart_svg.select("g.countries");
@@ -433,12 +438,23 @@ function updateChoropleth() {
         .attr("fill", function(d) {
 
           var m = migrantsByDest[d.id];
-          var val = (m !== undefined ? val = +m[selectedYear] : NaN);
+          if (m !== undefined) {
+            var val = +m[selectedYear];
 
-          if (!isNaN(val))
-            return migrationsColor(val);
-          else
-            return landColor;   //.darker(0.5);
+            if (isNaN(val)) {
+
+              if ((selectedYear % 10) !== 0) {
+                // assuming we have data only for each 10th year (which ends with 0)
+                var l = Math.floor(selectedYear/10)*10, r = Math.ceil(selectedYear/10)*10;
+                var t = (selectedYear - l) / (r - l);
+                val = interpolate(t, +m[l], +m[r]);
+              }
+            }
+
+            if (!isNaN(val)) return migrationsColor(val);
+          }
+
+          return landColor;   //.darker(0.5);
          })
 
       gcountries.selectAll("circle.country")
@@ -449,8 +465,6 @@ function updateChoropleth() {
 
   }
 }
-
-
 
 
 
