@@ -146,7 +146,7 @@ var timeline = timelineSvg.append("g")
     .attr("class", "chart")
     .attr("transform","translate("+timelineMargins.left+","+timelineMargins.top+")");
 
-$("#timeline").css("height", (timelineHeight + timelineMargins.top + timelineMargins.bottom)+ "px");
+$("#timeline svg").attr("height", (timelineHeight + timelineMargins.top + timelineMargins.bottom));
 
 
 var arc = d3.geo.greatArc().precision(3) //3);
@@ -158,7 +158,7 @@ var moneyFormat = (function() {
     v *= 1e6;
     if (v >= 1e9) return msg("details.remittances.amount.billions",  fmt(v / 1e9));
     if (v >= 1e6) return msg("details.remittances.amount.millions",  fmt(v / 1e6));
-    if (v >= 1e3) return msg("details.remittances.amount.thousands", fmt(v / 1e3));
+//    if (v >= 1e3) return msg("details.remittances.amount.thousands", fmt(v / 1e3));
     return msg("details.remittances.amount", fmt(v));
   };
 })();
