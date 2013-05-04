@@ -6,5 +6,5 @@
       <stop offset="100%" style="stop-color:#111;stop-opacity:0" />
     </linearGradient>
   </defs>
-  <rect width="600px" height="1px" fill="url(#transpg)"/>
+  <rect width="600" height="1" fill="url(#transpg)"/>
 </svg>
