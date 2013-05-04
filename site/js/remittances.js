@@ -1,95 +1,8 @@
 
-var msg = (function() {
-  if (!String.prototype.format) {
-    String.prototype.format = function() {
-      var args = arguments;
-      return this.replace(/{(\d+)}/g, function(match, number) {
-        return typeof args[number] != 'undefined'
-          ? args[number]
-          : match
-        ;
-      });
-    };
-  }
-
-  var messages = null, lang = null;
-  var getter = function(id) {
-    if (messages !== null) {
-      var m = messages[lang][id];
-      if (m !== undefined  &&  arguments.length > 1) {
-        return m.format.apply(m, Array.prototype.slice.call(arguments).splice(1));
-      }
-      return m;
-    }
-  };
-
-  var update = function() {
-    if (messages !== null) {
-      $("[data-msg]").each(function() {
-        $(this).html(getter($(this).data("msg")));
-      });
-    }
-  };
-
-  getter.load = function(url) {
-    $.getJSON(url, function(data) {
-      messages = data; update(); });
-    return getter;
-  };
-  getter.update = update;
-  getter.lang = function(code) {
-    if (code === undefined) {
-      return lang;
-    } else {
-      lang = code; update();
-      return getter;
-    }
-  };
-
-  return getter;
-})();
-
-var language = window.location.search.substr(1,3);
-if (language.length == 0) language = "de";
-msg.lang(language).load("js/messages.json");
-
-
-$(function() {
-
-  msg.update();  // just to be sure the messages are set after the document is ready
-
-
-	var mySwiper = new Swiper('#guide',{
-		//Your options here:
-		mode:'horizontal'
-	});
-
-  $("#guide .next").click(function() { mySwiper.swipeNext(); })
-  $("#guide .prev").click(function() { mySwiper.swipePrev(); })
-
-  $("body").keydown(function(e) {
-    if ($("#guide").is(":visible")) {
-      if (e.keyCode == 37) { mySwiper.swipePrev(); }
-      else if (e.keyCode == 39) { mySwiper.swipeNext(); }
-    }
-  });
-
-  var hideGuide = function() {
-    $("#guide").fadeOut();
-    $("#details").fadeIn();
-//    $("#timeline g.tseries .legend").fadeIn();
-  };
-
-  $("#guide .skip").click(hideGuide);
-  $("#guide .last").click(hideGuide);
-
-  $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
-
-  d3.select("#guide").style("visibility", "visible");
-
-});
 
 // (function() {
+
+
 
 
 
@@ -198,7 +111,146 @@ var selectedCountry = null, highlightedCountry = null;
 var countryFeaturesByCode = {}, countryNamesByCode = {};
 
 
-var countCommas = 0;
+
+
+var yearAnimation = (function() {
+  var anim = {};
+  var timerId = null;
+  var interval = 300;
+
+  var next = function() {
+    var year = selectedYear + 1;
+    if (year > remittanceYears[remittanceYears.length - 1])
+      year = remittanceYears[0];
+    selectYear(year, interval);
+  };
+  anim.start = function() {
+    if (timerId === null) {
+      timerId = setInterval(next, interval);
+    }
+  };
+
+  anim.stop = function() {
+    if (timerId !== null) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+  }
+
+  anim.interval = function(msec) {
+    if (arguments.length === 0) return interval;
+    interval = msec;
+    return anim;
+  }
+
+  return anim;
+})();
+
+
+
+var msg = (function() {
+  if (!String.prototype.format) {
+    String.prototype.format = function() {
+      var args = arguments;
+      return this.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+      });
+    };
+  }
+
+  var messages = null, lang = null;
+  var getter = function(id) {
+    if (messages !== null) {
+      var m = messages[lang][id];
+      if (m !== undefined  &&  arguments.length > 1) {
+        return m.format.apply(m, Array.prototype.slice.call(arguments).splice(1));
+      }
+      return m;
+    }
+  };
+
+  var update = function() {
+    if (messages !== null) {
+      $("[data-msg]").each(function() {
+        $(this).html(getter($(this).data("msg")));
+      });
+    }
+  };
+
+  getter.load = function(url) {
+    $.getJSON(url, function(data) {
+      messages = data; update(); });
+    return getter;
+  };
+  getter.update = update;
+  getter.lang = function(code) {
+    if (code === undefined) {
+      return lang;
+    } else {
+      lang = code; update();
+      return getter;
+    }
+  };
+
+  return getter;
+})();
+
+
+
+var language = window.location.search.substr(1,3);
+if (language.length == 0) language = "de";
+msg.lang(language).load("js/messages.json");
+
+
+$(function() {
+
+  msg.update();  // just to be sure the messages are set after the document is ready
+
+  yearAnimation.start();
+
+	var mySwiper = new Swiper('#guide',{
+		//Your options here:
+		mode:'horizontal'
+	});
+
+  var next = function() {
+    mySwiper.swipeNext();
+    console.log(mySwiper.activeSlide);
+  };
+  var prev = function() {
+    mySwiper.swipePrev();
+    console.log(mySwiper.activeSlide);
+  };
+
+  $("#guide .next").click(function() { next(); })
+  $("#guide .prev").click(function() { prev(); })
+
+  $("body").keydown(function(e) {
+    if ($("#guide").is(":visible")) {
+      if (e.keyCode == 37) prev();
+      else if (e.keyCode == 39) next();
+    }
+  });
+
+  var hideGuide = function() {
+    $("#guide").fadeOut();
+    $("#details").fadeIn();
+//    $("#timeline g.tseries .legend").fadeIn();
+    yearAnimation.stop();
+  };
+
+  $("#guide .skip").click(hideGuide);
+  $("#guide .last").click(hideGuide);
+
+  $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
+
+  d3.select("#guide").style("visibility", "visible");
+
+});
+
 
 function calcRemittanceTotalsByYear(remittances) {
   var totals = {}, i, yi, countryData, y, val, max = NaN;
@@ -209,10 +261,6 @@ function calcRemittanceTotalsByYear(remittances) {
     for (yi=0; yi<remittanceYears.length; yi++) {
       y = remittanceYears[yi];
       if (totals[y] === undefined) totals[y] = 0;
-
-      if (countryData[y].indexOf(",") >= 0) {
-        countCommas++;
-      }
 
       val = +countryData[y];
       if (!isNaN(val)) {
@@ -227,19 +275,6 @@ function calcRemittanceTotalsByYear(remittances) {
   return totals;
 }
 
-
-function updateBubbleSizes(no_animation) {
-
-  var c = d3.selectAll("#chart g.countries circle")
-  if (!no_animation)
-     c = c.transition()
-      .duration(100)
-
-  c.attr("r", function(d) {
-    var r = rscale(d[selectedYear]);
-    return (isNaN(r) ? 0 : r);
-  })
-}
 
 
 
@@ -334,16 +369,29 @@ function updateDetails() {
 
 
 
-function selectYear(year, no_animation) {
+function selectYear(year, duration) {
   var r = d3.extent(yearScale.domain());
   if (year < r[0]) year = r[0];
   if (year > r[1]) year = r[1];
   selectedYear = year;
-  timeline.select("g.selectorHand")
-//        .transition()
-//        .duration(4)
-      .attr("transform", "translate("+(yearScale(year))+",0)");
-  updateBubbleSizes(no_animation);
+
+  var t = d3.select("#visualisation")
+//    .transition()
+//      .ease("linear")
+//      .duration(duration);
+
+  t.select("#timeline g.selectorHand")
+    .transition()
+      .ease("linear")
+      .duration(duration)
+    .attr("transform", "translate("+(yearScale(year))+",0)");
+
+  t.selectAll("#chart g.countries circle")
+      .attr("r", function(d) {
+        var r = rscale(d[selectedYear]);
+        return (isNaN(r) ? 0 : r);
+      });
+
   updateChoropleth();
   updateDetails();
 }
@@ -590,6 +638,7 @@ queue()
         }))
       .enter().append("svg:circle")
         .attr("class", "country")
+        .attr("r", "0")
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 0)
@@ -615,8 +664,8 @@ queue()
 
     selectYear(2010);
 
-    updateBubbleSizes(true);
-    updateDetails();
+//    updateBubbleSizes(0);
+//    updateDetails();
     updateTimeSeries();
 
     gcountries.selectAll("circle")
@@ -748,6 +797,9 @@ queue()
     }
 
 });
+
+
+
 
 
 // })();

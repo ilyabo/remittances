@@ -127,7 +127,7 @@ header,
 
 
 #chart { text-align: center;  }
-#chart circle { stroke:white; fill: white; fill-opacity: 0; stroke-width:2px; }
+#chart circle { stroke:white; fill: white; fill-opacity: 0.2; stroke-width:2; }
 /* #chart circle:hover { fill-opacity: 1; } */
 
 
