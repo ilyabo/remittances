@@ -99,7 +99,7 @@ var width = $(document).width(),
     height = $(document).height() - 40;
 
 
-$("#guide aside").css("padding-top", (height * 0.2) + "px");
+$("#guide aside").css("padding-top", (height * 0.15) + "px");
 
 var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
@@ -142,7 +142,8 @@ var timelineWidth = Math.min(width - 200, 800),
 var timelineSvg = d3.select("#timeline").append("svg")
     .attr("width", timelineWidth + timelineMargins.left + timelineMargins.right);
 
-var timeline = timelineSvg .append("g")
+var timeline = timelineSvg.append("g")
+    .attr("class", "chart")
     .attr("transform","translate("+timelineMargins.left+","+timelineMargins.top+")");
 
 $("#timeline").css("height", (timelineHeight + timelineMargins.top + timelineMargins.bottom)+ "px");
@@ -467,6 +468,10 @@ function updateChoropleth() {
 }
 
 
+//function getNumOfMigrants(year, ) {
+//
+//}
+
 
 
 
@@ -478,7 +483,7 @@ queue()
   .defer(d3.csv, "data/remittances.csv")
   .defer(d3.json, "data/oecd-aid.json")  // NOTE: there are 1. -ALL- 2. negative values (MEX)
   .defer(d3.csv, "data/migrations.csv") // filtered by > 100
-  .defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
+  //.defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
                                               // because migrations are filtered
   .await(function(err, world, remittances, aid, migrations) {
 
@@ -531,15 +536,15 @@ queue()
 
     var arcs = chart_svg.append("g").attr("class", "arcs");
 
-    migrations.forEach(function(d) {
-      d.max = d3.max(migrationYears.map(function(y) { return +d[y]; } ));
-    });
-
-    // migrations = migrations.filter(function(d) { return d.max >= 250000});
-
-    var maxMagnitude = d3.max(migrations, function(d) { return d.max; });
-
-    migrationsColor.domain([1, maxMagnitude]);
+//    migrations.forEach(function(d) {
+//      d.max = d3.max(migrationYears.map(function(y) { return +d[y]; } ));
+//    });
+//
+//    // migrations = migrations.filter(function(d) { return d.max >= 250000});
+//
+//    var maxMagnitude = d3.max(migrations, function(d) { return d.max; });
+//
+//    migrationsColor.domain([1, maxMagnitude]);
 
 
     var flows = migrations.forEach(function(flow) {
@@ -604,52 +609,6 @@ queue()
 
 
 
-    var selectorHand = timeline.append("g")
-      .attr("class", "selectorHand")
-      .attr("transform", "translate("+(yearScale(selectedYear))+",0)");
-
-    selectorHand.append("line")
-      .attr("y1", 12)
-      .attr("y2", timelineHeight);
-
-
-    var selectorHandHalo = timelineSvg.append("defs")
-      .append("radialGradient")
-        .attr({
-          id : "selectorHandHalo",
-          cx : "50%", cy : "50%", r : "50%", fx : "50%", fy : "50%"
-        });
-
-    selectorHandHalo.append("stop")
-      .attr({ offset: "0%", "stop-color": "#fff", "stop-opacity": "0.0" });
-
-    selectorHandHalo.append("stop")
-      .attr({ offset: "35%", "stop-color": "#fff", "stop-opacity": "0.05" });
-
-    selectorHandHalo.append("stop")
-      .attr({ offset: "80%",  "stop-color": "#fff", "stop-opacity": "0.23" });
-
-    selectorHandHalo.append("stop")
-      .attr({ offset: "100%",  "stop-color": "#fff", "stop-opacity": "0.25" });
-
-
-    selectorHand.append("circle")
-      .attr("class", "center")
-      .attr("cx", 0)
-      .attr("cy", 10)
-      .attr("r", 4);
-
-    selectorHand.append("circle")
-      .attr("class", "halo")
-      .attr("opacity", "0.4")
-      .attr("fill", "url(#selectorHandHalo)")
-      .attr("cx", 0)
-      .attr("cy", 10)
-      .attr("r", 30);
-
-
-
-
 
 
 
@@ -664,8 +623,6 @@ queue()
       .transition()
         .duration(300)
         .attr("opacity", 1)
-
-
 
 
 
@@ -702,26 +659,97 @@ queue()
 
 
 
-    $("#timeline").mousedown(function(){
-      $(this).css("cursor","ew-resize");
-      return false;
-    });
 
-    var selectYearOnMouseMoveOrClick = function(event) {
-//      if (d3.event.which > 0) {
-//          // any mouse button pressed (will always be true in firefox :( )
+
+    var selectorHand = timeline.append("g")
+      .attr("class", "selectorHand")
+      .attr("transform", "translate("+(yearScale(selectedYear))+",0)");
+
+    selectorHand.append("line")
+      .attr("y1", 12)
+      .attr("y2", timelineHeight);
+
+
+    var haloGradient = timelineSvg.append("defs")
+      .append("radialGradient")
+        .attr({
+          id : "selectorHandHalo",
+          cx : "50%", cy : "50%", r : "50%", fx : "50%", fy : "50%"
+        });
+
+    haloGradient.append("stop")
+      .attr({ offset: "0%", "stop-color": "#fff", "stop-opacity": "0.0" });
+
+    haloGradient.append("stop")
+      .attr({ offset: "35%", "stop-color": "#fff", "stop-opacity": "0.05" });
+
+    haloGradient.append("stop")
+      .attr({ offset: "80%",  "stop-color": "#fff", "stop-opacity": "0.23" });
+
+    haloGradient.append("stop")
+      .attr({ offset: "100%",  "stop-color": "#fff", "stop-opacity": "0.25" });
+
+
+    selectorHand.append("circle")
+      .attr("class", "center")
+      .attr("cx", 0)
+      .attr("cy", 10)
+      .attr("r", 4);
+
+    selectorHand.append("circle")
+      .attr("class", "halo")
+      .attr("opacity", "0.4")
+      .attr("fill", "url(#selectorHandHalo)")
+      .attr("cx", 0)
+      .attr("cy", 10)
+      .attr("r", 30);
+
+
+
+
+
+
+
+
+    var selectorHandDrag = d3.behavior.drag()
+        .origin(Object)
+        .on("drag", dragSelectorHand);
+
+    d3.select("#timeline .selectorHand")
+      .on("mouseover", function(){
+         d3.select(this).select("circle.halo")
+           .transition()
+             .duration(250)
+             .attr("opacity", "1.0");
+      })
+      .on("mouseout", function(){
+         d3.select(this).select("circle.halo")
+           .transition()
+             .duration(250)
+             .attr("opacity", "0.5");
+      })
+      .call(selectorHandDrag);
+
+
+    d3.select("#timeline g.chart")
+      .on("click", function() {
         var c = d3.mouse(this);
+        selectYearForPosition(c[0]);
+      })
 
-        var year = Math.round(yearScale.invert(c[0]));
-        selectYear(year, true);
-//      }
-    };
-    timelineAxisGroup
-      .on("mousedown", selectYearOnMouseMoveOrClick)
-      .on("mousemove", selectYearOnMouseMoveOrClick);
+    function dragSelectorHand(d) {
+      var c = d3.mouse(this.parentNode);   // get mouse position relative to its container
+      selectYearForPosition(c[0]);
+    }
 
+    function selectYearForPosition(cx) {
+      var year = Math.round(yearScale.invert(cx));
+      selectYear(year, true);
+    }
 
 });
 
 
 // })();
+
+
