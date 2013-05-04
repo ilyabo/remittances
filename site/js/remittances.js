@@ -48,7 +48,7 @@ var rscale = d3.scale.sqrt()
 var timelineMargins = {left:40,top:20,bottom:0,right:100};
 
 var timelineWidth = Math.min(width - 200, 800),
-    timelineHeight = Math.min(260, height * 0.2);
+    timelineHeight = Math.min(260, height * 0.3);
 
 
 
@@ -295,7 +295,7 @@ function renderTimeSeries(name, data) {
     var legend = tseries.append("g")
       .attr("class", "legend")
       .attr("transform",
-        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.3) +")");
+        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.4) +")");
 
     var gg = legend.append("g")
        .attr("class", "remittances")
@@ -376,23 +376,22 @@ function selectYear(year, duration) {
   selectedYear = year;
 
   var t = d3.select("#visualisation")
-//    .transition()
-//      .ease("linear")
-//      .duration(duration);
-
-  t.select("#timeline g.selectorHand")
     .transition()
       .ease("linear")
-      .duration(duration)
+      .duration(duration);
+
+  t.select("#timeline g.selectorHand")
     .attr("transform", "translate("+(yearScale(year))+",0)");
 
   t.selectAll("#chart g.countries circle")
+    .attr("opacity", 1)
       .attr("r", function(d) {
         var r = rscale(d[selectedYear]);
         return (isNaN(r) ? 0 : r);
       });
 
-  updateChoropleth();
+  if (selectedCountry !== null)
+    updateChoropleth();
   updateDetails();
 }
 
