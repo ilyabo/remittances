@@ -232,7 +232,8 @@ header,
 	backface-visibility:hidden;
 	/* Fix of Webkit flickering */
 		
-	background: url(../images/aside_bg_darker.png) repeat-y left;
+	/*background: url(../images/aside_bg_darker.png) repeat-y left;*/
+	background: url(../images/aside_bg.svg) repeat-y left;
     background-size:600px 1px;
 	z-index:1;
 }
