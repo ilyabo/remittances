@@ -185,7 +185,9 @@ header,
 
 
 
-#timeline path.domain { fill:#999; fill-opacity:0.0; /*cursor:ew-resize;*/ }
+#timeline { pointer-events: none;  }
+#timeline g.selectorHand, #timeline g.tseries  { pointer-events: visiblePainted ;  }
+#timeline path.domain { fill:none; /*cursor:ew-resize;*/ }
 #timeline g.selectorHand { cursor:ew-resize; }
 #timeline g.selectorHand line { stroke:#999; stroke-width:2;   }
 #timeline g.selectorHand circle.center {  fill:#fff; stroke:#666; stroke-width:2; }
