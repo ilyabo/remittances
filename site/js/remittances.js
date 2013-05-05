@@ -118,24 +118,33 @@ var yearAnimation = (function() {
   var timerId = null;
   var interval = 300;
 
-  var next = function() {
-    var year = selectedYear + 1;
-    if (year > remittanceYears[remittanceYears.length - 1])
-      year = remittanceYears[0];
-    selectYear(year, interval);
-  };
-  anim.start = function() {
-    if (timerId === null) {
-      timerId = setInterval(next, interval);
-    }
-  };
-
-  anim.stop = function() {
+  var stop = function() {
     if (timerId !== null) {
       clearInterval(timerId);
       timerId = null;
     }
-  }
+  };
+  var start = function() {
+    if (timerId === null) {
+      timerId = setInterval(next, interval);
+    }
+  };
+  var rewind = function() {
+    var year = remittanceYears[0];
+    selectYear(year, interval);
+    setTimeout(start, interval * 2);
+  };
+  var next = function() {
+    var year = selectedYear + 1;
+    if (year > remittanceYears[remittanceYears.length - 1]) {
+      stop();
+      setTimeout(rewind, interval * 4);
+    } else {
+      selectYear(year, interval);
+    }
+  };
+  anim.start = start;
+  anim.stop = stop;
 
   anim.interval = function(msec) {
     if (arguments.length === 0) return interval;
