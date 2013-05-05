@@ -65,16 +65,23 @@ $("#timeline svg").attr("height", (timelineHeight + timelineMargins.top + timeli
 var arc = d3.geo.greatArc().precision(3) //3);
 var migrationsByOriginCode = {};
 
-var moneyFormat = (function() {
+var numberFormat = (function() {
   var fmt = d3.format(",.0f");
   return function(v) {
-    v *= 1e6;
-    if (v >= 1e9) return msg("details.remittances.amount.billions",  fmt(v / 1e9));
-    if (v >= 1e6) return msg("details.remittances.amount.millions",  fmt(v / 1e6));
-//    if (v >= 1e3) return msg("details.remittances.amount.thousands", fmt(v / 1e3));
-    return msg("details.remittances.amount", fmt(v));
+    if (v == null  ||  isNaN(v)) return "...";
+    if (v >= 1e9) return msg("amount.billions",  fmt(v / 1e9));
+    if (v >= 1e6) return msg("amount.millions",  fmt(v / 1e6));
+//    if (v >= 1e3) return msg("amount.thousands", fmt(v / 1e3));
+    return fmt(v);
   };
 })();
+
+var moneyFormat = function(v) {
+  if (v == null  ||  isNaN(v)) return "...";
+  return msg("money", numberFormat(v));
+};
+
+var moneyMillionsFormat = function(v) { return moneyFormat(1e6 * v); };
 
 
 
@@ -90,7 +97,8 @@ var remittanceYears = [
 var remittanceYearsDomain = [1970, 2011];
 
 var remittanceTotals, remittanceTotalsByMigrantsOrigin,
-    migrationTotals, migrationTotalsByOrigin, aidTotals;
+    migrationTotals, migrationTotalsByOrigin,
+    aidTotals, aidTotalsByOrigin;
 
 
 
@@ -397,21 +405,32 @@ function updateDetails() {
   details.select(".year")
     .text(msg("details.remittances.year", selectedYear));
 
-  var totalRemittances, countryName;
+  var countryName, totalRemittances, numMigrants;
 
   if (highlightedCountry != null  ||  selectedCountry != null) {
-    var country = (selectedCountry || highlightedCountry);
+    var iso3 = (selectedCountry || highlightedCountry);
+    countryName = countryNamesByCode[iso3];
 
-    countryName = countryNamesByCode[country];
-    var countryData = remittanceTotalsByMigrantsOrigin[country];
-    totalRemittances = (countryData != null ? +countryData[selectedYear] : NaN);
+    var countryRem = remittanceTotalsByMigrantsOrigin[iso3];
+    totalRemittances = (countryRem != null ? +countryRem[selectedYear] : "...");
+
+    numMigrants = getTotalMigrants(selectedYear, iso3);
+
+    var countryAid = aidTotalsByOrigin[iso3];
+    totalAid = (countryAid != null ? countryAid[selectedYear] : "...");
+
   } else {
-    totalRemittances = remittanceTotals[selectedYear];
     countryName = msg("details.remittances.total");
+
+    numMigrants = getTotalMigrants(selectedYear);
+    totalRemittances = remittanceTotals[selectedYear];
+    totalAid = aidTotals[selectedYear];
   }
 
-
-  details.select(".remittances").text(moneyFormat(totalRemittances));
+  details.select(".migrants .value").text(numberFormat(numMigrants));
+  details.select(".remittances .value").text(moneyMillionsFormat(totalRemittances));
+  details.select(".aid .value").text(moneyMillionsFormat(totalAid));
+  details.select(".remittancesPerCapita .value").text(moneyMillionsFormat(totalRemittances / numMigrants));
   details.select(".country").text(countryName);
 }
 
@@ -507,7 +526,7 @@ function updateChoropleth() {
 //
 //              d3.select("#description")
 //                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
-//                    " US$"  + moneyFormat(d[selectedYear]) + "M<br>nach Hause"
+//                    " US$"  + moneyMillionsFormat(d[selectedYear]) + "M<br>nach Hause"
 //                      );
 
       var migrantsFromCountry = migrationsByOriginCode[code];
@@ -558,6 +577,7 @@ function updateChoropleth() {
 
 
 function interpolateNumOfMigrants(values, year) {
+  if (values == null) return NaN;
   var val = +values[year];
 
   if (isNaN(val)) {
@@ -605,8 +625,9 @@ queue()
 //    yearAnimation.start();
 
     remittanceTotalsByMigrantsOrigin = nestBy("iso3", remittances);
-
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
+
+    aidTotalsByOrigin = aid;
     aidTotals = aid.TOTAL;
 
     migrationTotalsByOrigin = nestBy("origin", migrationTotals);
@@ -615,7 +636,7 @@ queue()
 
 
     var leftMargin = Math.max(120, width*0.2);
-    fitProjection(projection, world, [[leftMargin, 60], [width - 100, height-120]], true);
+    fitProjection(projection, world, [[leftMargin, 60], [width - 150, height-120]], true);
 
 
 
@@ -718,7 +739,7 @@ queue()
         .on("mouseout", function(d) { highlightCountry(null); })
 
 //        .append("svg:title")
-//          .text(function(d) { return d.Name + ": " + moneyFormat(d[selectedYear]) + "M current US$"});
+//          .text(function(d) { return d.Name + ": " + moneyMillionsFormat(d[selectedYear]) + "M current US$"});
 
 
 
@@ -762,7 +783,7 @@ queue()
       .ticks(timelineHeight / 40)
       .tickSize(5, 0, 0)
       .tickPadding(3)
-      .tickFormat(moneyFormat);
+      .tickFormat(moneyMillionsFormat);
 
 
 

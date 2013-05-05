@@ -139,7 +139,7 @@ header {
     color:white;
     text-align: right;
 }
-#details .sub {  }
+#details .grp { margin-top:20px; }
 #details .country {
     color:#00b48f; font-size:25pt;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
@@ -147,9 +147,12 @@ header {
 }
 #details .country { z-index:11 !important; background-color: #111; height: 1em; }
 #details .year { color:#999; font-size:25pt; margin-bottom:10px; }
-#details .remittances {  display:inline; font-size:14pt; color:white;}
-#details .remittancesComment { margin-top:3px; display:block; font-size:8pt; color:#999;}
-#details .remittancesTitle {  font-size:10pt; color:white; margin-top:0px; margin-bottom:5px; }
+#details .value {   font-size:14pt; color:white;}
+#details .migrants .value {   font-size:12pt; }
+#details .remittancesPerCapita .value {   font-size:20pt; }
+#details .remittancesPerCapita .title {   font-size:14pt; }
+#details .title {  font-size:10pt; color:white; margin-top:0px; margin-bottom:5px; }
+#details .comment { margin-top:3px; display:block; font-size:8pt; color:#999;}
 
 
 
