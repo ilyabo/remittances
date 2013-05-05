@@ -42,7 +42,7 @@ var path = d3.geo.path()
     .projection(projection);
 
 var rscale = d3.scale.sqrt()
-  .range([0, 25]);
+  .range([0, height/45]);
 
 
 var timelineMargins = {left:40,top:20,bottom:0,right:100};
