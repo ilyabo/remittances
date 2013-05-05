@@ -60,7 +60,7 @@ a {
 
 #guide  aside p {
     padding-top:0px;
-    padding-bottom:20px;
+    padding-bottom:5px;
 	line-height: 24px;
 	width: 80%;
 }
@@ -84,6 +84,21 @@ a {
     cursor:pointer;
 }
 
+#guide .anim {
+    background: url('../images/play.svg') no-repeat;
+	padding-left: 29px;
+	line-height: 24px;
+    text-align: right;
+    vertical-align: middle;
+	display: inline-block;
+    cursor:pointer;
+    margin-left:200px;
+}
+
+#guide .anim.playing {
+    background: url('../images/stop.svg') no-repeat;
+}
+
 /*#guide .next,       #guide .prev       { opacity:0.5; }*/
 /*#guide .next:hover, #guide .prev:hover { opacity:1.0; }*/
 
@@ -96,7 +111,7 @@ a {
 }
 
 #guide .content {
-    height:25em;
+    height:27em;
 }
 
 /* MAP STUFF */

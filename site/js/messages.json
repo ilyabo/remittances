@@ -1,7 +1,7 @@
 {
   "de" : {
-    "title" : "Geldsendungen von Migranten in ihre Heimat",
-    "details.remittances.title" : "von Migranten in ihre Heimat gesendet",
+    "title" : "Geldsendungen von Emigranten in ihre Heimat",
+    "details.remittances.title" : "von Emigranten in ihre Heimat gesendet",
     "details.remittances.units" : "inflationsbereinigte 2011 US-Dollar",
     "details.remittances.total" : "Gesamt",
     "details.remittances.amount" : "${0}",
@@ -18,6 +18,8 @@
     "intro.next" : "Weiter",
     "intro.skip" : "Einführung überspringen",
     "intro.start-exploring" : "Jetzt beginnen",
+    "intro.animation.play" : "Abspielen",
+    "intro.animation.stop" : "Stoppen",
 
     "intro.1.title" : "Massiver Anstieg seit 2000",
     "intro.1.text" : "Seit Beginn der Datenerhebung 1970 ist die Summe der Gelder, die Migranten in ihre Heimat zurückschicken, stetig angestiegen. Geradezu explodiert sind die sogenannten Remittances aber erst um die Jahrtausendwende. Von 130 Millarden USD im Jahr 2000 sind sie auf 513 Milliarden im Jahr 2011 angestiegen. Hierbei handelt es sich nur um Geld, das überwiesen wurde. Über inoffizielle Kanäle, so schätzen Experten, dürften weitere 250 Milliarden fliessen.",
@@ -60,6 +62,8 @@
     "intro.next" : "Next",
     "intro.skip" : "Skip intro",
     "intro.start-exploring" : "Start now",
+    "intro.animation.play" : "Play",
+    "intro.animation.stop" : "Stop",
 
     "intro.1.title" : "Incredible rise since 2000",
     "intro.1.text" : "Remittances, money sent back home by migrants, have increased ever since data collection started in 1970. After 2000, however, the worldwide total downright skyrocketed from 130 billion USD to 513 billion in 2011. In fact, only official transactions are counted towards that total. Experts estimate that at least another 250 billion are sent through inofficial channels such as legmen.",

@@ -12,7 +12,7 @@ var width = $(document).width(),
     height = $(document).height() - 40;
 
 
-$("#guide aside").css("padding-top", (height * 0.15) + "px");
+$("#guide aside").css("padding-top", (height * 0.1) + "px");
 
 var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
@@ -135,8 +135,7 @@ var yearAnimation = (function() {
     if (playing) start();
   }
   var rewind = function() {
-    var year = remittanceYears[0];
-    selectYear(year, interval);
+    selectYear(remittanceYears[0], interval);
     setTimeout(restart, interval * 2);
   };
   var next = function() {
@@ -148,13 +147,23 @@ var yearAnimation = (function() {
       selectYear(year, interval);
     }
   };
+//  anim.replay = function() {
+//    selectYear(remittanceYears[0], interval);
+//    setTimeout(start, interval * 2);
+//    return anim;
+//  }
+  anim.isPlaying = function() {
+    return playing;
+  };
   anim.start = function() {
     playing = true;
     start();
+    return anim;
   }
   anim.stop = function() {
     playing = false;
     stop();
+    return anim;
   }
 
   anim.interval = function(msec) {
@@ -242,8 +251,22 @@ $(function() {
     mySwiper.swipePrev();
   };
 
-  $("#guide .next").click(function() { next(); })
-  $("#guide .prev").click(function() { prev(); })
+  $("#guide .next").click(next);
+  $("#guide .prev").click(prev);
+  $("#guide .anim").click(function() {
+    if ($(this).hasClass("playing")) {
+      yearAnimation.stop();
+      $("#guide .anim")
+        .removeClass("playing")
+        .text(msg("intro.animation.play"));
+    } else {
+      yearAnimation.start();
+      $("#guide .anim")
+        .addClass("playing")
+        .text(msg("intro.animation.stop"));
+    }
+
+  });
 
   $("body").keydown(function(e) {
     if ($("#guide").is(":visible")) {
@@ -579,7 +602,7 @@ queue()
   .await(function(err, world, remittances, aid, migrations, migrationTotals) {
 
     $("#loading").hide();
-    yearAnimation.start();
+//    yearAnimation.start();
 
     remittanceTotalsByMigrantsOrigin = nestBy("iso3", remittances);
 
@@ -710,17 +733,17 @@ queue()
 
 
 
-    selectYear(2010);
 
 //    updateBubbleSizes(0);
 //    updateDetails();
     updateTimeSeries();
 
-    gcountries.selectAll("circle")
-      .transition()
-        .duration(300)
-        .attr("opacity", 1)
+//    gcountries.selectAll("circle")
+//      .transition()
+//        .duration(300)
+//        .attr("opacity", 1)
 
+    selectYear(2010);
 
 
     var yearAxis = d3.svg.axis()
