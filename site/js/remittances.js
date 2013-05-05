@@ -89,7 +89,8 @@ var remittanceYears = [
 
 var remittanceYearsDomain = [1970, 2011];
 
-var remittanceTotals = null, aidTotals = null;
+var remittanceTotals, remittanceTotalsByMigrantsOrigin,
+    migrationTotals, migrationTotalsByOrigin, aidTotals;
 
 
 
@@ -373,14 +374,22 @@ function updateDetails() {
   details.select(".year")
     .text(msg("details.remittances.year", selectedYear));
 
-  var totalRemittances = remittanceTotals[selectedYear];
+  var totalRemittances, countryName;
 
-  details.select(".remittances")
-    .text(moneyFormat(totalRemittances));
+  if (highlightedCountry != null  ||  selectedCountry != null) {
+    var country = (selectedCountry || highlightedCountry);
 
-  details.select(".country").text(
-    highlightedCountry !== null ? countryNamesByCode[highlightedCountry] : msg("details.remittances.total")
-  );
+    countryName = countryNamesByCode[country];
+    var countryData = remittanceTotalsByMigrantsOrigin[country];
+    totalRemittances = (countryData != null ? +countryData[selectedYear] : NaN);
+  } else {
+    totalRemittances = remittanceTotals[selectedYear];
+    countryName = msg("details.remittances.total");
+  }
+
+
+  details.select(".remittances").text(moneyFormat(totalRemittances));
+  details.select(".country").text(countryName);
 }
 
 
@@ -400,7 +409,7 @@ function selectYear(year, duration) {
     .attr("transform", "translate("+(yearScale(year))+",0)");
 
   t.selectAll("#chart g.countries circle")
-    .attr("opacity", 1)
+//    .attr("opacity", 1)
       .attr("r", function(d) {
         var r = rscale(d[selectedYear]);
         return (isNaN(r) ? 0 : r);
@@ -459,8 +468,8 @@ function updateChoropleth() {
             .attr("stroke", "none");
 
     gcountries.selectAll("circle.country")
-       .transition()
-        .duration(50)
+//       .transition()
+//        .duration(50)
           .attr("opacity", 1);
 
   } else {
@@ -503,18 +512,7 @@ function updateChoropleth() {
 
           var m = migrantsByDest[d.id];
           if (m !== undefined) {
-            var val = +m[selectedYear];
-
-            if (isNaN(val)) {
-
-              if ((selectedYear % 10) !== 0) {
-                // assuming we have data only for each 10th year (which ends with 0)
-                var l = Math.floor(selectedYear/10)*10, r = Math.ceil(selectedYear/10)*10;
-                var t = (selectedYear - l) / (r - l);
-                val = interpolate(t, +m[l], +m[r]);
-              }
-            }
-
+            var val = interpolateNumOfMigrants(m, selectedYear);
             if (!isNaN(val)) return migrationsColor(val);
           }
 
@@ -522,23 +520,53 @@ function updateChoropleth() {
          })
 
       gcountries.selectAll("circle.country")
-         .transition()
-          .duration(50)
-            .attr("opacity", 0);
-      }
+//         .transition()
+//          .duration(50)
+            .attr("opacity", function(d) {
+              if (d.iso3 === selectedCountry  ||  d.iso3 == highlightedCountry)
+                return 1;
+              else
+                return 0;
+            });
+    }
 
   }
 }
 
 
-//function getNumOfMigrants(year, ) {
-//
-//}
+function interpolateNumOfMigrants(values, year) {
+  var val = +values[year];
+
+  if (isNaN(val)) {
+    if ((year % 10) !== 0) {
+      // assuming we have data only for each 10th year (which ends with 0)
+      var l = Math.floor(year/10)*10, r = Math.ceil(year/10)*10;
+      var t = (year - l) / (r - l);
+      val = interpolate(t, +values[l], +values[r]);
+    }
+  }
+
+  return val;
+}
 
 
+function getTotalMigrants(year, origin) {
+  if (origin != undefined)
+    return interpolateNumOfMigrants(migrationTotalsByOrigin[origin], year);
+
+  return d3.keys(migrationTotalsByOrigin).reduce(function(sum, origin) {
+    return interpolateNumOfMigrants(migrationTotalsByOrigin[origin], year) + sum;
+  }, 0);
+
+}
 
 
-
+function nestBy(uniqueProperty, data) {
+  return d3.nest()
+      .key(function(d) { return d[uniqueProperty]; })
+      .rollup(function(arr) { return arr[0]; })
+      .map(data);
+}
 
 
 queue()
@@ -546,15 +574,19 @@ queue()
   .defer(d3.csv, "data/remittances.csv")
   .defer(d3.json, "data/oecd-aid.json")  // NOTE: there are 1. -ALL- 2. negative values (MEX)
   .defer(d3.csv, "data/migrations.csv") // filtered by > 100
-  //.defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
+  .defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
                                               // because migrations are filtered
-  .await(function(err, world, remittances, aid, migrations) {
+  .await(function(err, world, remittances, aid, migrations, migrationTotals) {
 
     $("#loading").hide();
     yearAnimation.start();
 
+    remittanceTotalsByMigrantsOrigin = nestBy("iso3", remittances);
+
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
     aidTotals = aid.TOTAL;
+
+    migrationTotalsByOrigin = nestBy("origin", migrationTotals);
 
 
 
@@ -657,7 +689,7 @@ queue()
         .attr("r", "0")
         .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
         .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
-        .attr("opacity", 0)
+        .attr("opacity", 1.0)
         .on("click", function(d) { selectCountry(d.iso3); })
         .on("mouseover", function(d) { highlightCountry(d.iso3); })
         .on("mouseout", function(d) { highlightCountry(null); })
@@ -725,7 +757,7 @@ queue()
 
 
 
-    var selectorHandHeight = Math.max(timelineHeight * 0.6, 60);
+    var selectorHandHeight = Math.max(timelineHeight - 30, 60);
 
     var selectorHand = timeline.append("g")
       .attr("class", "selectorHand")

@@ -119,7 +119,6 @@ header {
     color:#00b48f; font-size:25pt;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
     display:inline-block;
-    margin-right: 10px;
     margin-bottom:5px;
 }
 #details .country { z-index:11 !important; background-color: #111; height: 1em; }
@@ -132,7 +131,7 @@ header {
 
 
 #chart { text-align: center;  }
-#chart circle { stroke:white; fill: white; fill-opacity: 0.2; stroke-width:2; }
+#chart circle { stroke:white; fill: white; fill-opacity: 0.4; stroke-width:1.5; }
 /* #chart circle:hover { fill-opacity: 1; } */
 
 
