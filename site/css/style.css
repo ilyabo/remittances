@@ -20,8 +20,8 @@ header {
 
 h1 {
 	color: white;
-	font-size: 25pt;
-	font-weight: bold;
+	font-size: 23pt;
+	font-weight: normal;
 }
 
 h2 {
@@ -100,17 +100,20 @@ a {
 }
 
 /* MAP STUFF */
-header,
-#details {
+header {
 	position: absolute;
 	left:30px;
     pointer-events:none;
 }
 
 #details {
-    display: none;
-    position:absolute; top:80px; color:white;
+	position: absolute;
+	right:30px; top:25px;
+    pointer-events:none;
+    color:white;
+    text-align: right;
 }
+#details .sub {  }
 #details .country, h2 {
     color:#00b48f; font-size:40px;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */

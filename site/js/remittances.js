@@ -227,11 +227,9 @@ $(function() {
 
   var next = function() {
     mySwiper.swipeNext();
-    console.log(mySwiper.activeSlide);
   };
   var prev = function() {
     mySwiper.swipePrev();
-    console.log(mySwiper.activeSlide);
   };
 
   $("#guide .next").click(function() { next(); })
@@ -246,7 +244,7 @@ $(function() {
 
   var hideGuide = function() {
     $("#guide").fadeOut();
-    $("#details").fadeIn();
+//    $("#details").fadeIn();
 //    $("#timeline g.tseries .legend").fadeIn();
     yearAnimation.stop();
   };
@@ -552,7 +550,7 @@ queue()
 
 
     var leftMargin = Math.max(120, width*0.2);
-    fitProjection(projection, world, [[leftMargin, 60], [width - 25, height-120]], true);
+    fitProjection(projection, world, [[leftMargin, 60], [width - 100, height-120]], true);
 
 
 
