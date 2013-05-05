@@ -117,6 +117,7 @@ var yearAnimation = (function() {
   var anim = {};
   var timerId = null;
   var interval = 300;
+  var playing = false;
 
   var stop = function() {
     if (timerId !== null) {
@@ -129,10 +130,13 @@ var yearAnimation = (function() {
       timerId = setInterval(next, interval);
     }
   };
+  var restart = function() {
+    if (playing) start();
+  }
   var rewind = function() {
     var year = remittanceYears[0];
     selectYear(year, interval);
-    setTimeout(start, interval * 2);
+    setTimeout(restart, interval * 2);
   };
   var next = function() {
     var year = selectedYear + 1;
@@ -143,8 +147,14 @@ var yearAnimation = (function() {
       selectYear(year, interval);
     }
   };
-  anim.start = start;
-  anim.stop = stop;
+  anim.start = function() {
+    playing = true;
+    start();
+  }
+  anim.stop = function() {
+    playing = false;
+    stop();
+  }
 
   anim.interval = function(msec) {
     if (arguments.length === 0) return interval;
@@ -218,7 +228,6 @@ $(function() {
 
   msg.update();  // just to be sure the messages are set after the document is ready
 
-  yearAnimation.start();
 
 	var mySwiper = new Swiper('#guide',{
 		//Your options here:
@@ -542,6 +551,7 @@ queue()
   .await(function(err, world, remittances, aid, migrations) {
 
     $("#loading").hide();
+    yearAnimation.start();
 
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
     aidTotals = aid.TOTAL;
@@ -715,13 +725,14 @@ queue()
 
 
 
+    var selectorHandHeight = Math.max(timelineHeight * 0.6, 60);
 
     var selectorHand = timeline.append("g")
       .attr("class", "selectorHand")
       .attr("transform", "translate("+(yearScale(selectedYear))+",0)");
 
     selectorHand.append("line")
-      .attr("y1", 12)
+      .attr("y1", timelineHeight - selectorHandHeight)
       .attr("y2", timelineHeight);
 
 
@@ -748,7 +759,7 @@ queue()
     selectorHand.append("circle")
       .attr("class", "center")
       .attr("cx", 0)
-      .attr("cy", 10)
+      .attr("cy", timelineHeight - selectorHandHeight)
       .attr("r", 4);
 
     selectorHand.append("circle")
@@ -756,7 +767,7 @@ queue()
       .attr("opacity", "0.4")
       .attr("fill", "url(#selectorHandHalo)")
       .attr("cx", 0)
-      .attr("cy", 10)
+      .attr("cy", timelineHeight - selectorHandHeight)
       .attr("r", 30);
 
 
