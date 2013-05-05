@@ -84,6 +84,12 @@ var moneyFormat = function(v) {
 var moneyMillionsFormat = function(v) { return moneyFormat(1e6 * v); };
 
 
+function str2num(str) {
+  // empty string gives 0 when using + to convert
+  if (str === null || str === undefined || str.length == 0) return NaN;
+  return +str;
+}
+
 
 var migrationYears = [ 1960, 1970, 1980, 1990, 2000, 2010 ];
 var remittanceYears = [
@@ -308,10 +314,11 @@ function calcRemittanceTotalsByYear(remittances) {
 
     for (yi=0; yi<remittanceYears.length; yi++) {
       y = remittanceYears[yi];
-      if (totals[y] === undefined) totals[y] = 0;
+      if (totals[y] === undefined) totals[y] = NaN;
 
-      val = +countryData[y];
+      val = str2num(countryData[y]);
       if (!isNaN(val)) {
+        if (isNaN(totals[y])) totals[y] = 0;
         totals[y] += val;
       }
     }
@@ -399,6 +406,8 @@ function updateTimeSeries() {
 }
 
 
+
+
 function updateDetails() {
   var details = d3.select("#details");
 
@@ -412,12 +421,12 @@ function updateDetails() {
     countryName = countryNamesByCode[iso3];
 
     var countryRem = remittanceTotalsByMigrantsOrigin[iso3];
-    totalRemittances = (countryRem != null ? +countryRem[selectedYear] : "...");
+    totalRemittances = (countryRem != null ? str2num(countryRem[selectedYear]) : NaN);
 
     numMigrants = getTotalMigrants(selectedYear, iso3);
 
     var countryAid = aidTotalsByOrigin[iso3];
-    totalAid = (countryAid != null ? countryAid[selectedYear] : "...");
+    totalAid = (countryAid != null ? str2num(countryAid[selectedYear]) : NaN);
 
   } else {
     countryName = msg("details.remittances.total");
@@ -578,14 +587,14 @@ function updateChoropleth() {
 
 function interpolateNumOfMigrants(values, year) {
   if (values == null) return NaN;
-  var val = +values[year];
+  var val = str2num(values[year]);
 
   if (isNaN(val)) {
     if ((year % 10) !== 0) {
       // assuming we have data only for each 10th year (which ends with 0)
       var l = Math.floor(year/10)*10, r = Math.ceil(year/10)*10;
       var t = (year - l) / (r - l);
-      val = interpolate(t, +values[l], +values[r]);
+      val = interpolate(t, str2num(values[l]), str2num(values[r]));
     }
   }
 
