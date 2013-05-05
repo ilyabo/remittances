@@ -193,11 +193,11 @@ header,
 #timeline g.selectorHand circle.center {  fill:#fff; stroke:#666; stroke-width:2; }
 
 #timeline g.tseries path { stroke-width:2.5; }
-#timeline g.tseries path.remittances { stroke:#00b48f; }
+#timeline g.tseries path.remittances { stroke:/*#00b48f*/white; }
 #timeline g.tseries path.aid { stroke:#2c97df; }
 
 #timeline g.tseries .legend { }
-#timeline g.tseries .legend .remittances  { fill:#00b48f; }
+#timeline g.tseries .legend .remittances  { /*fill:#00b48f;*/ fill:white; }
 #timeline g.tseries .legend .aid  { fill:#2c97df; }
 #timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; }
 
