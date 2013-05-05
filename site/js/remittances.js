@@ -12,7 +12,7 @@ var width = $(document).width(),
     height = $(document).height() - 40;
 
 
-$("#guide aside").css("padding-top", (height * 0.1) + "px");
+$("#guide aside").css("padding-top", (height * 0.15) + "px");
 
 var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
@@ -255,15 +255,15 @@ $(function() {
   $("#guide .prev").click(prev);
   $("#guide .anim").click(function() {
     if ($(this).hasClass("playing")) {
-      yearAnimation.stop();
       $("#guide .anim")
         .removeClass("playing")
         .text(msg("intro.animation.play"));
+      yearAnimation.stop();
     } else {
-      yearAnimation.start();
       $("#guide .anim")
         .addClass("playing")
         .text(msg("intro.animation.stop"));
+      yearAnimation.start();
     }
 
   });

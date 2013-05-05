@@ -22,6 +22,7 @@ h1 {
 	color: white;
 	font-size: 23pt;
 	font-weight: normal;
+    margin-top: 20px;
 }
 
 h2 {
@@ -30,13 +31,12 @@ h2 {
 	color: #15b290;
 	margin: 0;
 	padding: 0;
-	line-height: 52px;
 }
 
-	h2 span {
-		font-size: 50px;
-		color: #afafaf;
-	}
+h2 span {
+    font-size: 50px;
+    color: #afafaf;
+}
 
 a {
 	color: white;
@@ -84,6 +84,16 @@ a {
     cursor:pointer;
 }
 
+#guide .anim,
+#guide .skip,
+#guide .next,
+#guide .prev { opacity: 0.8; }
+
+#guide .anim:hover,
+#guide .skip:hover,
+#guide .next:hover,
+#guide .prev:hover { opacity: 1.0; }
+
 #guide .anim {
     background: url('../images/play.svg') no-repeat;
 	padding-left: 29px;
@@ -111,7 +121,7 @@ a {
 }
 
 #guide .content {
-    height:27em;
+    height:25em;
 }
 
 /* MAP STUFF */
@@ -133,7 +143,6 @@ header {
 #details .country, h2 {
     color:#00b48f; font-size:25pt;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
-    display:inline-block;
     margin-bottom:5px;
 }
 #details .country { z-index:11 !important; background-color: #111; height: 1em; }
