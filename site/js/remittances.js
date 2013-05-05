@@ -607,8 +607,13 @@ function getTotalMigrants(year, origin) {
     return interpolateNumOfMigrants(migrationTotalsByOrigin[origin], year);
 
   return d3.keys(migrationTotalsByOrigin).reduce(function(sum, origin) {
-    return interpolateNumOfMigrants(migrationTotalsByOrigin[origin], year) + sum;
-  }, 0);
+    var val = interpolateNumOfMigrants(migrationTotalsByOrigin[origin], year);
+    if (!isNaN(val)) {
+      if (isNaN(sum)) sum = 0;
+      sum += val;
+    }
+    return sum;
+  }, NaN);
 
 }
 
