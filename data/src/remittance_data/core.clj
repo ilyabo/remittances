@@ -299,7 +299,7 @@
     (let [origin  (find-country-code (:origin row))]
       (let [val   (:total row)]
         (if (number? val)
-          [ origin val ] ))))))
+          [ origin (round val) ] ))))))
 
 (def migrations-2010-by-origin-dest
   (into {} (apply concat (for [row rows]
