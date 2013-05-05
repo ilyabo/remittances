@@ -134,13 +134,13 @@ header {
 
 #details {
 	position: absolute;
-	right:30px; top:85px;
+	right:30px; top:17px;
     pointer-events:none;
     color:white;
     text-align: right;
 }
 #details .sub {  }
-#details .country, h2 {
+#details .country {
     color:#00b48f; font-size:25pt;
     text-rendering: optimizeLegibility; /* proper kerning for the word Total */
     margin-bottom:5px;
@@ -207,6 +207,7 @@ header {
 #timeline .timeAxis line.tick.minor  { stroke:#999; }
 
 
+#timeline .magnitudeAxis { opacity: 0.3; }
 #timeline .magnitudeAxis g.tick.major line { stroke:#999; }
 #timeline .magnitudeAxis g.tick.major text { stroke:#999; font-size:12px; }
 #timeline .magnitudeAxis line.tick.minor  { stroke:#999; }
