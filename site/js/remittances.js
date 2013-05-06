@@ -284,8 +284,27 @@ $(function() {
         $(this).data("clicked", true);
       }
     }
-
   });
+
+  $("#timeline .play").click(function() {
+    if ($(this).hasClass("playing")) {
+      $("#timeline .play")
+        .removeClass("playing")
+        .text(msg("intro.animation.play"));
+      yearAnimation.stop();
+    } else {
+      $("#timeline .play")
+        .addClass("playing")
+        .text(msg("intro.animation.stop"));
+      if ($(this).data("clicked")) {
+        yearAnimation.start();
+      } else {
+        yearAnimation.restart();
+        $(this).data("clicked", true);
+      }
+    }
+  });
+
 
   $("body").keydown(function(e) {
     if ($("#guide").is(":visible")) {
@@ -296,6 +315,7 @@ $(function() {
 
   var hideGuide = function() {
     $("#guide").fadeOut();
+    $("#timeline .play").css("visibility", "visible");
 //    $("#details").fadeIn();
 //    $("#timeline g.tseries .legend").fadeIn();
     yearAnimation.stop();

@@ -106,7 +106,7 @@ a {
 }
 
 #guide .anim.playing {
-    background: url('../images/stop.svg') no-repeat;
+    background: url('../images/pause.svg') no-repeat;
 }
 
 /*#guide .next,       #guide .prev       { opacity:0.5; }*/
@@ -207,6 +207,9 @@ header {
 
 
 
+
+
+
 #timeline .timeAxis g.tick.major line { stroke:#999; }
 #timeline .timeAxis g.tick.major text { stroke:#999; font-size:16px; pointer-events:none; }
 #timeline .timeAxis line.tick.minor  { stroke:#999; }
@@ -219,7 +222,34 @@ header {
 
 
 
-#timeline { pointer-events: none;  }
+#timeline {
+    pointer-events: none;
+    vertical-align: bottom;
+    white-space: nowrap;
+}
+
+#timeline .play {
+    visibility:  hidden;
+    display:inline-block;
+    background-image: url('../images/play.svg');
+    background-repeat:no-repeat;
+    background-position:center top;
+    background-size:50px 50px;
+    height:80px; width:80px;
+    position: relative;
+    top:-55px; left:45px;
+    line-height: 140px;
+    cursor:pointer;
+    opacity:0.7;
+    pointer-events: visiblePainted;
+    color:white;
+}
+
+#timeline .play:hover { opacity:1.0; }
+#timeline .play.playing {
+    background-image: url('../images/pause.svg');
+}
+
 #timeline g.selectorHand, #timeline g.tseries  { pointer-events: visiblePainted ;  }
 #timeline path.domain { fill:none; /*cursor:ew-resize;*/ }
 #timeline g.selectorHand { cursor:ew-resize; }
