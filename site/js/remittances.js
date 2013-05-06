@@ -498,8 +498,8 @@ function selectYear(year, duration) {
         return (isNaN(r) ? 0 : r);
       });
 
-  if (selectedCountry !== null)
-    updateChoropleth();
+//  if (selectedCountry !== null)
+  updateChoropleth();
   updateDetails();
 }
 
