@@ -505,6 +505,9 @@ function selectYear(year, duration) {
 }
 
 function selectCountry(code, dontUnselect) {
+
+  $('#countrySelect input.typeahead').val("");
+
   if (selectedCountry === code) {
     if (dontUnselect) return;
     selectedCountry = null;
@@ -562,58 +565,52 @@ function updateChoropleth() {
     var code = ( selectedCountry !== null ? selectedCountry : highlightedCountry);
 
 
-    var migs = migrationsByOriginCode[code];
-    if (migs === undefined) {
-      console.log("No migrations for " + code);
-    } else {
-//
-//              d3.select("#description")
-//                  .html("In "+selectedYear+ " schickten migranten <br> aus <b>" + d.Name + "</b>" +
-//                    " US$"  + moneyMillionsFormat(d[selectedYear]) + "M<br>nach Hause"
-//                      );
+    var migrantsFromCountry = migrationsByOriginCode[code];
+    if (migrantsFromCountry === undefined) {
+      console.warn("No migrations for " + code);
+      migrantsFromCountry = [];
+    }
 
-      var migrantsFromCountry = migrationsByOriginCode[code];
-      var max =
-        // calc max over time for country
-        d3.max(migrantsFromCountry, function(d) {
-          return d3.max(migrationYears.map(function(y) { return +d[y]; }));
-        });
+    var max =
+      // calc max over time for country
+      d3.max(migrantsFromCountry, function(d) {
+        return d3.max(migrationYears.map(function(y) { return +d[y]; }));
+      });
 
-      migrationsColor.domain([0, max]);
+    migrationsColor.domain([0, max]);
 
 
-      var migrantsByDest = d3.nest()
-        .key(function(d) { return d.Dest; })
-        .rollup(function(d) { return d[0]; })
-        .map(migrantsFromCountry);
+    var migrantsByDest = d3.nest()
+      .key(function(d) { return d.Dest; })
+      .rollup(function(d) { return d[0]; })
+      .map(migrantsFromCountry);
 
 
-      chart_svg.selectAll("path.land")
-        .classed("highlighted", function(d) { return d.id === highlightedCountry; })
-        .classed("selected", function(d) { return d.id === selectedCountry; })
-         .transition()
-          .duration(50)
-        .attr("fill", function(d) {
+    chart_svg.selectAll("path.land")
+      .classed("highlighted", function(d) { return d.id === highlightedCountry; })
+      .classed("selected", function(d) { return d.id === selectedCountry; })
+       .transition()
+        .duration(50)
+      .attr("fill", function(d) {
 
-          var m = migrantsByDest[d.id];
-          if (m !== undefined) {
-            var val = interpolateNumOfMigrants(m, selectedYear);
-            if (!isNaN(val)) return migrationsColor(val);
-          }
+        var m = migrantsByDest[d.id];
+        if (m !== undefined) {
+          var val = interpolateNumOfMigrants(m, selectedYear);
+          if (!isNaN(val)) return migrationsColor(val);
+        }
 
-          return landColor;   //.darker(0.5);
-         })
+        return landColor;   //.darker(0.5);
+       })
 
-      gcountries.selectAll("circle.country")
+    gcountries.selectAll("circle.country")
 //         .transition()
 //          .duration(50)
-            .attr("opacity", function(d) {
-              if (d.iso3 === selectedCountry  ||  d.iso3 == highlightedCountry)
-                return 1;
-              else
-                return 0;
-            });
-    }
+          .attr("opacity", function(d) {
+            if (d.iso3 === selectedCountry  ||  d.iso3 == highlightedCountry)
+              return 1;
+            else
+              return 0;
+          });
 
   }
 }
