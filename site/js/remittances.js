@@ -433,12 +433,19 @@ function updateDetails() {
     var countryAid = aidTotalsByOrigin[iso3];
     totalAid = (countryAid != null ? str2num(countryAid[selectedYear]) : NaN);
 
+    details.select(".aid .title").text(msg("details.aid.title.selected-country"));
+    details.select(".migrants .title").text(msg("details.migrants.title.selected-country"));
+    details.select(".remittances .title").text(msg("details.remittances.title.selected-country"));
   } else {
     countryName = msg("details.remittances.total");
 
     numMigrants = getTotalMigrants(selectedYear);
     totalRemittances = remittanceTotals[selectedYear];
     totalAid = aidTotals[selectedYear];
+
+    details.select(".aid .title").text(msg("details.aid.title.total"));
+    details.select(".migrants .title").text(msg("details.migrants.title.total"));
+    details.select(".remittances .title").text(msg("details.remittances.title.total"));
   }
 
   details.select(".migrants .value").text(numberFormat(numMigrants));
