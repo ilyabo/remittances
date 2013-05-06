@@ -20,9 +20,10 @@ header {
 
 h1 {
 	color: white;
-	font-size: 21pt;
+	font-size: 19pt;
 	font-weight: normal;
-    margin-top: 20px;
+    top: 25px;
+    left:25px;
 }
 
 h2 {
@@ -45,24 +46,38 @@ a {
 	
 /* INTRO STUFF */
 
+
 #guide {
     visibility: hidden;
     height: 100%;
 }
 
+
+
 #guide aside {
-	padding: 0 30px 60px 30px;
-	width: 424px;
-	color: white;
+    display: inline-block;
+	padding: 20px 30px 0px 30px;
+	/*width: 424px;*/
+	width: 380px;
+    height:500px;
+    position: relative;
+    top: 50%;
+    margin-top:-300px;
+    color: white;
+    float:right;
 }
 
-#guide aside h2 { font-size:25pt; font-weight: bold; }
+#guide .content {
+    height:26em;
+}
+
+#guide aside h2 { font-size:23pt; font-weight: bold; }
 
 #guide  aside p {
     padding-top:0px;
     padding-bottom:5px;
 	line-height: 24px;
-	width: 80%;
+	width: 90%;
 }
 
 #guide .skip {
@@ -120,9 +135,6 @@ a {
 	background: url('../images/prev.png') no-repeat;
 }
 
-#guide .content {
-    height:25em;
-}
 
 /* MAP STUFF */
 header {
@@ -134,10 +146,10 @@ header {
 
 #details {
 	position: absolute;
-	right:30px; top:17px;
+	left:30px; top:75px;
     pointer-events:none;
     color:white;
-    text-align: right;
+    text-align: left;
 }
 #details .grp { margin-top:20px; }
 #details .country {
@@ -229,7 +241,7 @@ header {
 }
 
 #timeline .play {
-    visibility:  hidden;
+    /*visibility:  hidden;*/
     display:inline-block;
     background-image: url('../images/play.svg');
     background-repeat:no-repeat;
@@ -297,7 +309,7 @@ header {
 	/* Fix of Webkit flickering */
 		
 	/*background: url(../images/aside_bg_darker.png) repeat-y left;*/
-	background: url(../images/aside_bg.svg) repeat-y left;
+	background: url(../images/aside_bg_r.svg) repeat-y right;
     background-size:600px 1px;
 	z-index:1;
 }

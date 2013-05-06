@@ -12,7 +12,7 @@ var width = $(document).width(),
     height = $(document).height() - 40;
 
 
-$("#guide aside").css("padding-top", (height * 0.15) + "px");
+//$("#guide aside").css("padding-top", (height * 0.15) + "px");
 
 var chart_svg = d3.select("#chart").append("svg")
   .attr("width", width)
@@ -315,7 +315,7 @@ $(function() {
 
   var hideGuide = function() {
     $("#guide").fadeOut();
-    $("#timeline .play").css("visibility", "visible");
+//    $("#timeline .play").css("visibility", "visible");
 //    $("#details").fadeIn();
 //    $("#timeline g.tseries .legend").fadeIn();
     yearAnimation.stop();
@@ -681,7 +681,7 @@ queue()
 
 
 
-    var leftMargin = Math.max(120, width*0.2);
+    var leftMargin = Math.max(100, width*0.15);
     fitProjection(projection, world, [[leftMargin, 60], [width - 150, height-120]], true);
 
 
