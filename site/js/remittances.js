@@ -161,11 +161,11 @@ var yearAnimation = (function() {
       selectYear(year, interval);
     }
   };
-//  anim.replay = function() {
-//    selectYear(remittanceYears[0], interval);
-//    setTimeout(start, interval * 2);
-//    return anim;
-//  }
+  anim.restart = function() {
+    playing = true;
+    rewind();
+    return anim;
+  }
   anim.isPlaying = function() {
     return playing;
   };
@@ -277,7 +277,12 @@ $(function() {
       $("#guide .anim")
         .addClass("playing")
         .text(msg("intro.animation.stop"));
-      yearAnimation.start();
+      if ($(this).data("clicked")) {
+        yearAnimation.start();
+      } else {
+        yearAnimation.restart();
+        $(this).data("clicked", true);
+      }
     }
 
   });
