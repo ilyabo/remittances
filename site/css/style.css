@@ -149,6 +149,8 @@ header {
 #details .year { color:#999; font-size:25pt; margin-bottom:10px; }
 #details .value {   font-size:14pt; color:white;}
 #details .migrants .value {   font-size:12pt; }
+#details .remittances .value {   font-size:20pt; }
+#details .remittances .title {   font-size:14pt; }
 #details .remittancesPerCapita .value {   font-size:20pt; }
 #details .remittancesPerCapita .title {   font-size:14pt; }
 #details .title {  font-size:10pt; color:white; margin-top:0px; margin-bottom:5px; }
