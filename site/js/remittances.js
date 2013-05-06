@@ -1,6 +1,6 @@
 
 
-// (function() {
+(function() {
 
 
 
@@ -47,7 +47,7 @@ var rscale = d3.scale.sqrt()
 
 var timelineMargins = {left:40,top:20,bottom:0,right:100};
 
-var timelineWidth = Math.min(width - 200, 800),
+var timelineWidth = Math.min(width - 250, 800),
     timelineHeight = Math.min(260, height * 0.3);
 
 
@@ -328,6 +328,7 @@ $(function() {
 
   d3.select("#guide").style("visibility", "visible");
 
+
 });
 
 
@@ -503,8 +504,9 @@ function selectYear(year, duration) {
   updateDetails();
 }
 
-function selectCountry(code) {
+function selectCountry(code, dontUnselect) {
   if (selectedCountry === code) {
+    if (dontUnselect) return;
     selectedCountry = null;
   } else {
     selectedCountry = code;
@@ -658,6 +660,23 @@ function nestBy(uniqueProperty, data) {
 }
 
 
+function initCountriesTypeahead(remittances) {
+
+    var typeaheadSelect = function(event, d) {
+      selectCountry(d.iso3, true);
+      //$(this).val("");
+    };
+
+    $('#countrySelect .typeahead').typeahead({
+      valueKey: "name"+(msg.lang() == "en" ? "" : "_"+msg.lang()),
+      name: 'countries',
+      local: remittances,
+      limit: 10
+    }).on("typeahead:selected", typeaheadSelect)
+      .on("typeahead:autocompleted", typeaheadSelect);
+
+}
+
 queue()
   .defer(d3.json, "data/world-countries.json")
   .defer(d3.csv, "data/remittances.csv")
@@ -669,6 +688,8 @@ queue()
 
     $("#loading").hide();
 //    yearAnimation.start();
+
+
 
     remittanceTotalsByMigrantsOrigin = nestBy("iso3", remittances);
     remittanceTotals = calcRemittanceTotalsByYear(remittances);
@@ -682,7 +703,7 @@ queue()
 
 
     var leftMargin = Math.max(100, width*0.15);
-    fitProjection(projection, world, [[leftMargin, 60], [width - 150, height-120]], true);
+    fitProjection(projection, world, [[leftMargin, 60], [width - 100, height-120]], true);
 
 
 
@@ -696,6 +717,11 @@ queue()
     world.features.forEach(function(f) {
       countryFeaturesByCode[f.id] = f;
     });
+
+
+    initCountriesTypeahead(remittances);
+
+
 
 
 
@@ -941,6 +967,7 @@ queue()
 
 
 
-// })();
+
+})();
 
 
