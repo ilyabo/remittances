@@ -268,8 +268,8 @@ header {
     background-image: url('../images/pause.svg');
 }
 
-#timeline g.selectorHand, #timeline g.tseries  { pointer-events: visiblePainted ;  }
-#timeline path.domain { fill:none; /*cursor:ew-resize;*/ }
+#timeline g.selectorHand, #timeline g.tseries  { pointer-events: visiblePainted;  }
+#timeline path.domain { fill:none; stroke:#555; stroke-width:0.3; }
 #timeline g.selectorHand { cursor:ew-resize; }
 #timeline g.selectorHand line { stroke:#999; stroke-width:2;   }
 #timeline g.selectorHand circle.center {  fill:#fff; stroke:#666; stroke-width:2; }
@@ -279,6 +279,7 @@ header {
 #timeline g.tseries path.aid { stroke:#2c97df; }
 
 #timeline g.tseries .legend { }
+#timeline g.tseries .legend circle { stroke:#111; stroke-width:1; }
 #timeline g.tseries .legend .remittances  { /*fill:#00b48f;*/ fill:white; }
 #timeline g.tseries .legend .aid  { fill:#2c97df; }
 #timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; }

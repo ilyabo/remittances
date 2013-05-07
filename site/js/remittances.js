@@ -45,7 +45,7 @@ var rscale = d3.scale.sqrt()
   .range([0, height/45]);
 
 
-var timelineMargins = {left:40,top:20,bottom:0,right:100};
+var timelineMargins = {left:40,top:0,bottom:5,right:100};
 
 var timelineWidth = Math.min(width - 250, 800),
     timelineHeight = Math.min(260, height * 0.3);
@@ -104,7 +104,7 @@ var remittanceYearsDomain = [1970, 2012];
 
 var remittanceTotals, remittanceTotalsByMigrantsOrigin,
     migrationTotals, migrationTotalsByOrigin,
-    aidTotals, aidTotalsByOrigin;
+    aidTotals, aidTotalsByRecipient;
 
 
 
@@ -116,7 +116,28 @@ var yearScale = d3.scale.linear()
 var tseriesScale = d3.scale.linear()
   .range([timelineHeight, 2]);
 
-var tseriesLine = d3.svg.line().interpolate("monotone");
+var tseriesLine = d3.svg.line()
+  .interpolate("monotone")
+  .defined(function(d) {
+    return !isNaN(d.value)});
+
+var yearAxis = d3.svg.axis()
+  .scale(yearScale)
+  .orient("top")
+  .ticks(timelineWidth / 70)
+  .tickSize(10, 5, timelineHeight)
+  .tickSubdivide(4)
+  .tickPadding(15)
+  .tickFormat(function(d) { return d; });
+
+
+var magnitudeAxis = d3.svg.axis()
+  .scale(tseriesScale)
+  .orient("right")
+  .ticks(timelineHeight / 40)
+  .tickSize(5, 0, 0)
+  .tickPadding(2)
+  .tickFormat(moneyMillionsFormat);
 
 
 var selectedYear = null;
@@ -369,18 +390,34 @@ function calcTotalsByYear(values) {
 
 function renderTimeSeries(name, data) {
 
-  var years = d3.keys(data).sort();
+  if (data == null) data = {};
+  var years = remittanceYears; // d3.keys(data).sort();
 
   var tseries = timeline.select("g.tseries");
 
   if (tseries.empty()) {
     tseries = timeline.append("g")
       .attr("class", "tseries");
+  }
 
+  var path = tseries.select("path." + name);
+  if (path.empty) {
+    tseriesLine
+      .x(function(d) { return yearScale(d.year); })
+      .y(function(d) { return tseriesScale(d.value); });
+
+    tseries.append("path")
+      .attr("class", name)
+      .attr("fill", "none");
+  }
+
+  if (tseries.select("g.legend").empty()) {
     var legend = tseries.append("g")
       .attr("class", "legend")
       .attr("transform",
-        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.4) +")");
+//        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.4) +")"
+        "translate(50,50)"
+      );
 
     var gg = legend.append("g")
        .attr("class", "remittances")
@@ -406,33 +443,45 @@ function renderTimeSeries(name, data) {
 
   }
 
-  var path = tseries.select("path." + name);
-  if (path.empty) {
-    tseriesLine
-      .x(function(d) { return yearScale(d); })
-      .y(function(d) { return tseriesScale(data[d]); });
-
-    tseries.append("path")
-      .attr("class", name)
-      .attr("fill", "none");
-  }
-
-  tseries.datum(years)
+  tseries.datum(years.map(function(y) { return { year:y,  value: data[y] }; }), years)
     .select("path." + name)
-      .attr("d", tseriesLine);
+      .attr("d", function(d) {
+        var line = tseriesLine(d);
+        if (line == null) line = "M0,0";
+        return line;
+      });
 
 }
 
 
 function updateTimeSeries() {
-  tseriesScale.domain([0,
-    Math.max(
-      d3.max(d3.values(remittanceTotals)),
-      d3.max(d3.values(aidTotals))
-    ) * 1.15
-  ]);
-  renderTimeSeries("aid", aidTotals);
-  renderTimeSeries("remittances", remittanceTotals);
+
+  var remittances, aid;
+
+  var country = (selectedCountry || highlightedCountry);
+  if (country == null) {
+    remittances = remittanceTotals;
+    aid = aidTotals;
+  } else {
+    remittances = remittanceTotalsByMigrantsOrigin[country];
+    aid = aidTotalsByRecipient[country];
+  }
+
+  var rmax = d3.max(d3.values(remittances));
+  var dmax = d3.max(d3.values(aid));
+
+  var max;
+  if (isNaN(rmax)) max = dmax;
+  else if (isNaN(dmax)) max = rmax;
+  else max = Math.max(rmax, dmax);
+
+  max *= 1.15;
+
+  tseriesScale.domain([0, max]);
+  renderTimeSeries("aid", aid);
+  renderTimeSeries("remittances", remittances);
+
+  timeline.select("g.magnitudeAxis").call(magnitudeAxis);
 }
 
 
@@ -455,7 +504,7 @@ function updateDetails() {
 
     numMigrants = getTotalMigrants(selectedYear, iso3);
 
-    var countryAid = aidTotalsByOrigin[iso3];
+    var countryAid = aidTotalsByRecipient[iso3];
     totalAid = (countryAid != null ? str2num(countryAid[selectedYear]) : NaN);
 
     details.select(".aid .title").text(msg("details.aid.title.selected-country"));
@@ -520,6 +569,7 @@ function selectCountry(code, dontUnselect) {
   }
   updateChoropleth();
   updateDetails();
+  updateTimeSeries();
 }
 
 $(document).keyup(function(e) { if (e.keyCode == 27) selectCountry(null); });
@@ -539,6 +589,7 @@ function highlightCountry(code) {
     });
   updateChoropleth();
   updateDetails();
+  updateTimeSeries();
 }
 
 
@@ -655,7 +706,7 @@ function getTotalMigrants(year, origin) {
 }
 
 
-function nestBy(uniqueProperty, data) {
+function nestBy(uniqueProperty, data, rollup) {
   return d3.nest()
       .key(function(d) { return d[uniqueProperty]; })
       .rollup(function(arr) { return arr[0]; })
@@ -694,10 +745,22 @@ queue()
 
 
 
-    remittanceTotalsByMigrantsOrigin = nestBy("iso3", remittances);
+    remittanceTotalsByMigrantsOrigin = //nestBy("iso3", remittances);
+      d3.nest()
+      .key(function(d) { return d.iso3; })
+      .rollup(function(arr) {
+          var d = arr[0], byYear = {};
+          remittanceYears.forEach(function(y) {
+            var v = str2num(d[y]);
+            if (!isNaN(v)) byYear[y] = v;
+          });
+          return byYear;
+       })
+      .map(remittances);
+
     remittanceTotals = calcTotalsByYear(remittances);
 
-    aidTotalsByOrigin = aid["by-origin"];
+    aidTotalsByRecipient = aid["by-recipient"];
     aidTotals = aid["TOTAL"];
 //    aidTotals2 = calcTotalsByYear(
 //      // remove TOTAL
@@ -836,7 +899,6 @@ queue()
 
 //    updateBubbleSizes(0);
 //    updateDetails();
-    updateTimeSeries();
 
 //    gcountries.selectAll("circle")
 //      .transition()
@@ -846,24 +908,6 @@ queue()
     selectYear(2010);
 
 
-    var yearAxis = d3.svg.axis()
-      .scale(yearScale)
-      .orient("top")
-      .ticks(timelineWidth / 70)
-      .tickSize(10, 5, timelineHeight)
-      .tickSubdivide(4)
-      .tickPadding(15)
-      .tickFormat(function(d) { return d; });
-
-
-    var magnitudeAxis = d3.svg.axis()
-      .scale(tseriesScale)
-      .orient("right")
-      .ticks(timelineHeight / 40)
-      .tickSize(5, 0, 0)
-      .tickPadding(3)
-      .tickFormat(moneyMillionsFormat);
-
 
 
     var timelineAxisGroup = timeline.append("g")
@@ -872,11 +916,12 @@ queue()
 
     var timelineRightAxisGroup = timeline.append("g")
       .attr("class", "magnitudeAxis")
-      .attr("transform", "translate("+(timelineWidth+5)+",0)");
+      .attr("transform", "translate("+(timelineWidth)+",0)");
 
     timelineAxisGroup.call(yearAxis);
-    timelineRightAxisGroup.call(magnitudeAxis);
+//    timelineRightAxisGroup.call(magnitudeAxis);
 
+    updateTimeSeries();
 
 
 
