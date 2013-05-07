@@ -332,19 +332,22 @@ $(function() {
 });
 
 
-function calcRemittanceTotalsByYear(remittances) {
+/* @param values is an array in which the indices correspond to the
+                 indices in the remittenceYears array */
+function calcTotalsByYear(values) {
   var totals = {}, i, yi, countryData, y, val, max = NaN;
 
-  for (i=0; i<remittances.length; i++) {
-    countryData = remittances[i];
+  for (i=0; i<values.length; i++) {
+    countryData = values[i];
 
     for (yi=0; yi<remittanceYears.length; yi++) {
       y = remittanceYears[yi];
-      if (totals[y] === undefined) totals[y] = NaN;
+//      if (totals[y] === undefined) totals[y] = NaN;
 
       val = str2num(countryData[y]);
       if (!isNaN(val)) {
-        if (isNaN(totals[y])) totals[y] = 0;
+//        if (isNaN(totals[y])) totals[y] = 0;
+        if (totals[y] === undefined) totals[y] = 0;
         totals[y] += val;
       }
     }
@@ -677,7 +680,7 @@ function initCountriesTypeahead(remittances) {
 queue()
   .defer(d3.json, "data/world-countries.json")
   .defer(d3.csv, "data/remittances.csv")
-  .defer(d3.json, "data/oecd-aid.json")  // NOTE: there are 1. -ALL- 2. negative values (MEX)
+  .defer(d3.json, "data/oecd-aid.json")  // NOTE: there are is TOTAL
   .defer(d3.csv, "data/migrations.csv") // filtered by > 100
   .defer(d3.csv, "data/migration-totals.csv") // we need to load it separately, not calculate
                                               // because migrations are filtered
@@ -689,10 +692,14 @@ queue()
 
 
     remittanceTotalsByMigrantsOrigin = nestBy("iso3", remittances);
-    remittanceTotals = calcRemittanceTotalsByYear(remittances);
+    remittanceTotals = calcTotalsByYear(remittances);
 
-    aidTotalsByOrigin = aid;
-    aidTotals = aid.TOTAL;
+    aidTotalsByOrigin = aid["by-origin"];
+    aidTotals = aid["TOTAL"];
+//    aidTotals2 = calcTotalsByYear(
+//      // remove TOTAL
+//      d3.keys(aid).filter(function(d) { return  d!== "TOTAL"}).map(function(d) { return aid[d]; })
+//    );
 
     migrationTotalsByOrigin = nestBy("origin", migrationTotals);
 

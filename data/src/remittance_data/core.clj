@@ -357,31 +357,43 @@
 
 
 (def aid
-  (let [rows (filter
-              #(=  "Constant Prices (2011 USD millions)"
-                   ;"Current Prices (USD millions)"
-                 (get % (keyword "Amount type")))
-              (:rows aid-dataset))
+  (let [aid-for-countries
+    (fn [accepted-countries]
+      (let [rows (filter
+                  #(=  "Constant Prices (2011 USD millions)"
+                       ;"Current Prices (USD millions)"
+                     (get % (keyword "Amount type")))
+                  (:rows aid-dataset))
 
-        rows (remove #(.contains (:Recipient %) ", regional") rows)
+            rows (remove #(.contains (:Recipient %) ", regional") rows)
 
-        by-recipient (group-by :Recipient rows)
+            by-recipient (group-by :Recipient rows)
 
-        accepted-countries  (concat (map :iso3 remittances) ["TOTAL"])
-     ]
 
-    (into {}
-      (remove nil?
-        (for [[recipient, records] by-recipient]
-          (let [iso3 (find-country-code recipient)]
-            (if (in? accepted-countries iso3)
-              [
-                iso3
+         ]
 
-                (into {} (for [r records]
-                  [ (keyword (str (get r :Year)))  (get r :Value) ]))
-              ]
-            )))))))
+        (into {}
+          (remove nil?
+            (for [[recipient, records] by-recipient]
+              (let [iso3 (find-country-code recipient)]
+                (if (in? accepted-countries iso3)
+                  [
+                    iso3
+
+                    (into {} (for [r records]
+                      (let [val  (get r :Value)
+                            val  (if (> val 0) val 0)   ; replace negative values with 0
+                            ]
+                        [ (keyword (str (get r :Year)))  val ])))
+                  ]
+                )))))))
+         ]
+
+    (merge
+      { :by-origin   (aid-for-countries (map :iso3 remittances)) }
+      (aid-for-countries   ["TOTAL"]))
+
+    )))
 
 
 
