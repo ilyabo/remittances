@@ -3,7 +3,7 @@
     "title" : "Geldsendungen von Migranten in ihre Heimat",
     "details.remittances.title.total" : "Geldsendungen von Migranten",
     "details.remittances.title.selected-country" : "von Migranten erhalten",
-    "details.remittances.units" : "inflationsbereinigte 2011 US-Dollar",
+    "details.remittances.units" : "inflationsbereinigte US-Dollar, 2011",
     "details.remittances.total" : "Gesamt",
     "details.remittances.per-capita.title" : "pro Migrant",
     "details.migrants.title.total" : "Migranten",
@@ -11,18 +11,20 @@
     "details.aid.title.total" : "Entwicklungshilfe verteilt",
     "details.aid.title.selected-country" : "Entwicklungshilfe erhalten",
     "details.remittances.title" : "Geldsendungen von Migranten",
-    "details.remittances.units" : "inflationsbereinigte 2011 US-Dollar",
+    "details.remittances.units" : "inflationsbereinigte US-Dollar, 2011",
     "details.remittances.total" : "Gesamt",
     "details.remittances.per-capita.title" : "pro Migrant",
     "details.migrants.title" : "Migranten",
     "details.aid.title" : "Entwicklungshilfe erhalten",
     "money" : "${0}",
-    "amount.not-available" : "N/A",
+    "amount.not-available" : "k.A.",
     "amount.billions" : "{0} Milliarden",
+    "amount.billions.singular" : "{0} Milliarde",
     "amount.millions" : "{0} Millionen",
+    "amount.millions.singular" : "{0} Million",
     "amount.thousands" : "{0} Tausend",
 
-    "details.remittances.year" : "Im Jahr {0}",
+    "details.remittances.year" : "im Jahr {0}",
 
     "details.tseries.legend.remittances" : "Geldsendungen",
     "details.tseries.legend.aid" : "Entwicklungshilfe",
@@ -38,19 +40,19 @@
     "intro.1.text" : "Die Geldmenge, die Migranten in ihre Heimat zurückschicken, steigt seit Beginn der Datenerhebung 1970 stetig an. Geradezu explodiert sind die sogenannten Remittances aber erst um die Jahrtausendwende. Von (inflationsbereinigten) 204 Milliarden USD im Jahr 2000 sind sie auf 540 Milliarden im Jahr 2012 angestiegen. Hierbei handelt es sich nur um Geld, das überwiesen wurde. Über inoffizielle Kanäle, so schätzen Experten, dürften weitere 250 Milliarden fliessen.",
 
     "intro.2.title" : "Weit mehr als Entwicklungshilfe",
-    "intro.2.text" : "Geht es um Zahlungen an ärmere Länder, steht oft die staatliche Entwicklungshilfe im Fokus der Diskussion. Tatsache ist aber: Weltweit floss 2011 mindestens zweieinhalb mal so viel Geld über Remittances. Viele Länder werden stärker von ihren eigenen Landsleuten als von anderen Ländern unterstützt. In 30% aller Länder, die von der Schweiz Entwicklungshilfe erhalten, floss 2011 mehr Geld über Remittances, im Falle der Philippinen sogar fünfzig Mal mehr.",
+    "intro.2.text" : "Geht es um Zahlungen an ärmere Länder, steht oft die staatliche Entwicklungshilfe im Fokus der Diskussion. Tatsache ist aber: Weltweit floss 2011 mindestens zweieinhalb Mal so viel Geld über Remittances. Viele Länder werden stärker von ihren eigenen Landsleuten als von anderen Ländern unterstützt. In 30% aller Länder, die von der Schweiz Entwicklungshilfe erhalten, floss 2011 mehr Geld über Remittances, im Falle der Philippinen sogar fünfzig Mal mehr.",
 
     "intro.3.title" : "Immer mehr pro Auswanderer",
-    "intro.3.text" : "Die Geldsendungen nehmen nicht nur in der Summe zu. Auch der durchschnittliche Betrag pro Auswanderer hat sich in den letzten 10 Jahren auf rund 2500 USD verdoppelt. Es handelt sich hierbei allerdings nur um eine Schätzung. Die tatsächlichen Beträge dürften etwas tiefer liegen, da eingebürgerte Migranten in der Statistik nicht mehr berücksichtigt sind, ihre Überweisungen jedoch schon.",
+    "intro.3.text" : "Die Geldsendungen nehmen nicht nur in der Summe zu. Auch der durchschnittliche Betrag pro Auswanderer hat sich in den letzten zehn Jahren auf rund 2500 USD verdoppelt. Es handelt sich hierbei allerdings nur um eine Schätzung. Die tatsächlichen Beträge dürften etwas tiefer liegen, da eingebürgerte Migranten in der Statistik nicht mehr berücksichtigt sind, ihre Überweisungen jedoch schon.",
 
-    "intro.4.title" : "Indien und China weit vorneweg",
-    "intro.4.text" : " Die beiden mit Abstand bevölkerungsreichsten Länder der Welt, Indien und China, liegen auch auf der Rangliste der meisten Remittances weit vorne. 71 Milliarden US-Dollar schickten Inder aus aller Welt 2012 in ihre Heimat zurück, Chinesen 62 Milliarden. Auf den weiteren Plätzen folgen Mexiko, die Philippinen, Nigeria und Ägypten. Danach folgt mit Frankreich das erste europäische Land.",
+    "intro.4.title" : "Indien und China vorneweg",
+    "intro.4.text" : "Die beiden mit Abstand bevölkerungsreichsten Länder der Welt, Indien und China, liegen auch auf der Rangliste der Remittances weit vorne. 71 Milliarden US-Dollar schickten Inder aus aller Welt 2012 in ihre Heimat zurück, Chinesen 62 Milliarden. Auf den weiteren Plätzen folgen Mexiko, die Philippinen, Nigeria und Ägypten. Danach folgt mit Frankreich das erste europäische Land.",
 
     "intro.5.title" : "Griechen und Türken schicken weniger",
-    "intro.5.text" : " Nur bei neun Ländern ist die Summe der Überweisungen in die Heimat seit 2000 eindeutig rückläufig (bei einigen weiteren ist eine negative Tendenz sichtbar, Zahlen aus den letzten Jahren aber nicht verfügbar). Den stärksten Rückgang haben Griechenland (-79%) und die Türkei (-83%) zu verzeichnen. 2000 wurden noch über 7 Milliaden USD von Auslandtürken in die Türkei geschickt, 2012 weniger als eine Milliarde.",
+    "intro.5.text" : " Nur bei neun Ländern ist die Summe der Überweisungen in die Heimat seit 2000 eindeutig rückläufig (bei einigen weiteren ist eine negative Tendenz sichtbar, Zahlen aus den letzten Jahren sind aber nicht verfügbar). Den stärksten Rückgang haben Griechenland (–79%) und die Türkei (–83%) zu verzeichnen. 2000 wurden noch über 7 Milliarden USD von Auslandtürken in die Türkei geschickt, 2012 weniger als eine Milliarde.",
 
     "intro.6.title" : "Krise? Welche Krise?",
-    "intro.6.text" : "Die globale Finanz- und Wirtschaftskrise ab 2008 hat sich auf das Wachstum der Remittances nur sehr kurzfristig ausgewirkt. 2009 gingen die Zahlungen weltweit um 15 Milliarden zurück, der erste nenneswerte Rückgang seit Beginn der Datenerhebung überhaupt. Besonders betroffen waren Länder in Europa, Mittel- und Südamerika sowie Australien. Bereits im Folgejahr setzte sich das rasante Wachstum, das um die Jahrtausendwende eingesetzt hatte, fort.",
+    "intro.6.text" : "Die globale Finanz- und Wirtschaftskrise ab 2008 hat sich auf das Wachstum der Remittances nur sehr kurzfristig ausgewirkt. 2009 gingen die Zahlungen weltweit um 15 Milliarden zurück, der erste nennenswerte Rückgang seit Beginn der Datenerhebung überhaupt. Besonders betroffen waren Länder in Europa, Mittel- und Südamerika sowie Australien. Bereits im Folgejahr setzte sich das rasante Wachstum fort, das um die Jahrtausendwende eingesetzt hatte.",
 
     "intro.7.title" : "Erkunden Sie die Daten selber!",
     "intro.7.text" : "Klicken Sie die Länder an, die Sie besonders interessieren und navigieren Sie der Zeitachse entlang. Für jedes Land sehen Sie, wie sich die Remittances seit 1970 absolut und pro Auswanderer entwickelt haben und wo auf der Welt die Auswanderer leben. Je heller die Farbe, desto mehr Auswanderer des angewählten Landes leben dort."
@@ -75,7 +77,7 @@
     "amount.billions" : "{0} billion",
     "amount.millions" : "{0} million",
     "amount.thousands" : "{0} thousand",
-    "details.remittances.year" : "In {0}",
+    "details.remittances.year" : "in {0}",
 
     "details.tseries.legend.remittances" : "Remittances",
     "details.tseries.legend.aid" : "Development aid",
