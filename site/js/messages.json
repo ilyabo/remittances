@@ -73,7 +73,7 @@
     "details.migrants.title" : "Migrants",
     "details.aid.title" : "Development aid received",
     "money" : "${0}",
-    "amount.not-available" : "N/A",
+    "amount.not-available" : "n/a",
     "amount.billions" : "{0} billion",
     "amount.millions" : "{0} million",
     "amount.thousands" : "{0} thousand",
@@ -105,7 +105,7 @@
     "intro.5.text" : "Only nine countries have seen a decline of remittances since 2000 (a few others had a negative trend, but no recent data is available). Remittances have fallen the most for Greece (-79%) and for Turkey (-83%). While Turkish migrants had sent home more than 7 billion USD in 2000, in 2011 that number had fallen below 1 billion.",
 
     "intro.6.title" : "Crisis? What crisis?",
-    "intro.6.text" : "The global financial crisis that started in 2008 had only a short-term effect on remittances. In 2009, remittances decreased by 15 billion globally, the first notable decline ever. Mostly countries in Europe, Central and South America and Australia saw recorded a declide. One year later, though, rapid growth was back on track.",
+    "intro.6.text" : "The global financial crisis that started in 2008 had only a short-term effect on remittances. In 2009, remittances decreased by 15 billion globally, the first notable decline ever. Mostly countries in Europe, Central and South America and Australia saw a decline. One year later, though, rapid growth was back on track.",
 
     "intro.7.title" : "Explore the data yourself",
     "intro.7.text" : "Now it's time for you to start exploring the data yourself. Click on the countries you're interested in the most and slide along the time axis. For each country, you will see how remittances have developed since 1970 (both in absolute numbers and per migrant) and where most of those migrants live. The brighter the colour, the more migrants from the selected country."
