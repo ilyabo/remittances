@@ -246,6 +246,7 @@ var msg = (function() {
 var language = window.location.search.substr(1,3);
 if (language.length == 0) language = "de";
 msg.lang(language).load("js/messages.json");
+var countryNameKey = "name"+(msg.lang() == "en" ? "" : "_"+msg.lang())
 
 
 $(function() {
@@ -509,7 +510,7 @@ function selectYear(year, duration) {
 
 function selectCountry(code, dontUnselect) {
 
-  $('#countrySelect input.typeahead').val("");
+  $('#countrySelect input.typeahead').val(countryNamesByCode[code]);
 
   if (selectedCountry === code) {
     if (dontUnselect) return;
@@ -668,7 +669,7 @@ function initCountriesTypeahead(remittances) {
   };
 
   $('#countrySelect .typeahead').typeahead({
-    valueKey: "name"+(msg.lang() == "en" ? "" : "_"+msg.lang()),
+    valueKey: countryNameKey,
     name: 'countries',
     local: remittances,
     limit: 10
@@ -714,7 +715,7 @@ queue()
 
     remittances.forEach(function(r) {
       r.centroid = projection([+r.lon, +r.lat]);
-      countryNamesByCode[r.iso3] = r["name"+(msg.lang() == "en" ? "" : "_"+msg.lang())];
+      countryNamesByCode[r.iso3] = r[countryNameKey];
     });
 
 
