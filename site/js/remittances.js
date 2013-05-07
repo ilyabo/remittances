@@ -1,6 +1,6 @@
 
 
-(function() {
+$(function() {
 
 
 
@@ -659,18 +659,18 @@ function nestBy(uniqueProperty, data) {
 
 function initCountriesTypeahead(remittances) {
 
-    var typeaheadSelect = function(event, d) {
-      selectCountry(d.iso3, true);
-      //$(this).val("");
-    };
+  var typeaheadSelect = function(event, d) {
+    selectCountry(d.iso3, true);
+    //$(this).val("");
+  };
 
-    $('#countrySelect .typeahead').typeahead({
-      valueKey: "name"+(msg.lang() == "en" ? "" : "_"+msg.lang()),
-      name: 'countries',
-      local: remittances,
-      limit: 10
-    }).on("typeahead:selected", typeaheadSelect)
-      .on("typeahead:autocompleted", typeaheadSelect);
+  $('#countrySelect .typeahead').typeahead({
+    valueKey: "name"+(msg.lang() == "en" ? "" : "_"+msg.lang()),
+    name: 'countries',
+    local: remittances,
+    limit: 10
+  }).on("typeahead:selected", typeaheadSelect)
+    .on("typeahead:autocompleted", typeaheadSelect);
 
 }
 
@@ -965,6 +965,6 @@ queue()
 
 
 
-})();
+});
 
 
