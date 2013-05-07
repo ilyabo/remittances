@@ -69,8 +69,10 @@ var numberFormat = (function() {
   var fmt = d3.format(",.0f");
   return function(v) {
     if (v == null  ||  isNaN(v)) return msg("amount.not-available");
-    if (v >= 1e9) return msg("amount.billions",  fmt(v / 1e9));
-    if (v >= 1e6) return msg("amount.millions",  fmt(v / 1e6));
+    if (v >= 2e9) return msg("amount.billions",  fmt(v / 1e9));
+    if (v >= 1e9) return msg("amount.billions.singular",  fmt(v / 1e9));
+    if (v >= 2e6) return msg("amount.millions",  fmt(v / 1e6));
+    if (v >= 1e6) return msg("amount.millions.singular",  fmt(v / 1e6));
 //    if (v >= 1e3) return msg("amount.thousands", fmt(v / 1e3));
     return fmt(v);
   };
