@@ -390,10 +390,8 @@
          ]
 
     (merge
-      { :by-origin   (aid-for-countries (map :iso3 remittances)) }
-      (aid-for-countries   ["TOTAL"]))
-
-    )))
+      { :by-recipient   (aid-for-countries (map :iso3 remittances)) }
+      (aid-for-countries   ["TOTAL"]))))
 
 
 
