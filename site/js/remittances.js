@@ -531,6 +531,8 @@ function highlightCountry(code) {
   highlightedCountry = code;
   chart_svg.selectAll("path.land")
     .sort(function(a, b) {
+       if (a.id === selectedCountry) return 1;
+       if (b.id === selectedCountry) return -1;
        if (a.id === code) return 1;
        if (b.id === code) return -1;
       return 0;

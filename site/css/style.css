@@ -188,16 +188,22 @@ header {
 
 #chart .map .land { stroke-width:1.0; }
 
+
+
 #chart .map .land:hover, .land.highlighted {
 	/* fill: #67F7C1; */
     stroke:#F2D59A;
     stroke-width:1;
 
 }
-
 #chart .map .land.selected {
-	fill: #9D7C37;
+	/*fill: #9D7C37;*/
+	/*fill: #276cab;*/
+    stroke: #F2D59A;
+    fill:#555;
+    stroke-width:1.3;
 }
+
 
 
 
