@@ -302,7 +302,16 @@ var showGuide = function() {
 $("#show-intro").click(showGuide);
 
 var slideSelected = function() {
-  console.log(mySwiper.activeSlide );
+  switch (mySwiper.activeSlide) {
+    case 0:
+      d3.selectAll("#timeline g.tseries .aid").attr("opacity", "0.1");
+    break;
+
+    case 1:
+      d3.selectAll("#timeline g.tseries .aid").attr("opacity", "1.0");
+    break;
+  }
+
 };
 var next = function() {
   mySwiper.swipeNext();
@@ -1053,6 +1062,10 @@ queue()
       selectYear(year, true);
     }
 
+
+
+
+    slideSelected();
 });
 
 
