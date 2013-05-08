@@ -303,12 +303,30 @@ $("#show-intro").click(showGuide);
 
 var slideSelected = function() {
   switch (mySwiper.activeSlide) {
-    case 0:
-      d3.selectAll("#timeline g.tseries .aid").attr("opacity", "0.1");
+    case 0: // Massiver Anstieg in den letzten zehn Jahren
+      selectCountry(null);
+      d3.selectAll("#timeline g.tseries .aid").attr("opacity", "0");
     break;
 
-    case 1:
+    case 1: // Viermal mehr als Entwicklungshilfe
+      selectCountry(null);
       d3.selectAll("#timeline g.tseries .aid").attr("opacity", "1.0");
+    break;
+
+    case 2:  // Pro Kopf
+    break;
+
+    case 3: //  Indien und China weit vorneweg
+      selectCountry("IND", true);
+    break;
+
+    case 4: // Weniger Geld für Griechenland und die Türkei
+      selectCountry("TUR", true);
+    break;
+
+    case 5: // Krise? Welche Krise?
+      selectCountry(null);
+      selectYear(2008);
     break;
   }
 
