@@ -1,0 +1,15 @@
+Legend/Légende
+Code,English description,Description française
+B,Break,Rupture
+C,Non-publishable and confidential value,Valeur non-publiable et confidentielle
+D,Difference in methodology,Différence de méthodologie
+E,Estimated value,Valeur estimée
+F,Forecast value,Valeur projetée
+H,Missing value, holiday or weekend,Valeur manquante ; jour férié ou fin de semaine
+L,Missing value; data exist but were not collected,Valeur manquante ; donnée existe mais n'a pas été collecté
+M,Missing value; data cannot exist,Valeur manquante ; donnée ne peut pas exister
+N,Non-publishable, but non-confidential value,Valeur non-publiable, mais non-confidentielle
+P,Provisional value,Valeur provisoire
+R,Confidential statistical information due to identifiable,Information statistique confidentielle due à identifiable
+S,Strike,Grève
+Z,Absolute zero observation,Observation zéro absolu

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title data-msg="title"></title>
+    <meta charset="utf-8"/>
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/d3.geo.projection.v0.min.js"></script>
+    <script src="lib/queue.min.js"></script>
+    <script src="lib/jquery-1.9.1.min.js"></script>
+    <script src="lib/typeahead.min.js" ></script>
+    <script src="lib/idangerous.swiper-1.9.min.js" ></script>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+  </head>
+
+  <body>
+
+    <div id="loading"><img src="images/loading.gif"></div>
+
+    <div id="countrySelect">
+      <input type="text" class="typeahead">
+    </div>
+
+    <section id="visualisation">
+    <header>
+      <h1 data-msg="title"></h1>
+    </header>
+    <div id="chart"></div>
+    <div id="timeline">
+      <div class="play" data-msg="intro.animation.play"></div>
+    </div>
+    <div id="legend"></div>
+    <div id="details">
+      <div class="country"></div>
+      <div class="sub">
+        <div class="year"></div>
+
+        <div class="grp aid">
+          <div class="value"></div>
+          <div class="title" data-msg="details.aid.title"></div>
+        </div>
+        <div class="comment" data-msg="details.remittances.units"></div>
+
+
+        <div class="grp remittances">
+          <div class="value"></div>
+          <div class="title" data-msg="details.remittances.title"></div>
+        </div>
+
+        <div class="grp migrants">
+          <div class="value"></div>
+          <div class="title" data-msg="details.migrants.title"></div>
+        </div>
+
+        <div class="grp remittancesPerCapita">
+          <div class="value"></div>
+          <div class="title" data-msg="details.remittances.per-capita.title"></div>
+        </div>
+
+
+        <div class="description"></div>
+      </div>
+    </div>
+    
+    <a href="http://www.tageswoche.ch" title="(c) TagesWoche" alt="(c) TagesWoche"><img class="logo" src="images/logo-tw.png"></a>
+
+    </section>
+
+  <section id="guide" class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.1.title"></h2>
+            <p data-msg="intro.1.text"></p>
+            <a class="anim" data-msg="intro.animation.play"></a>
+          </div>
+          <a class="prev" data-msg="intro.prev" style="opacity:0.1"></a>
+          <a class="next" data-msg="intro.next"></a>
+          <div class="pagination"></div>
+          <a class="skip" data-msg="intro.skip"></a>
+        </aside>
+      </div>
+
+
+
+       <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.2.title"></h2>
+            <p data-msg="intro.2.text"></p>
+            <a class="anim" data-msg="intro.animation.play"></a>
+          </div>
+          <a class="prev" data-msg="intro.prev"></a>
+          <a class="next" data-msg="intro.next"></a>
+          <div class="pagination"></div>
+          <a class="skip" data-msg="intro.skip"></a>
+        </aside>
+      </div>
+
+      <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.3.title">Pro Kopf</h2>
+            <p  data-msg="intro.3.text"></p>
+            <a class="anim" data-msg="intro.animation.play"></a>
+          </div>
+          <a class="prev" data-msg="intro.prev"></a>
+          <a class="next" data-msg="intro.next"></a>
+          <div class="pagination"></div>
+          <a class="skip" data-msg="intro.skip"></a>
+        </aside>
+      </div>
+
+      <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.4.title"></h2>
+            <p data-msg="intro.4.text"></p>
+            <a class="anim" data-msg="intro.animation.play"></a>
+          </div>
+          <a class="prev" data-msg="intro.prev"></a>
+          <a class="next" data-msg="intro.next"></a>
+          <div class="pagination"></div>
+          <a class="skip" data-msg="intro.skip"></a>
+        </aside>
+      </div>
+
+      <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.5.title"></h2>
+            <p data-msg="intro.5.text"></p>
+            <a class="anim" data-msg="intro.animation.play"></a>
+          </div>
+          <a class="prev" data-msg="intro.prev"></a>
+          <a class="next" data-msg="intro.next"></a>
+          <div class="pagination"></div>
+          <a class="skip" data-msg="intro.skip"></a>
+        </aside>
+      </div>
+
+      <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.6.title"></h2>
+            <p data-msg="intro.6.text"></p>
+            <a class="anim" data-msg="intro.animation.play"></a>
+          </div>
+          <a class="prev" data-msg="intro.prev"></a>
+          <a class="next" data-msg="intro.next"></a>
+          <div class="pagination"></div>
+          <a class="skip" data-msg="intro.skip"></a>
+        </aside>
+      </div>
+
+      <div class="swiper-slide">
+        <aside>
+          <div class="content">
+            <h2 data-msg="intro.7.title"></h2>
+            <p data-msg="intro.7.text"></p>
+          </div>
+          <a class="prev" data-msg="intro.prev"></a>
+          <a class="next last" data-msg="intro.start-exploring"></a>
+        </aside>
+      </div>
+      
+    </div>
+  </section>
+    <script src="lib/fit-projection.js"></script>
+    <script src="js/remittances.js" ></script>
+  </body>
+</html>
