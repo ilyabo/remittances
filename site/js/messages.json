@@ -28,6 +28,14 @@
 
     "details.tseries.legend.remittances" : "Geldsendungen",
     "details.tseries.legend.aid" : "Entwicklungshilfe",
+    
+    "sources.remittances.name" : "Weltbank",
+    "sources.remittances.info" : "Alle Beträge sind anhand des Total DAC Deflator auf das Jahr 2011 bezogen inflationsbereinigt.",
+    "sources.migration.name" : "OECD",
+    "sources.migration.info" : "Vereinzelt tauchen negative Werte auf. Diese entstehen, wenn ein Land früher erhaltene Entwicklungshilfekredite zurückbezahlt hat.",
+    "sources.aid.name" : "Weltbank",
+    "sources.aid.info" : "Zahlen werden nur alle zehn Jahre erhoben, die Werte dazwischen wurden linear interpoliert. Für 2011 und 2012 werden die Zahlen von 2010 dargestellt.
+",
 
     "intro.prev" : "&nbsp;",
     "intro.next" : "Weiter",
@@ -81,6 +89,13 @@
 
     "details.tseries.legend.remittances" : "Remittances",
     "details.tseries.legend.aid" : "Development aid",
+    
+    "sources.remittances.name" : "World Bank",
+    "sources.remittances.info" : "All amounts have been inflation adjusted for 2011 based on the total DAC deflator.",
+    "sources.migration.name" : "OECD",
+    "sources.migration.info" : "Negative values occur when a country has paid back earlier aid debt.",
+    "sources.aid.name" : "World Bank",
+    "sources.aid.info" : "Migrant stocks are recorded only once per decade, for the years in-between, values have been interpolated linearly. For 2011 and 2012, numbers from 2010 as displayed.",
 
     "intro.prev" : "&nbsp;",
     "intro.next" : "Next",
