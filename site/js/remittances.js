@@ -680,7 +680,10 @@ function interpolateNumOfMigrants(values, year) {
   var val = str2num(values[year]);
 
   if (isNaN(val)) {
-    if ((year % 10) !== 0) {
+    if (year >= 2011) {
+	    val = str2num(values[2010]);
+    }
+    else if ((year % 10) !== 0) {
       // assuming we have data only for each 10th year (which ends with 0)
       var l = Math.floor(year/10)*10, r = Math.ceil(year/10)*10;
       var t = (year - l) / (r - l);
