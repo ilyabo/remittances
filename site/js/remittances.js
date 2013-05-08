@@ -569,7 +569,6 @@ function selectYear(year, duration) {
 
 function selectCountry(code, dontUnselect) {
 
-  $('#countrySelect input.typeahead').val(countryNamesByCode[code]);
 
   if (selectedCountry === code) {
     if (dontUnselect) return;
@@ -577,6 +576,9 @@ function selectCountry(code, dontUnselect) {
   } else {
     selectedCountry = code;
   }
+
+  $('#countrySelect input.typeahead').val(countryNamesByCode[selectedCountry]);
+
   updateChoropleth();
   updateDetails();
   updateTimeSeries();

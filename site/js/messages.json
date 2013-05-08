@@ -86,7 +86,9 @@
     "money" : "${0}",
     "amount.not-available" : "n/a",
     "amount.billions" : "{0} billion",
+    "amount.billions.singular" : "{0} billion",
     "amount.millions" : "{0} million",
+    "amount.millions.singular" : "{0} million",
     "amount.thousands" : "{0} thousand",
     "details.remittances.year" : "in {0}",
 

@@ -260,12 +260,12 @@ header {
     top:-85px; left:40px;
     line-height: 140px;
     cursor:pointer;
-    opacity:0.7;
+    opacity:0.5;
     pointer-events: visiblePainted;
     color:white;
 }
 
-#timeline .play:hover { opacity:1.0; }
+#timeline .play:hover { opacity:0.8; }
 #timeline .play.playing {
     background-image: url('../images/pause.svg');
 }
@@ -280,7 +280,7 @@ header {
 #timeline g.tseries path.remittances { stroke:/*#00b48f*/white; }
 #timeline g.tseries path.aid { stroke:#2c97df; }
 
-#timeline g.tseries .legend { opacity: 0.7; }
+#timeline g.tseries .legend { opacity: 0.9; }
 #timeline g.tseries .legend circle { stroke:#111; stroke-width:1; }
 #timeline g.tseries .legend .remittances  { /*fill:#00b48f;*/ fill:white; }
 #timeline g.tseries .legend .aid  { fill:#2c97df; }
