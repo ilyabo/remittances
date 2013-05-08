@@ -29,9 +29,11 @@
     "details.tseries.legend.remittances" : "Geldsendungen",
     "details.tseries.legend.aid" : "Entwicklungshilfe",
     
+    "sources" : "Quellen",
     "sources.remittances.type" : "Geldsendungen",
     "sources.remittances.name" : "Weltbank",
     "sources.remittances.info" : "Alle Beträge sind anhand des Total DAC Deflator auf das Jahr 2011 bezogen inflationsbereinigt.",
+    "sources.migration.type" : "Migration",
     "sources.migration.name" : "OECD",
     "sources.migration.info" : "Vereinzelt tauchen negative Werte auf. Diese entstehen, wenn ein Land früher erhaltene Entwicklungshilfekredite zurückbezahlt hat.",
     "sources.aid.type" : "Entwicklungshilfe",
@@ -91,9 +93,11 @@
     "details.tseries.legend.remittances" : "Remittances",
     "details.tseries.legend.aid" : "Development aid",
     
+    "sources" : "Sources",
     "sources.remittances.type" : "Remittances",
     "sources.remittances.name" : "World Bank",
     "sources.remittances.info" : "All amounts have been inflation adjusted for 2011 based on the total DAC deflator.",
+    "sources.migration.type" : "Migration",
     "sources.migration.name" : "OECD",
     "sources.migration.info" : "Negative values occur when a country has paid back earlier aid debt.",
     "sources.aid.type" : "Development aid",
