@@ -45,11 +45,12 @@ var rscale = d3.scale.sqrt()
   .range([0, height/45]);
 
 
-var timelineMargins = {left:40,top:0,bottom:5,right:100};
+var timelineMargins = {left:40,top:10,bottom:5,right:80};
 
-var timelineWidth = Math.min(width - 250, 800),
-    timelineHeight = Math.min(260, height * 0.3);
-
+//var timelineWidth = Math.min(width - 250, 800),
+//    timelineHeight = Math.min(260, height * 0.3);
+var timelineWidth = 600,
+    timelineHeight = 200;
 
 
 var timelineSvg = d3.select("#timeline").append("svg")
@@ -339,7 +340,8 @@ $(function() {
 
   var hideGuide = function() {
     $("#guide").fadeOut();
-//    $("#timeline .play").css("visibility", "visible");
+    $("#countrySelect").fadeIn();
+    $("#timeline .play").css("visibility", "visible");
 //    $("#details").fadeIn();
 //    $("#timeline g.tseries .legend").fadeIn();
     yearAnimation.stop();
@@ -418,7 +420,7 @@ function renderTimeSeries(name, data) {
       .attr("class", "legend")
       .attr("transform",
 //        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.4) +")"
-        "translate(50,50)"
+        "translate(80,40)"
       );
 
     var gg = legend.append("g")
@@ -790,8 +792,8 @@ queue()
 
 
 
-    var leftMargin = Math.max(100, width*0.15);
-    fitProjection(projection, world, [[leftMargin, 60], [width - 100, height-120]], true);
+    var leftMargin = 350; // Math.max(100, width*0.4);
+    fitProjection(projection, world, [[leftMargin, 60], [width - 20, height-120]], true);
 
 
 
