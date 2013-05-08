@@ -36,8 +36,7 @@
     "sources.migration.info" : "Vereinzelt tauchen negative Werte auf. Diese entstehen, wenn ein Land früher erhaltene Entwicklungshilfekredite zurückbezahlt hat.",
     "sources.aid.type" : "Entwicklungshilfe",
     "sources.aid.name" : "Weltbank",
-    "sources.aid.info" : "Zahlen werden nur alle zehn Jahre erhoben, die Werte dazwischen wurden linear interpoliert. Für 2011 und 2012 werden die Zahlen von 2010 dargestellt.
-",
+    "sources.aid.info" : "Zahlen werden nur alle zehn Jahre erhoben, die Werte dazwischen wurden linear interpoliert. Für 2011 und 2012 werden die Zahlen von 2010 dargestellt.",
 
     "intro.prev" : "&nbsp;",
     "intro.next" : "Weiter",

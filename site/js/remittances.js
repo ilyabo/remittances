@@ -719,22 +719,35 @@ function nestBy(uniqueProperty, data, rollup) {
 }
 
 
-function initCountriesTypeahead(remittances) {
+function initCountriesTypeahead() {
 
+  var countryNames = d3.keys(countryNamesByCode).map(function(iso3) {
+    return { iso3:iso3, name:countryNamesByCode[iso3] };
+  });
   var typeaheadSelect = function(event, d) {
     selectCountry(d.iso3, true);
-    //$(this).val("");
   };
 
   $('#countrySelect .typeahead').typeahead({
-    valueKey: countryNameKey,
+    valueKey: "name",
     name: 'countries',
-    local: remittances,
+    local: countryNames,
     limit: 10
   }).on("typeahead:selected", typeaheadSelect)
     .on("typeahead:autocompleted", typeaheadSelect);
 
 }
+
+function initCountryNames(remittances) {
+  remittances.forEach(function(r) {
+    r.centroid = projection([+r.lon, +r.lat]);
+    countryNamesByCode[r.iso3] = r[countryNameKey];
+  });
+  countryNamesByCode.GBR = "Grossbritannien";
+  countryNamesByCode.ARG = "Argentinien";
+}
+
+
 
 queue()
   .defer(d3.json, "data/world-countries.json")
@@ -783,17 +796,10 @@ queue()
 
 
 
-    remittances.forEach(function(r) {
-      r.centroid = projection([+r.lon, +r.lat]);
-      countryNamesByCode[r.iso3] = r[countryNameKey];
-    });
-
-
+    initCountryNames(remittances);
     world.features.forEach(function(f) {
       countryFeaturesByCode[f.id] = f;
     });
-
-
     initCountriesTypeahead(remittances);
 
 
@@ -974,6 +980,7 @@ queue()
       .attr("cx", 0)
       .attr("cy", timelineHeight - selectorHandHeight)
       .attr("r", 30);
+
 
 
 
