@@ -274,88 +274,103 @@ var countryNameKey = "name"+(msg.lang() == "en" ? "" : "_"+msg.lang())
 
 
 $(function() {
-
   msg.update();  // just to be sure the messages are set after the document is ready
-
-
-	var mySwiper = new Swiper('#guide',{
-		//Your options here:
-		mode:'horizontal'
-	});
-
-  var next = function() {
-    mySwiper.swipeNext();
-  };
-  var prev = function() {
-    mySwiper.swipePrev();
-  };
-
-  $("#guide .next").click(next);
-  $("#guide .prev").click(prev);
-  $("#guide .anim").click(function() {
-    if ($(this).hasClass("playing")) {
-      $("#guide .anim")
-        .removeClass("playing")
-        .text(msg("intro.animation.play"));
-      yearAnimation.stop();
-    } else {
-      $("#guide .anim")
-        .addClass("playing")
-        .text(msg("intro.animation.stop"));
-      if ($(this).data("clicked")) {
-        yearAnimation.start();
-      } else {
-        yearAnimation.restart();
-        $(this).data("clicked", true);
-      }
-    }
-  });
-
-  $("#timeline .play").click(function() {
-    if ($(this).hasClass("playing")) {
-      $("#timeline .play")
-        .removeClass("playing")
-        .text(msg("intro.animation.play"));
-      yearAnimation.stop();
-    } else {
-      $("#timeline .play")
-        .addClass("playing")
-        .text(msg("intro.animation.stop"));
-      if ($(this).data("clicked")) {
-        yearAnimation.start();
-      } else {
-        yearAnimation.restart();
-        $(this).data("clicked", true);
-      }
-    }
-  });
-
-
-  $("body").keydown(function(e) {
-    if ($("#guide").is(":visible")) {
-      if (e.keyCode == 37) prev();
-      else if (e.keyCode == 39) next();
-    }
-  });
-
-  var hideGuide = function() {
-    $("#guide").fadeOut();
-    $("#countrySelect").fadeIn();
-    $("#timeline .play").css("visibility", "visible");
-//    $("#details").fadeIn();
-//    $("#timeline g.tseries .legend").fadeIn();
-    yearAnimation.stop();
-  };
-
-  $("#guide .skip").click(hideGuide);
-  $("#guide .last").click(hideGuide);
-
-  $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
-
-  d3.select("#guide").style("visibility", "visible");
-
-
 });
+
+
+
+var mySwiper = new Swiper('#guide',{
+  //Your options here:
+  mode:'horizontal'
+});
+
+var hideGuide = function() {
+  $("#guide").fadeOut();
+  $("#countrySelect").fadeIn();
+  $("#timeline .play").css("visibility", "visible");
+  yearAnimation.stop();
+};
+
+var showGuide = function() {
+  $("#guide").fadeIn();
+  $("#countrySelect").fadeOut();
+  $("#timeline .play").css("visibility", "hidden");
+  yearAnimation.stop();
+  slideSelected();
+};
+
+$("#show-intro").click(showGuide);
+
+var slideSelected = function() {
+  console.log(mySwiper.activeSlide );
+};
+var next = function() {
+  mySwiper.swipeNext();
+  slideSelected();
+};
+var prev = function() {
+  mySwiper.swipePrev();
+  slideSelected();
+};
+
+
+$("#guide .next").click(next);
+$("#guide .prev").click(prev);
+$("#guide .anim").click(function() {
+  if ($(this).hasClass("playing")) {
+    $("#guide .anim")
+      .removeClass("playing")
+      .text(msg("intro.animation.play"));
+    yearAnimation.stop();
+  } else {
+    $("#guide .anim")
+      .addClass("playing")
+      .text(msg("intro.animation.stop"));
+    if ($(this).data("clicked")) {
+      yearAnimation.start();
+    } else {
+      yearAnimation.restart();
+      $(this).data("clicked", true);
+    }
+  }
+});
+
+$("#timeline .play").click(function() {
+  if ($(this).hasClass("playing")) {
+    $("#timeline .play")
+      .removeClass("playing")
+      .text(msg("intro.animation.play"));
+    yearAnimation.stop();
+  } else {
+    $("#timeline .play")
+      .addClass("playing")
+      .text(msg("intro.animation.stop"));
+    if ($(this).data("clicked")) {
+      yearAnimation.start();
+    } else {
+      yearAnimation.restart();
+      $(this).data("clicked", true);
+    }
+  }
+});
+
+
+$("body").keydown(function(e) {
+  if ($("#guide").is(":visible")) {
+    if (e.keyCode == 37) prev();
+    else if (e.keyCode == 39) next();
+  }
+});
+
+
+$("#guide .skip").click(hideGuide);
+$("#guide .last").click(hideGuide);
+
+$(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
+
+
+
+
 
 
 /* @param values is an array in which the indices correspond to the

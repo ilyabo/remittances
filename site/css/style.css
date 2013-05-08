@@ -48,9 +48,17 @@ a {
 
 
 #guide {
-    visibility: hidden;
     height: 100%;
 }
+
+#show-intro {
+    cursor:pointer; opacity:0.7;
+    position: absolute;
+    left:30px; bottom:20px;
+    color:white;
+    font-size: 14px;
+}
+#show-intro:hover { opacity:1.0; }
 
 
 
@@ -85,12 +93,12 @@ a {
 	height: 31px;
 	display: block;
 	line-height: 31px;
-	padding-left: 45px;
+	padding-left: 37px;
 	margin-left: 20px;
     cursor:pointer;
 }
 
-#guide .next, #guide .prev {
+#guide .next, #guide .prev, #guide .last {
 	height: 76px;
 	display: inline-block;
 	line-height: 76px;
@@ -102,11 +110,13 @@ a {
 #guide .anim,
 #guide .skip,
 #guide .next,
+#guide .last,
 #guide .prev { opacity: 0.8; }
 
 #guide .anim:hover,
 #guide .skip:hover,
 #guide .next:hover,
+#guide .last:hover,
 #guide .prev:hover { opacity: 1.0; }
 
 #guide .anim {
@@ -127,7 +137,7 @@ a {
 /*#guide .next,       #guide .prev       { opacity:0.5; }*/
 /*#guide .next:hover, #guide .prev:hover { opacity:1.0; }*/
 
-#guide .next {
+#guide .next, #guide .last {
 	background: url('../images/next.png') no-repeat;
 }
 
@@ -209,7 +219,7 @@ header {
 
 #timeline {
     position:fixed;
-    bottom:35px;
+    bottom:25px;
     width:100%;
     /*height:120px;*/
     text-align: right;
@@ -221,11 +231,6 @@ header {
 	-ms-user-select: none;
 	user-select: none;
 }
-
-
-
-
-
 
 
 #timeline .timeAxis g.tick.major line { stroke:#999; }
@@ -260,12 +265,12 @@ header {
     top:-85px; left:40px;
     line-height: 140px;
     cursor:pointer;
-    opacity:0.5;
+    opacity:0.6;
     pointer-events: visiblePainted;
     color:white;
 }
 
-#timeline .play:hover { opacity:0.8; }
+#timeline .play:hover { opacity:0.9; }
 #timeline .play.playing {
     background-image: url('../images/pause.svg');
 }
