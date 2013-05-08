@@ -130,7 +130,7 @@ var yearAxis = d3.svg.axis()
   .ticks(timelineWidth / 70)
   .tickSize(10, 5, timelineHeight)
   .tickSubdivide(4)
-  .tickPadding(15)
+  .tickPadding(5)
   .tickFormat(function(d) { return d; });
 
 
@@ -392,11 +392,7 @@ function calcTotalsByYear(values) {
 
 
 
-function renderTimeSeries(name, data) {
-
-  if (data == null) data = {};
-  var years = remittanceYears; // d3.keys(data).sort();
-
+function initTimeSeries(name) {
   var tseries = timeline.select("g.tseries");
 
   if (tseries.empty()) {
@@ -446,6 +442,16 @@ function renderTimeSeries(name, data) {
       .text(msg("details.tseries.legend.aid"));
 
   }
+}
+
+function renderTimeSeries(name, data) {
+  var tseries = timeline.select("g.tseries");
+  var path = tseries.select("path." + name);
+
+  if (data == null) data = {};
+  var years = remittanceYears; // d3.keys(data).sort();
+
+
 
   tseries.datum(years.map(function(y) { return { year:y,  value: data[y] }; }), years)
     .select("path." + name)
@@ -921,6 +927,8 @@ queue()
     selectYear(2010);
 
 
+    initTimeSeries("aid");
+    initTimeSeries("remittances");
 
 
     var timelineAxisGroup = timeline.append("g")
@@ -935,6 +943,7 @@ queue()
 //    timelineRightAxisGroup.call(magnitudeAxis);
 
     updateTimeSeries();
+
 
 
 

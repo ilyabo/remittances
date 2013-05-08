@@ -229,7 +229,7 @@ header {
 
 
 #timeline .timeAxis g.tick.major line { stroke:#999; }
-#timeline .timeAxis g.tick.major text { stroke:#999; font-size:16px; /*pointer-events:none;*/ }
+#timeline .timeAxis g.tick.major text { stroke:#999; font-size:14px; /*pointer-events:none;*/ }
 #timeline .timeAxis line.tick.minor  { stroke:#999; }
 
 
