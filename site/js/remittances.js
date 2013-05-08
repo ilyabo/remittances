@@ -50,7 +50,7 @@ var timelineMargins = {left:40,top:10,bottom:5,right:80};
 //var timelineWidth = Math.min(width - 250, 800),
 //    timelineHeight = Math.min(260, height * 0.3);
 var timelineWidth = 600,
-    timelineHeight = 200;
+    timelineHeight = 180;
 
 
 var timelineSvg = d3.select("#timeline").append("svg")
@@ -157,6 +157,7 @@ var yearAnimation = (function() {
   var timerId = null;
   var interval = 300;
   var playing = false;
+  var yearInterval = null;
 
   var stop = function() {
     if (timerId !== null) {
@@ -172,19 +173,30 @@ var yearAnimation = (function() {
   var restart = function() {
     if (playing) start();
   }
+  var years = function() {
+    if (yearInterval !== null) return yearInterval;
+    return remittanceYears;
+  }
   var rewind = function() {
-    selectYear(remittanceYears[0], interval);
+    selectYear(years()[0], interval);
     setTimeout(restart, interval * 2);
   };
   var next = function() {
+    if (yearInterval !== null  &&  years().indexOf(year) < 0) {
+      year = years()[0];
+    }
     var year = selectedYear + 1;
-    if (year > remittanceYears[remittanceYears.length - 1]) {
+    if (year > years()[years().length - 1]) {
       stop();
       setTimeout(rewind, interval * 4);
     } else {
       selectYear(year, interval);
     }
   };
+  anim.years = function(years) {
+    yearInterval = (years != null ? years.splice(0) : null);
+    return anim;
+  }
   anim.restart = function() {
     playing = true;
     rewind();
@@ -284,14 +296,8 @@ var mySwiper = new Swiper('#guide',{
   mode:'horizontal'
 });
 
-var hideGuide = function() {
-  $("#guide").fadeOut();
-  $("#countrySelect").fadeIn();
-  $("#timeline .play").css("visibility", "visible");
-  yearAnimation.stop();
-};
 
-var showGuide = function() {
+function showGuide() {
   $("#guide").fadeIn();
   $("#countrySelect").fadeOut();
   $("#timeline .play").css("visibility", "hidden");
@@ -301,32 +307,76 @@ var showGuide = function() {
 
 $("#show-intro").click(showGuide);
 
-var slideSelected = function() {
+function hideGuide() {
+  $("#guide").fadeOut();
+  $("#countrySelect").fadeIn();
+  $("#timeline .play").css("visibility", "visible");
+  yearAnimation.stop();
+  showAid();
+};
+
+function hideAid() {
+  d3.selectAll("#timeline g.tseries .aid")
+    .transition()
+    .duration(300)
+      .attr("opacity", "0");
+}
+
+function showAid() {
+  d3.selectAll("#timeline g.tseries .aid")
+    .transition()
+    .duration(300)
+      .attr("opacity", "1.0");
+}
+
+
+function slideSelected() {
+  yearAnimation.stop();
+  $("#guide .anim")
+    .removeClass("playing")
+    .text(msg("intro.animation.play"));
+
   switch (mySwiper.activeSlide) {
     case 0: // Massiver Anstieg in den letzten zehn Jahren
       selectCountry(null);
-      d3.selectAll("#timeline g.tseries .aid").attr("opacity", "0");
+      selectYear(2012);
+      hideAid();
     break;
 
     case 1: // Viermal mehr als Entwicklungshilfe
       selectCountry(null);
-      d3.selectAll("#timeline g.tseries .aid").attr("opacity", "1.0");
+      selectYear(2011);
+      showAid();
     break;
 
     case 2:  // Pro Kopf
+      selectCountry(null);
+      selectYear(2012);
+      hideAid();
     break;
 
     case 3: //  Indien und China weit vorneweg
       selectCountry("IND", true);
+      selectYear(2012);
+      hideAid();
     break;
 
     case 4: // Weniger Geld für Griechenland und die Türkei
       selectCountry("TUR", true);
+      selectYear(2000);
+      hideAid();
     break;
 
     case 5: // Krise? Welche Krise?
       selectCountry(null);
       selectYear(2008);
+      hideAid();
+    break;
+
+    case 6: //  Erkunden Sie die Daten selber!
+      selectCountry(null);
+      selectYear(2010);
+      showAid();
     break;
   }
 
@@ -350,13 +400,16 @@ $("#guide .anim").click(function() {
       .text(msg("intro.animation.play"));
     yearAnimation.stop();
   } else {
+    var years = $(this).data("years");
+    if (years != null) years = years.split(",").map(str2num);
     $("#guide .anim")
       .addClass("playing")
       .text(msg("intro.animation.stop"));
+
     if ($(this).data("clicked")) {
-      yearAnimation.start();
+      yearAnimation.years(years).start();
     } else {
-      yearAnimation.restart();
+      yearAnimation.years(years).restart();
       $(this).data("clicked", true);
     }
   }
