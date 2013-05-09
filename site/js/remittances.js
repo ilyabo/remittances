@@ -889,6 +889,8 @@ function updateChoropleth() {
           });
 
   }
+
+  updateColorLegend();
 }
 
 
@@ -1000,6 +1002,47 @@ function hideTooltip() {
   $("#tooltip")
     .text("")
     .css("display", "none");
+}
+
+
+
+function updateColorLegend() {
+  var container = d3.select("#color-legend");
+  var margin = {left:5, top:10, right:10, bottom:20};
+  var w = 120 - margin.left - margin.right,
+      h = 40 - margin.top - margin.bottom;
+
+  var rect, gradient;
+  var svg, defs, g = container.select("g.color-legend");
+
+  if (g.empty()) {
+    svg = container.append("svg")
+        .attr("width", 150 + margin.left + margin.right)
+        .attr("height", 40 + margin.top + margin.bottom);
+    gradient = svg.append("defs")
+      .append("linearGradient")
+        .attr({ id : "migrants-scale-gradient", x1 :"0%", y1 :"0%", x2 : "100%", y2:"0%" });
+    gradient.append("stop")
+      .attr({ offset:"0%", "stop-color": migrationsColor.range()[0] });
+    gradient.append("stop")
+      .attr({ offset:"100%", "stop-color": migrationsColor.range()[1] });
+
+    g = svg.append("g")
+        .attr("class", "color-legend")
+        .attr("transform", "translate("+margin.left+","+margin.top+")");
+
+    rect = g.append("rect")
+      .attr({
+        "class": "gradient",
+        stroke : "#ccc",
+        "stroke-width" : "0.4",
+        width: w, height: h,
+        fill: "url(#migrants-scale-gradient)"
+      })
+
+  }
+
+  rect = g.select("rect.gradient");
 }
 
 
@@ -1249,7 +1292,6 @@ queue()
       .attr("cx", 0)
       .attr("cy", timelineHeight - selectorHandHeight)
       .attr("r", 30);
-
 
 
 
