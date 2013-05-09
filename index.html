@@ -11,7 +11,6 @@
     <script src="lib/idangerous.swiper-1.9.min.js" ></script>
     <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-
   </head>
 
   <body>
@@ -61,11 +60,47 @@
 
         <div class="description"></div>
       </div>
-    </div>
-    
-    <a href="http://www.tageswoche.ch" title="(c) TagesWoche" alt="(c) TagesWoche"><img class="logo" src="images/logo-tw.png"></a>
 
-    </section>
+
+    </div>
+
+    <div id="color-legend"></div>
+    <div id="circle-legend"></div>
+
+    <a href="http://www.tageswoche.ch" target="_blank" title="(c) TagesWoche" alt="(c) TagesWoche">
+      <img class="logo" src="images/logo-tw.png">
+    </a>
+
+    <div id="sources">
+      <span data-msg="sources"></span>:
+      <ul>
+        <li>
+          <span class="info" data-msg="sources.remittances.type" data-info="sources.remittances.info"></span>:
+          <a data-msg="sources.remittances.name" target="_blank" href="http://econ.worldbank.org/WBSITE/EXTERNAL/EXTDEC/EXTDECPROSPECTS/0,,contentMDK:22759429~pagePK:64165401~piPK:64165026~theSitePK:476883,00.html"></a>
+        </li>
+        <li>
+          <span class="info" data-msg="sources.aid.type" data-info="sources.aid.info"></span>:
+          <a data-msg="sources.aid.name" target="_blank" href="http://data.worldbank.org/data-catalog/global-bilateral-migration-database"></a>
+        </li>
+        <li>
+          <span class="info" data-msg="sources.migration.type" data-info="sources.migration.info"></span>:
+          <a data-msg="sources.migration.name" target="_blank" href="http://stats.oecd.org/Index.aspx?DataSetCode=REF_TOTAL_ODF#"></a>
+        </li>
+      </ul>
+
+    </div>
+
+
+    <div id="show-intro" data-msg="intro.show"></div>
+    <div id="per-capita">
+      <input id="per-capita-chk" type="checkbox"><label for="per-capita-chk"><span data-msg="per-capita"></span></label>
+    </div>
+
+    <div id="tooltip"></div>
+
+
+
+  </section>
 
   <section id="guide" class="swiper-container">
     <div class="swiper-wrapper">
@@ -90,7 +125,6 @@
           <div class="content">
             <h2 data-msg="intro.2.title"></h2>
             <p data-msg="intro.2.text"></p>
-            <a class="anim" data-msg="intro.animation.play"></a>
           </div>
           <a class="prev" data-msg="intro.prev"></a>
           <a class="next" data-msg="intro.next"></a>
@@ -146,7 +180,7 @@
           <div class="content">
             <h2 data-msg="intro.6.title"></h2>
             <p data-msg="intro.6.text"></p>
-            <a class="anim" data-msg="intro.animation.play"></a>
+           <!-- <a class="anim" data-msg="intro.animation.play" data-years="2008,2009,2010,2011,2012"></a>-->
           </div>
           <a class="prev" data-msg="intro.prev"></a>
           <a class="next" data-msg="intro.next"></a>
@@ -162,7 +196,7 @@
             <p data-msg="intro.7.text"></p>
           </div>
           <a class="prev" data-msg="intro.prev"></a>
-          <a class="next last" data-msg="intro.start-exploring"></a>
+          <a class="last" data-msg="intro.start-exploring"></a>
         </aside>
       </div>
       
@@ -170,5 +204,18 @@
   </section>
     <script src="lib/fit-projection.js"></script>
     <script src="js/remittances.js" ></script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-18717219-2']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
   </body>
 </html>

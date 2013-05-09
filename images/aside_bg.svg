@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
   <defs>
     <linearGradient id="transpg" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#111;stop-opacity:0.98" />
-      <stop offset="70%" style="stop-color:#111;stop-opacity:0.98" />
+      <stop offset="0%" style="stop-color:#111;stop-opacity:0.9" />
+      <stop offset="80%" style="stop-color:#111;stop-opacity:0.9" />
       <stop offset="100%" style="stop-color:#111;stop-opacity:0" />
     </linearGradient>
   </defs>
-  <rect width="600" height="1" fill="url(#transpg)"/>
+  <rect width="430" height="1" fill="url(#transpg)"/>
 </svg>

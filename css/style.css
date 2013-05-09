@@ -21,7 +21,7 @@ header {
 h1 {
 	color: white;
 	font-size: 19pt;
-	font-weight: normal;
+	font-weight: bold;
     top: 25px;
     left:25px;
 }
@@ -48,9 +48,17 @@ a {
 
 
 #guide {
-    visibility: hidden;
     height: 100%;
 }
+
+#show-intro {
+    cursor:pointer; opacity:0.7;
+    position: absolute;
+    left:30px; bottom:20px;
+    color:white;
+    font-size: 14px;
+}
+#show-intro:hover { opacity:1.0; }
 
 
 
@@ -58,20 +66,20 @@ a {
     display: inline-block;
 	padding: 0px 30px 0px 30px;
 	/*width: 424px;*/
-	width: 380px;
+	width: 360px;
     height:500px;
     position: relative;
-    top: 50%;
+    top: 49%;
     margin-top:-250px;
     color: white;
     float:left;
 }
 
 #guide .content {
-    height:26em;
+    height:25em;
 }
 
-#guide aside h2 { font-size:23pt; font-weight: bold; }
+#guide aside h2 { font-size:22pt; font-weight: bold; }
 
 #guide  aside p {
     padding-top:0px;
@@ -85,12 +93,12 @@ a {
 	height: 31px;
 	display: block;
 	line-height: 31px;
-	padding-left: 45px;
+	padding-left: 37px;
 	margin-left: 20px;
     cursor:pointer;
 }
 
-#guide .next, #guide .prev {
+#guide .next, #guide .prev, #guide .last {
 	height: 76px;
 	display: inline-block;
 	line-height: 76px;
@@ -102,11 +110,13 @@ a {
 #guide .anim,
 #guide .skip,
 #guide .next,
+#guide .last,
 #guide .prev { opacity: 0.8; }
 
 #guide .anim:hover,
 #guide .skip:hover,
 #guide .next:hover,
+#guide .last:hover,
 #guide .prev:hover { opacity: 1.0; }
 
 #guide .anim {
@@ -127,7 +137,7 @@ a {
 /*#guide .next,       #guide .prev       { opacity:0.5; }*/
 /*#guide .next:hover, #guide .prev:hover { opacity:1.0; }*/
 
-#guide .next {
+#guide .next, #guide .last {
 	background: url('../images/next.png') no-repeat;
 }
 
@@ -209,10 +219,10 @@ header {
 
 #timeline {
     position:fixed;
-    bottom:0px;
+    bottom:25px;
     width:100%;
     /*height:120px;*/
-    text-align: center;
+    text-align: right;
     /*background-color: rgba(0,0,0,0.1);*/
     -webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -223,31 +233,26 @@ header {
 }
 
 
-
-
-
-
-
 #timeline .timeAxis g.tick.major line { stroke:#999; }
-#timeline .timeAxis g.tick.major text { stroke:#999; font-size:16px; pointer-events:none; }
+#timeline .timeAxis g.tick.major text { stroke:#999; font-size:14px; /*pointer-events:none;*/ }
 #timeline .timeAxis line.tick.minor  { stroke:#999; }
 
 
-#timeline .magnitudeAxis { opacity: 0.3; }
+#timeline .magnitudeAxis { opacity: 0.7; }
 #timeline .magnitudeAxis g.tick.major line { stroke:#999; }
-#timeline .magnitudeAxis g.tick.major text { stroke:#999; font-size:12px; }
+#timeline .magnitudeAxis g.tick.major text { stroke:#999; font-size:10px; }
 #timeline .magnitudeAxis line.tick.minor  { stroke:#999; }
 
 
 
 #timeline {
-    pointer-events: none;
+    /*pointer-events: none;*/
     vertical-align: bottom;
     white-space: nowrap;
 }
 
 #timeline .play {
-    /*visibility:  hidden;*/
+    visibility:  hidden;
     display:inline-block;
     background-image: url('../images/play.svg');
     background-repeat:no-repeat;
@@ -255,21 +260,23 @@ header {
     background-size:50px 50px;
     height:80px; width:80px;
     position: relative;
-    top:-55px; left:45px;
+    text-align: center;
+    /*padding-right:10px;*/
+    top:-85px; left:40px;
     line-height: 140px;
     cursor:pointer;
-    opacity:0.7;
+    opacity:0.6;
     pointer-events: visiblePainted;
     color:white;
 }
 
-#timeline .play:hover { opacity:1.0; }
+#timeline .play:hover { opacity:0.9; }
 #timeline .play.playing {
     background-image: url('../images/pause.svg');
 }
 
 #timeline g.selectorHand, #timeline g.tseries  { pointer-events: visiblePainted;  }
-#timeline path.domain { fill:none; stroke:#555; stroke-width:0.3; }
+#timeline path.domain { fill:#111; fill-opacity:0.1; stroke:#555; stroke-width:0.3; }
 #timeline g.selectorHand { cursor:ew-resize; }
 #timeline g.selectorHand line { stroke:#999; stroke-width:2;   }
 #timeline g.selectorHand circle.center {  fill:#fff; stroke:#666; stroke-width:2; }
@@ -278,15 +285,16 @@ header {
 #timeline g.tseries path.remittances { stroke:/*#00b48f*/white; }
 #timeline g.tseries path.aid { stroke:#2c97df; }
 
-#timeline g.tseries .legend { }
+#timeline g.tseries .legend { opacity: 0.9; }
 #timeline g.tseries .legend circle { stroke:#111; stroke-width:1; }
 #timeline g.tseries .legend .remittances  { /*fill:#00b48f;*/ fill:white; }
 #timeline g.tseries .legend .aid  { fill:#2c97df; }
-#timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; }
+#timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; text-shadow: 1px 1px 1px #111; }
 
 
 
 #countrySelect {
+    display:none;
     background-image: url('../images/search.png');
     background-size: 25px 25px;
     background-repeat: no-repeat;
@@ -384,9 +392,9 @@ header {
 	backface-visibility:hidden;
 	/* Fix of Webkit flickering */
 		
-	/*background: url(../images/aside_bg_darker.png) repeat-y left;*/
 	background: url(../images/aside_bg.svg) repeat-y left;
-    background-size:600px 1px;
+    background-size:430px 1px;
+	/*background: url(../images/aside_bg_darker.png) repeat-y left;*/
 	z-index:1;
 }
 .swiper-wrapper {
@@ -421,6 +429,8 @@ header {
 }
 .swiper-slide {
 	float: left;
+	background: url(../images/aside_bg.svg) repeat-y left;
+    background-size:430px 1px;
 }
 
 /* IE10 Windows Phone 8 Fixes */
@@ -438,4 +448,56 @@ header {
 }
 
 /* Logo */
-.logo {position: absolute;right:20px;bottom:15px;opacity: 0.6;width: 150px;}
+.logo {position: absolute;right:5px;bottom:5px;opacity: 0.6;width: 100px; opacity:0.25; }
+.logo:hover { opacity:1.0; }
+
+
+#sources { position:absolute; /*left:30px; top:53px;*/
+    bottom:6px; right:150px;
+    font-size:11px;   display:inline-block; }
+#sources { color:#999;   }
+#sources ul {
+    color:#777; display:inline-block; padding:0; margin:0;
+}
+#sources li span {
+    background-image:url(../images/i.svg);
+    background-repeat: no-repeat;
+    background-size: 14px 14px ;
+    background-position: 0px center;
+    padding-left:18px;
+    opacity: 0.8;
+    cursor: pointer;
+}
+#sources li span:hover{ opacity:1.0; }
+#sources li {
+    list-style-type: none; display:inline-block; padding-bottom:0; padding-left:10px; }
+#sources li a {  color:#999; }
+#sources li a:hover { text-decoration: underline; }
+
+
+#per-capita { display:none; color:white; position: absolute; top:80px; right:25px; }
+
+#tooltip {
+    display:none;
+    position:absolute;
+    top:130px;
+    left:20px;
+    /*width:200px;*/
+    background-color:#ffffd0;
+    font-size:10pt;
+    text-shadow: none;
+    opacity:0.8;
+    border-radius:10px;
+    padding:5px;
+}
+
+/*.migrants-text { display:inline-block; }*/
+/*#color-legend { display:inline-block; margin-left:0; padding-left:0; }*/
+#color-legend { display:none; position: absolute; bottom:235px; right:20px; }
+#color-legend text { fill:#999; font-size:11px; font-family: Lato; text-shadow: 1px 1px 1px #111; }
+#color-legend text.axis { alignment-baseline:before-edge; }
+#color-legend text.title {   }
+
+
+#circle-legend { position:absolute; top:60px; right:20px; }
+#circle-legend text { font-family: Lato; text-shadow: 1px 1px 1px #111; fill:#ccc; font-size:8px; alignment-baseline:central; }
