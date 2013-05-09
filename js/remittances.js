@@ -1492,6 +1492,7 @@ queue()
 
 
 
+  $("#details").fadeIn();
   $("#circle-legend").fadeIn();
 });
 
