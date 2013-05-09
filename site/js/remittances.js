@@ -304,6 +304,7 @@ function showGuide() {
   $("#guide").fadeIn();
   $("#countrySelect").fadeOut();
   $("#timeline .play").css("visibility", "hidden");
+//  $("#per-capita").fadeOut();
   yearAnimation.stop();
   slideSelected();
 };
@@ -313,7 +314,9 @@ $("#show-intro").click(showGuide);
 function hideGuide() {
   $("#guide").fadeOut();
   $("#countrySelect").fadeIn();
+//  $("#per-capita").fadeIn();
   $("#timeline .play").css("visibility", "visible");
+  setPerMigrant(false);
   yearAnimation.stop();
   showAid();
 };

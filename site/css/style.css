@@ -462,4 +462,4 @@ header {
 #sources li a:hover { text-decoration: underline; }
 
 
-#per-capita { color:white; position: absolute; top:80px; right:25px; }
+#per-capita { display:none; color:white; position: absolute; top:80px; right:25px; }
