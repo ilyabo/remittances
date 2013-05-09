@@ -25,10 +25,10 @@
     "amount.millions.singular" : "{0} Million",
     "amount.thousands" : "{0} Tausend",
 
-    "migrants.number.from-a" : "{0} Migranten aus {1}",
+    "tooltip.migrants.number.from-a" : "{0} Migranten aus {1}",
+    "tooltip.remittances.amount" : "{0} <br> von Migranten erhalten",
 
     "details.remittances.year" : "im Jahr {0}",
-
     "details.tseries.legend.remittances" : "Geldsendungen",
     "details.tseries.legend.aid" : "Entwicklungshilfe",
     "details.tseries.legend.remittances.per-capita" : "Geldsendungen pro Migrant",
@@ -98,10 +98,10 @@
     "amount.millions.singular" : "{0} million",
     "amount.thousands" : "{0} thousand",
 
-    "migrants.number.from-a" : "{0} migrants from {1}",
+    "tooltip.migrants.number.from-a" : "{0} migrants from {1}",
+    "tooltip.remittances.amount" : "{0} sent to home country by emigrants",
 
     "details.remittances.year" : "in {0}",
-
     "details.tseries.legend.remittances" : "Remittances",
     "details.tseries.legend.aid" : "Development aid",
     "details.tseries.legend.remittances.per-capita" : "Remittances per capita",

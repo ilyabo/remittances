@@ -66,14 +66,19 @@ $("#timeline svg").attr("height", (timelineHeight + timelineMargins.top + timeli
 var arc = d3.geo.greatArc().precision(3) //3);
 var migrationsByOriginCode = {};
 
+var isPlural = function(v, exp) {
+  var v = Math.abs(Math.round(v/exp));
+  return v > 1;
+}
+
 var numberFormat = (function() {
   var fmt = d3.format(",.0f");
   return function(v) {
     if (v == null  ||  isNaN(v)) return msg("amount.not-available");
-    if (v >= 2e9) return msg("amount.billions",  fmt(v / 1e9));
-    if (v >= 1e9) return msg("amount.billions.singular",  fmt(v / 1e9));
-    if (v >= 2e6) return msg("amount.millions",  fmt(v / 1e6));
-    if (v >= 1e6) return msg("amount.millions.singular",  fmt(v / 1e6));
+    if (isPlural(v, 1e9)) return msg("amount.billions",  fmt(v / 1e9));
+    if (v >= 0.5e9) return msg("amount.billions.singular",  fmt(v / 1e9));
+    if (isPlural(v, 1e6)) return msg("amount.millions",  fmt(v / 1e6));
+    if (v >= 0.5e6) return msg("amount.millions.singular",  fmt(v / 1e6));
 //    if (v >= 1e3) return msg("amount.thousands", fmt(v / 1e3));
     return fmt(v);
   };
@@ -908,6 +913,18 @@ function interpolateNumOfMigrants(values, year) {
 }
 
 
+function getInterpolatedNumberOfMigrants(from, to, year) {
+  var migs, vals;
+  migs = migrationsByOriginCode[from];
+  if (migs != undefined) {
+    vals = migs.filter(function(d) { return d.Dest === to; })[0];
+    if (vals != undefined) {
+      return interpolateNumOfMigrants(vals, year);
+    }
+  }
+  return NaN;
+}
+
 
 function calcTotalMigrants(year, origin) {
   if (origin != undefined)
@@ -1288,33 +1305,38 @@ queue()
 
 
 
-
     $("#chart g.map path.land")
       .add("#chart g.countries circle")
       .on("mousemove", function(e) {
         var d = e.target.__data__;
         var iso3 = (d.id  ||  d.iso3);
-        var text = countryNamesByCode[iso3];
-        var migs, vals, val;
+        var vals, val, text = null;
 
         if (selectedCountry != null) {
           if (selectedCountry !== iso3) {
-            migs = migrationsByOriginCode[selectedCountry];
-            if (migs != undefined) {
-              vals = migs.filter(function(d) { return d.Dest === iso3; })[0];
-              if (vals != undefined) {
-                val = interpolateNumOfMigrants(vals, selectedYear);
-                if (val != undefined)
-                  text += ": <br>" +
-                    msg("migrants.number.from-a",
-                      numberFormat(val),
-                      countryNamesByCode[selectedCountry]);
-              }
+            val = getInterpolatedNumberOfMigrants(selectedCountry, iso3, selectedYear);
+            text = "<b>"+countryNamesByCode[iso3]+"</b>" + (!isNaN(val) ? ": <br>" +
+              msg("tooltip.migrants.number.from-a",
+                numberFormat(val),
+                countryNamesByCode[selectedCountry]) :
+                ": " + numberFormat(val));
+          }
+        }
+
+        if (text === null) {
+          if (highlightedCountry != null) {
+            vals = remittanceTotalsByMigrantsOrigin[highlightedCountry];
+            if (vals != null) {
+              val = vals[selectedYear];
+              text = "<b>"+countryNamesByCode[iso3]+"</b>" +
+                (!isNaN(val) ? ": <br>" +
+                  msg("tooltip.remittances.amount", moneyMillionsFormat(val)) :
+                  ": " + numberFormat(val));
             }
           }
         }
 
-        showTooltip(e, text);
+        if (text !== null) showTooltip(e, text);
       })
       .on("mouseout", hideTooltip)
 
