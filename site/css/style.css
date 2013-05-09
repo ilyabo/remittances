@@ -460,3 +460,6 @@ header {
 #sources li { list-style-type: none; display:inline-block; padding-bottom:0; padding-left:10px; }
 #sources li a {  color:#999; }
 #sources li a:hover { text-decoration: underline; }
+
+
+#per-capita { color:white; position: absolute; top:80px; right:25px; }
