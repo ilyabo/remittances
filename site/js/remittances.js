@@ -991,10 +991,16 @@ function calcRemittanceTotalsPerMigrantByMigrantsOrigin() {
 }
 
 function showTooltip(e, html) {
-  $("#tooltip")
-    .css("left", (e.pageX + 10) + "px")
-    .css("top", (e.pageY + 10) + "px")
-    .html(html)
+  var tt = $("#tooltip"), x = (e.pageX + 10), y = (e.pageY + 10);
+  tt.html(html);
+  if (y -10 + tt.height() > $(window).height()) {
+    y = $(window).height() - tt.height() - 20;
+  }
+  if (x -10 + tt.width() > $(window).width()) {
+    x = $(window).width() - tt.width() - 20;
+  }
+  tt.css("left", x + "px")
+    .css("top", y + "px")
     .css("display", "block");
 }
 
@@ -1381,10 +1387,14 @@ queue()
         if (text !== null) showTooltip(e, text);
       })
       .on("mouseout", hideTooltip)
-
-
   });
 
+
+  $("#sources .info")
+    .on("click", function(e) {
+      showTooltip(e, msg($(this).data("info")));
+    })
+    .on("mouseout", hideTooltip);
 
 
 

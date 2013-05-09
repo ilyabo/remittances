@@ -456,8 +456,21 @@ header {
     bottom:6px; right:150px;
     font-size:11px;   display:inline-block; }
 #sources { color:#999;   }
-#sources ul { color:#555; display:inline-block; padding:0; margin:0;  }
-#sources li { list-style-type: none; display:inline-block; padding-bottom:0; padding-left:10px; }
+#sources ul {
+    color:#777; display:inline-block; padding:0; margin:0;
+}
+#sources li span {
+    background-image:url(../images/i.svg);
+    background-repeat: no-repeat;
+    background-size: 14px 14px ;
+    background-position: 0px center;
+    padding-left:18px;
+    opacity: 0.8;
+    cursor: pointer;
+}
+#sources li span:hover{ opacity:1.0; }
+#sources li {
+    list-style-type: none; display:inline-block; padding-bottom:0; padding-left:10px; }
 #sources li a {  color:#999; }
 #sources li a:hover { text-decoration: underline; }
 
