@@ -15,6 +15,8 @@
     "details.remittances.total" : "Gesamt",
     "details.remittances.per-capita.title" : "pro Migrant",
     "per-capita" : "pro Migrant",
+    "search.country" : "Land",
+
     "details.migrants.title" : "Migranten",
     "details.aid.title" : "Entwicklungshilfe erhalten",
     "money" : "${0}",
@@ -88,6 +90,7 @@
     "details.remittances.total" : "Total",
     "details.remittances.per-capita.title" : "per capita",
     "per-capita" : "Per capita",
+    "search.country" : "Country",
     "details.migrants.title.total" : "Migrants",
     "details.migrants.title.selected-country" : "Emigrants",
     "details.aid.title.total" : "Development aid received",

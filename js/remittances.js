@@ -971,12 +971,15 @@ function initCountriesTypeahead() {
     selectCountry(d.iso3, true);
   };
 
-  $('#countrySelect .typeahead').typeahead({
-    valueKey: "name",
-    name: 'countries',
-    local: countryNames,
-    limit: 10
-  }).on("typeahead:selected", typeaheadSelect)
+  $("#countrySelect .typeahead")
+    .attr("placeholder", msg("search.country"))
+    .typeahead({
+      valueKey: "name",
+      name: 'countries',
+      local: countryNames,
+      limit: 10,
+    })
+    .on("typeahead:selected", typeaheadSelect)
     .on("typeahead:autocompleted", typeaheadSelect);
 
 }
@@ -1034,7 +1037,7 @@ function updateCircleLegend() {
   var entries;
 
   if (perMigrant) {
-    entries = [0, 10000/1e6, 20000/1e6, 41000/1e6];
+    entries = [0, 5000/1e6, 20000/1e6, 41000/1e6];
   } else {
     entries = [0, 10000, 30000, 71000];
   }
@@ -1061,11 +1064,9 @@ function updateCircleLegend() {
     .attr("x", maxr)
     .attr("width", 50)
     .attr("height", 1)
-    .attr("stroke", "#333");
 
   itemEnter.append("circle")
     .attr("cx", maxr)
-    .attr("stroke", "#ccc")
     .attr("fill", "none");
 
   itemEnter.append("text")
@@ -1484,14 +1485,14 @@ queue()
 
 
   $("#sources .info")
-    .on("click", function(e) {
+    .on("mouseover", function(e) {
       showTooltip(e, msg($(this).data("info")));
     })
     .on("mouseout", hideTooltip);
 
 
 
-
+  $("#circle-legend").fadeIn();
 });
 
 
