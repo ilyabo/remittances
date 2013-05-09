@@ -28,6 +28,9 @@
     "tooltip.migrants.number.from-a" : "{0} Migranten aus {1}",
     "tooltip.remittances.amount" : "{0} <br> von Migranten erhalten",
 
+    "legend.migrants.low" : "Niedrig",
+    "legend.migrants.high" : "Hoch",
+
     "details.remittances.year" : "im Jahr {0}",
     "details.tseries.legend.remittances" : "Geldsendungen",
     "details.tseries.legend.aid" : "Entwicklungshilfe",
@@ -100,6 +103,9 @@
 
     "tooltip.migrants.number.from-a" : "{0} migrants from {1}",
     "tooltip.remittances.amount" : "{0} sent to home country by emigrants",
+
+    "legend.migrants.low" : "Low",
+    "legend.migrants.high" : "High",
 
     "details.remittances.year" : "in {0}",
     "details.tseries.legend.remittances" : "Remittances",

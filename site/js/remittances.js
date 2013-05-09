@@ -25,10 +25,10 @@ var background = chart_svg.append("rect")
 
 var migrationsColor =
   // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/54FDE2
-  //  d3.scale.quantize()
-  //    .range(["#052021", "#124646", "#1F6F6C", "#2F9C94", "#40CBBB", "#54FDE2"]);
-  d3.scale.linear()
-    .range(["#052021", "#54FDE2"])
+//  d3.scale.quantize()
+//    .range(["#052021", "#124646", "#1F6F6C", "#2F9C94", "#40CBBB", "#54FDE2"])
+  d3.scale.log()
+    .range(["#052021", "#54FDE2"].reverse())
     .interpolate(d3.interpolateHcl);
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
@@ -852,7 +852,7 @@ function updateChoropleth() {
         return d3.max(migrationYears.map(function(y) { return +d[y]; }));
       });
 
-    migrationsColor.domain([0, max]);
+    migrationsColor.domain([1, max]);
 
 
     var migrantsByDest = d3.nest()
@@ -1014,17 +1014,17 @@ function hideTooltip() {
 
 function updateColorLegend() {
   var container = d3.select("#color-legend");
-  var margin = {left:5, top:10, right:10, bottom:20};
+  var margin = {left:40, top:20, right:20, bottom:20};
   var w = 120 - margin.left - margin.right,
-      h = 40 - margin.top - margin.bottom;
+      h = 50 - margin.top - margin.bottom;
 
   var rect, gradient;
   var svg, defs, g = container.select("g.color-legend");
 
   if (g.empty()) {
     svg = container.append("svg")
-        .attr("width", 150 + margin.left + margin.right)
-        .attr("height", 40 + margin.top + margin.bottom);
+      .attr("width", w + margin.left + margin.right)
+      .attr("height", h + margin.top + margin.bottom);
     gradient = svg.append("defs")
       .append("linearGradient")
         .attr({ id : "migrants-scale-gradient", x1 :"0%", y1 :"0%", x2 : "100%", y2:"0%" });
@@ -1046,6 +1046,14 @@ function updateColorLegend() {
         fill: "url(#migrants-scale-gradient)"
       })
 
+
+    g.append("text")
+      .attr({ x : 0, y : h + 3, "text-anchor":"middle" })
+      .text(msg("legend.migrants.low"));
+
+    g.append("text")
+      .attr({ x : w, y : h + 3, "text-anchor":"middle" })
+      .text(msg("legend.migrants.high"));
   }
 
   rect = g.select("rect.gradient");

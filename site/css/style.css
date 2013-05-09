@@ -491,4 +491,10 @@ header {
     padding:5px;
 }
 
-#color-legend { margin-left:0; padding-left:0; margin-top:20px; }
+/*.migrants-text { display:inline-block; }*/
+/*#color-legend { display:inline-block; margin-left:0; padding-left:0; }*/
+#color-legend { position: absolute; bottom:240px; right:15px; }
+#color-legend text {
+    alignment-baseline:before-edge;  fill:#ccc;
+    font-size:11px; font-family: Lato;
+}
