@@ -25,6 +25,8 @@
     "amount.millions.singular" : "{0} Million",
     "amount.thousands" : "{0} Tausend",
 
+    "migrants.number.from-a" : "{0} Migranten aus {1}",
+
     "details.remittances.year" : "im Jahr {0}",
 
     "details.tseries.legend.remittances" : "Geldsendungen",
@@ -95,6 +97,9 @@
     "amount.millions" : "{0} million",
     "amount.millions.singular" : "{0} million",
     "amount.thousands" : "{0} thousand",
+
+    "migrants.number.from-a" : "{0} migrants from {1}",
+
     "details.remittances.year" : "in {0}",
 
     "details.tseries.legend.remittances" : "Remittances",

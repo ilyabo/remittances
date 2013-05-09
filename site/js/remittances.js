@@ -464,8 +464,6 @@ $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
 
 
 
-
-
 /* @param values is an array in which the indices correspond to the
                  indices in the remittenceYears array */
 function calcTotalsByYear(values) {
@@ -868,7 +866,7 @@ function updateChoropleth() {
         var m = migrantsByDest[d.id];
         if (m !== undefined) {
           var val = interpolateNumOfMigrants(m, selectedYear);
-          if (!isNaN(val)) return migrationsColor(val);
+          if (!isNaN(val) && (val > 0)) return migrationsColor(val);
         }
 
         return landColor;   //.darker(0.5);
@@ -889,6 +887,7 @@ function updateChoropleth() {
 }
 
 
+/* @param values is a map year=>value */
 function interpolateNumOfMigrants(values, year) {
   if (values == null) return NaN;
   var val = str2num(values[year]);
@@ -907,6 +906,7 @@ function interpolateNumOfMigrants(values, year) {
 
   return val;
 }
+
 
 
 function calcTotalMigrants(year, origin) {
@@ -970,6 +970,21 @@ function calcRemittanceTotalsPerMigrantByMigrantsOrigin() {
   }
   return result;
 }
+
+function showTooltip(e, html) {
+  $("#tooltip")
+    .css("left", (e.pageX + 10) + "px")
+    .css("top", (e.pageY + 10) + "px")
+    .html(html)
+    .css("display", "block");
+}
+
+function hideTooltip() {
+  $("#tooltip")
+    .text("")
+    .css("display", "none");
+}
+
 
 
 queue()
@@ -1270,7 +1285,41 @@ queue()
     })
 
     slideSelected();
-});
+
+
+
+
+    $("#chart g.map path.land")
+      .add("#chart g.countries circle")
+      .on("mousemove", function(e) {
+        var d = e.target.__data__;
+        var iso3 = (d.id  ||  d.iso3);
+        var text = countryNamesByCode[iso3];
+        var migs, vals, val;
+
+        if (selectedCountry != null) {
+          if (selectedCountry !== iso3) {
+            migs = migrationsByOriginCode[selectedCountry];
+            if (migs != undefined) {
+              vals = migs.filter(function(d) { return d.Dest === iso3; })[0];
+              if (vals != undefined) {
+                val = interpolateNumOfMigrants(vals, selectedYear);
+                if (val != undefined)
+                  text += ": <br>" +
+                    msg("migrants.number.from-a",
+                      numberFormat(val),
+                      countryNamesByCode[selectedCountry]);
+              }
+            }
+          }
+        }
+
+        showTooltip(e, text);
+      })
+      .on("mouseout", hideTooltip)
+
+
+  });
 
 
 
