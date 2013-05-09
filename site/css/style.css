@@ -289,7 +289,7 @@ header {
 #timeline g.tseries .legend circle { stroke:#111; stroke-width:1; }
 #timeline g.tseries .legend .remittances  { /*fill:#00b48f;*/ fill:white; }
 #timeline g.tseries .legend .aid  { fill:#2c97df; }
-#timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; }
+#timeline g.tseries .legend text { font-size: 10pt; alignment-baseline:central; text-shadow: 1px 1px 1px #111; }
 
 
 
@@ -493,7 +493,10 @@ header {
 
 /*.migrants-text { display:inline-block; }*/
 /*#color-legend { display:inline-block; margin-left:0; padding-left:0; }*/
-#color-legend { position: absolute; bottom:240px; right:15px; }
-#color-legend text { fill:#ccc; font-size:11px; font-family: Lato; text-shadow: 1px 1px 1px #111; }
+#color-legend { display:none; position: absolute; bottom:280px; right:60px; }
+#color-legend text { fill:#999; font-size:11px; font-family: Lato; text-shadow: 1px 1px 1px #111; }
 #color-legend text.axis { alignment-baseline:before-edge; }
-#color-legend text.title { font-weight: bold;  }
+#color-legend text.title {   }
+
+
+#circle-legend { position:absolute; top:100px; right:20px; }
