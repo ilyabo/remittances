@@ -25,10 +25,11 @@ var background = chart_svg.append("rect")
 
 var migrationsColor =
   // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/54FDE2
+  // http://tristen.ca/hcl-picker/#/hlc/6/1/052021/2F9D96
 //  d3.scale.quantize()
 //    .range(["#052021", "#124646", "#1F6F6C", "#2F9C94", "#40CBBB", "#54FDE2"])
   d3.scale.log()
-    .range(["#052021", "#54FDE2"].reverse())
+    .range(["#2F9D96", "#052021"])
     .interpolate(d3.interpolateHcl);
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
@@ -871,7 +872,7 @@ function updateChoropleth() {
         var m = migrantsByDest[d.id];
         if (m !== undefined) {
           var val = interpolateNumOfMigrants(m, selectedYear);
-          if (!isNaN(val) && (val > 0)) return migrationsColor(val);
+          if (!isNaN(val) /*&& (val > 0)*/) return migrationsColor(val + 1 /* for log scale to work*/);
         }
 
         return landColor;   //.darker(0.5);
