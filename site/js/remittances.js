@@ -352,25 +352,25 @@ function slideSelected() {
     case 2:  // Pro Kopf
       selectCountry(null);
       selectYear(2012);
-      hideAid();
+      showAid();
     break;
 
     case 3: //  Indien und China weit vorneweg
       selectCountry("IND", true);
       selectYear(2012);
-      hideAid();
+      showAid();
     break;
 
     case 4: // Weniger Geld für Griechenland und die Türkei
       selectCountry("TUR", true);
       selectYear(2000);
-      hideAid();
+      showAid();
     break;
 
     case 5: // Krise? Welche Krise?
       selectCountry(null);
       selectYear(2008);
-      hideAid();
+      showAid();
     break;
 
     case 6: //  Erkunden Sie die Daten selber!
