@@ -536,7 +536,7 @@ function initTimeSeries(name) {
       .attr("class", "legend")
       .attr("transform",
 //        "translate("+ Math.round(timelineWidth * 0.8 - 200)+ ", "+Math.round(timelineHeight*0.4) +")"
-        "translate(120,40)"
+        "translate(120,10)"
       );
 
     var gg = legend.append("g")
@@ -735,6 +735,7 @@ function setPerMigrant(val) {
   $("#per-capita-chk").prop("checked", val);
   updateBubbleSizes();
   updateTimeSeries();
+  updateCircleLegend();
 }
 
 function selectYear(year, duration) {
@@ -1028,7 +1029,16 @@ function updateCircleLegend() {
   var w = 150 - margin.left - margin.right,
       h = maxr * 2;
 
-  var svg, defs, g = container.select("g.color-legend"), item;
+  var svg, defs, g = container.select("g.circle-legend"), itemEnter;
+
+  var entries;
+
+  if (perMigrant) {
+    entries = [0, 10000/1e6, 20000/1e6, 41000/1e6];
+  } else {
+    entries = [0, 10000, 30000, 71000];
+  }
+
 
   if (g.empty()) {
     svg = container.append("svg")
@@ -1038,36 +1048,44 @@ function updateCircleLegend() {
     g = svg.append("g")
         .attr("class", "circle-legend")
         .attr("transform", "translate("+margin.left+","+margin.top+")");
-
-
-    item = g.selectAll("g.item")
-      .data([0, 10000, 30000, 71000])
-     .enter()
-      .append("g")
-        .attr("class", "item")
-        .attr("transform", function(d) { return "translate(0,"+(maxr * 2 -  2*rscale(d))+")"; });
-
-    item.append("rect")
-      .attr("x", maxr)
-      .attr("width", 50)
-      .attr("height", 1)
-      .attr("stroke", "#333")
-
-    item.append("circle")
-      .attr("cx", maxr)
-      .attr("cy",  function(d) { return rscale(d); })
-      .attr("stroke", "#ccc")
-      .attr("fill", "none")
-      .attr("r", function(d) { return rscale(d); })
-
-    item.append("text")
-      .attr("x", maxr + 50 + 5)
-      .attr("fill", "#ccc")
-      .attr("font-size", "7px")
-      .attr("alignment-baseline", "middle")
-      .text(function(d) { return moneyMillionsFormat(d)});
-
   }
+
+
+  itemEnter = g.selectAll("g.item")
+    .data(entries)
+   .enter()
+    .append("g")
+      .attr("class", "item");
+
+  itemEnter.append("rect")
+    .attr("x", maxr)
+    .attr("width", 50)
+    .attr("height", 1)
+    .attr("stroke", "#333");
+
+  itemEnter.append("circle")
+    .attr("cx", maxr)
+    .attr("stroke", "#ccc")
+    .attr("fill", "none");
+
+  itemEnter.append("text")
+    .attr("x", maxr + 50 + 5);
+
+
+  // update
+  var items = g.selectAll("g.item")
+    .attr("transform", function(d) { return "translate(0,"+(maxr * 2 -  2*rscale(d))+")"; });
+
+  items.select("circle"); // propagate data update from parent
+  items.selectAll("circle")
+    .attr("cy",  function(d) { return rscale(d); })
+    .attr("r", function(d) { return rscale(d); })
+
+  items.select("text");  // propagate data update from parent
+  items.selectAll("text")
+    .text(function(d) { return moneyMillionsFormat(d)});
+
+
 }
 
 
