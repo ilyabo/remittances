@@ -480,8 +480,8 @@ header {
 #tooltip {
     display:none;
     position:absolute;
-    top:120px;
-    left:10px;
+    top:130px;
+    left:20px;
     /*width:200px;*/
     background-color:#ffffd0;
     font-size:10pt;
@@ -494,7 +494,6 @@ header {
 /*.migrants-text { display:inline-block; }*/
 /*#color-legend { display:inline-block; margin-left:0; padding-left:0; }*/
 #color-legend { position: absolute; bottom:240px; right:15px; }
-#color-legend text {
-    alignment-baseline:before-edge;  fill:#ccc;
-    font-size:11px; font-family: Lato;
-}
+#color-legend text { fill:#ccc; font-size:11px; font-family: Lato; text-shadow: 1px 1px 1px #111; }
+#color-legend text.axis { alignment-baseline:before-edge; }
+#color-legend text.title { font-weight: bold;  }

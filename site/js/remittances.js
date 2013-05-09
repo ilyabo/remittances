@@ -1015,9 +1015,9 @@ function hideTooltip() {
 
 function updateColorLegend() {
   var container = d3.select("#color-legend");
-  var margin = {left:40, top:20, right:20, bottom:20};
-  var w = 120 - margin.left - margin.right,
-      h = 50 - margin.top - margin.bottom;
+  var margin = {left:40, top:30, right:20, bottom:20};
+  var w = 150 - margin.left - margin.right,
+      h = 60 - margin.top - margin.bottom;
 
   var rect, gradient;
   var svg, defs, g = container.select("g.color-legend");
@@ -1041,19 +1041,23 @@ function updateColorLegend() {
     rect = g.append("rect")
       .attr({
         "class": "gradient",
-        stroke : "#ccc",
-        "stroke-width" : "0.4",
+        stroke : "#aaa",
+        "stroke-width" : "0.3",
         width: w, height: h,
         fill: "url(#migrants-scale-gradient)"
       })
 
 
     g.append("text")
-      .attr({ x : 0, y : h + 3, "text-anchor":"middle" })
+      .attr({ "class":"title", x : w/2, y : -7, "text-anchor":"middle" })
+      .text(msg("legend.migrants.number"));
+
+    g.append("text")
+      .attr({ "class":"axis", x : 0, y : h + 3, "text-anchor":"middle" })
       .text(msg("legend.migrants.low"));
 
     g.append("text")
-      .attr({ x : w, y : h + 3, "text-anchor":"middle" })
+      .attr({ "class":"axis", x : w, y : h + 3, "text-anchor":"middle" })
       .text(msg("legend.migrants.high"));
   }
 
