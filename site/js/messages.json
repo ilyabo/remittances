@@ -28,7 +28,9 @@
 
     "details.tseries.legend.remittances" : "Geldsendungen",
     "details.tseries.legend.aid" : "Entwicklungshilfe",
-    
+    "details.tseries.legend.remittances.per-capita" : "Geldsendungen pro Migrant",
+    "details.tseries.legend.aid.per-capita" : "Entwicklungshilfe pro Migrant",
+
     "sources" : "Quellen",
     "sources.remittances.type" : "Geldsendungen",
     "sources.remittances.name" : "Weltbank",
@@ -95,7 +97,9 @@
 
     "details.tseries.legend.remittances" : "Remittances",
     "details.tseries.legend.aid" : "Development aid",
-    
+    "details.tseries.legend.remittances.per-capita" : "Remittances per capita",
+    "details.tseries.legend.aid.per-capita" : "Development aid per capita",
+
     "sources" : "Sources",
     "sources.remittances.type" : "Remittances",
     "sources.remittances.name" : "World Bank",

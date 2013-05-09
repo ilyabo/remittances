@@ -338,42 +338,49 @@ function slideSelected() {
 
   switch (mySwiper.activeSlide) {
     case 0: // Massiver Anstieg in den letzten zehn Jahren
+      perCapita = false;
       selectCountry(null);
       selectYear(2012);
       hideAid();
     break;
 
     case 1: // Viermal mehr als Entwicklungshilfe
+      perCapita = false;
       selectCountry(null);
       selectYear(2011);
       showAid();
     break;
 
     case 2:  // Pro Kopf
+      perCapita = true;
       selectCountry(null);
       selectYear(2012);
-      showAid();
+      hideAid();
     break;
 
     case 3: //  Indien und China weit vorneweg
+      perCapita = false;
       selectCountry("IND", true);
       selectYear(2012);
       showAid();
     break;
 
     case 4: // Weniger Geld für Griechenland und die Türkei
+      perCapita = false;
       selectCountry("TUR", true);
       selectYear(2000);
       showAid();
     break;
 
     case 5: // Krise? Welche Krise?
+      perCapita = false;
       selectCountry(null);
       selectYear(2008);
       showAid();
     break;
 
     case 6: //  Erkunden Sie die Daten selber!
+      perCapita = false;
       selectCountry(null);
       selectYear(2010);
       showAid();
@@ -559,6 +566,30 @@ function renderTimeSeries(name, data) {
 }
 
 
+
+/* @param data An object year -> value */
+function calcPerCapitaValues(data, countryCode) {
+  var byMigrant = {}, yi, y, m, v;
+  for (yi = 0; yi < remittanceYears.length; yi++) {
+    y = remittanceYears[yi];
+    v = str2num(data[y]);
+    if (!isNaN(v)) {
+      m = calcTotalMigrants(y, countryCode);
+      console.log(m);
+      if (!isNaN(m)) {
+        byMigrant[y] = (v / m);
+      }
+    }
+  }
+  return byMigrant;
+}
+
+var perCapita = false;
+function showPerCapita(value) {
+  perCapita = value;
+  updateTimeSeries();
+}
+
 function updateTimeSeries() {
 
   var remittances, aid;
@@ -570,6 +601,23 @@ function updateTimeSeries() {
   } else {
     remittances = remittanceTotalsByMigrantsOrigin[country];
     aid = aidTotalsByRecipient[country];
+  }
+
+  if (perCapita) {
+    remittances = calcPerCapitaValues(remittances, country);
+    aid = calcPerCapitaValues(aid, country);
+
+    d3.select("#timeline g.tseries .legend .remittances text")
+      .text(msg("details.tseries.legend.remittances.per-capita"));
+
+    d3.select("#timeline g.tseries .legend .aid text")
+      .text(msg("details.tseries.legend.aid.per-capita"));
+  } else {
+    d3.select("#timeline g.tseries .legend .remittances text")
+      .text(msg("details.tseries.legend.remittances"));
+
+    d3.select("#timeline g.tseries .legend .aid text")
+      .text(msg("details.tseries.legend.aid"));
   }
 
   var rmax = d3.max(d3.values(remittances));
@@ -607,7 +655,7 @@ function updateDetails() {
     var countryRem = remittanceTotalsByMigrantsOrigin[iso3];
     totalRemittances = (countryRem != null ? str2num(countryRem[selectedYear]) : NaN);
 
-    numMigrants = getTotalMigrants(selectedYear, iso3);
+    numMigrants = calcTotalMigrants(selectedYear, iso3);
 
     var countryAid = aidTotalsByRecipient[iso3];
     totalAid = (countryAid != null ? str2num(countryAid[selectedYear]) : NaN);
@@ -618,7 +666,7 @@ function updateDetails() {
   } else {
     countryName = msg("details.remittances.total");
 
-    numMigrants = getTotalMigrants(selectedYear);
+    numMigrants = calcTotalMigrants(selectedYear);
     totalRemittances = remittanceTotals[selectedYear];
     totalAid = aidTotals[selectedYear];
 
@@ -800,7 +848,7 @@ function interpolateNumOfMigrants(values, year) {
 }
 
 
-function getTotalMigrants(year, origin) {
+function calcTotalMigrants(year, origin) {
   if (origin != undefined)
     return interpolateNumOfMigrants(migrationTotalsByOrigin[origin], year);
 
