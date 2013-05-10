@@ -11,12 +11,13 @@ var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
 var width = $(document).width(),
     height = $(document).height() - 40;
 
+var visReady = false;
 
 //$("#guide aside").css("padding-top", (height * 0.15) + "px");
 
 var chart_svg = d3.select("#chart").append("svg")
-  .attr("width", width)
-  .attr("height", height);
+   .attr("width", width)
+   .attr("height", height);
 
 var background = chart_svg.append("rect")
   .attr("width", width)
@@ -302,7 +303,10 @@ $(function() {
 
 var mySwiper = new Swiper('#guide',{
   //Your options here:
-  mode:'horizontal'
+  mode:'horizontal',
+  onSlideChangeEnd : function() {
+    if (visReady) slideSelected();
+  }
 });
 
 
@@ -409,18 +413,17 @@ function slideSelected() {
 
 };
 var next = function() {
-  mySwiper.swipeNext();
-  slideSelected();
+  if (visReady) mySwiper.swipeNext();
 };
 var prev = function() {
-  mySwiper.swipePrev();
-  slideSelected();
+  if (visReady) mySwiper.swipePrev();
 };
 
 
 $("#guide .next").click(next);
 $("#guide .prev").click(prev);
 $("#guide .anim").click(function() {
+  if (!visReady) return;
   if ($(this).hasClass("playing")) {
     $("#guide .anim")
       .removeClass("playing")
@@ -470,7 +473,9 @@ $("body").keydown(function(e) {
 });
 
 
-$("#guide .skip").click(hideGuide);
+$("#guide .skip").click(function() {
+  if (visReady) hideGuide();
+});
 $("#guide .last").click(hideGuide);
 
 $(document).keyup(function(e) { if (e.keyCode == 27) hideGuide(); });
@@ -1443,57 +1448,62 @@ queue()
       setPerMigrant($(this).is(":checked"));
     })
 
-    slideSelected();
 
 
 
     $("#chart g.map path.land")
-      .add("#chart g.countries circle")
-      .on("mousemove", function(e) {
-        var d = e.target.__data__;
-        var iso3 = (d.id  ||  d.iso3);
-        var vals, val, text = null;
+           .add("#chart g.countries circle")
+           .on("mousemove", function(e) {
+             var d = e.target.__data__;
+             var iso3 = (d.id  ||  d.iso3);
+             var vals, val, text = null;
 
-        if (selectedCountry != null) {
-          if (selectedCountry !== iso3) {
-            val = getInterpolatedNumberOfMigrants(selectedCountry, iso3, selectedYear);
-            text = "<b>"+countryNamesByCode[iso3]+"</b>" + (!isNaN(val) ? ": <br>" +
-              msg("tooltip.migrants.number.from-a",
-                numberFormat(val),
-                countryNamesByCode[selectedCountry]) :
-                ": " + numberFormat(val));
-          }
-        }
+             if (selectedCountry != null) {
+               if (selectedCountry !== iso3) {
+                 val = getInterpolatedNumberOfMigrants(selectedCountry, iso3, selectedYear);
+                 text = "<b>"+countryNamesByCode[iso3]+"</b>" + (!isNaN(val) ? ": <br>" +
+                   msg("tooltip.migrants.number.from-a",
+                     numberFormat(val),
+                     countryNamesByCode[selectedCountry]) :
+                     ": " + numberFormat(val));
+               }
+             }
 
-        if (text === null) {
-          if (highlightedCountry != null) {
-            vals = remittanceTotalsByMigrantsOrigin[highlightedCountry];
-            if (vals != null) {
-              val = vals[selectedYear];
-              text = "<b>"+countryNamesByCode[iso3]+"</b>" +
-                (!isNaN(val) ? ": <br>" +
-                  msg("tooltip.remittances.amount", moneyMillionsFormat(val)) :
-                  ": " + numberFormat(val));
-            }
-          }
-        }
+             if (text === null) {
+               if (highlightedCountry != null) {
+                 vals = remittanceTotalsByMigrantsOrigin[highlightedCountry];
+                 if (vals != null) {
+                   val = vals[selectedYear];
+                   text = "<b>"+countryNamesByCode[iso3]+"</b>" +
+                     (!isNaN(val) ? ": <br>" +
+                       msg("tooltip.remittances.amount", moneyMillionsFormat(val)) :
+                       ": " + numberFormat(val));
+                 }
+               }
+             }
 
-        if (text !== null) showTooltip(e, text);
-      })
-      .on("mouseout", hideTooltip)
+             if (text !== null) showTooltip(e, text);
+           })
+           .on("mouseout", hideTooltip)
+
+    $("#sources .info")
+         .on("mouseover", function(e) {
+           showTooltip(e, msg($(this).data("info")));
+         })
+         .on("mouseout", hideTooltip);
+
+
+
+    $("#details").fadeIn();
+    $("#circle-legend").fadeIn();
+    $("#show-intro").fadeIn();
+
+
+
+    visReady = true;
+    slideSelected();
+
   });
-
-
-  $("#sources .info")
-    .on("mouseover", function(e) {
-      showTooltip(e, msg($(this).data("info")));
-    })
-    .on("mouseout", hideTooltip);
-
-
-
-  $("#details").fadeIn();
-  $("#circle-legend").fadeIn();
 });
 
 
