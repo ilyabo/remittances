@@ -994,8 +994,10 @@ function initCountryNames(remittances) {
     r.centroid = projection([+r.lon, +r.lat]);
     countryNamesByCode[r.iso3] = r[countryNameKey];
   });
-  countryNamesByCode.GBR = "Grossbritannien";
-  countryNamesByCode.ARG = "Argentinien";
+  if (msg.lang() == "de") {
+    countryNamesByCode.GBR = "Grossbritannien";
+    countryNamesByCode.ARG = "Argentinien";
+  }
 }
 
 
