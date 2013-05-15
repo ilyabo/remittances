@@ -886,7 +886,7 @@ function updateChoropleth() {
         var m = migrantsByDest[d.id];
         if (m !== undefined) {
           var val = interpolateNumOfMigrants(m, selectedYear);
-          if (!isNaN(val) /*&& (val > 0)*/) return migrationsColor(val + 1 /* for log scale to work*/);
+          if (!isNaN(val) && (val > 0 /* for log scale to work*/)) return migrationsColor(val);
         }
 
         return landColor;   //.darker(0.5);
