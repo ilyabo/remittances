@@ -12,7 +12,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.6" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Leiningen: incanter:incanter-core:1.5.0-20121231.123323-2" level="project" />
     <orderEntry type="library" name="Leiningen: incanter:incanter-excel:1.5.0-20121231.123534-2" level="project" />
