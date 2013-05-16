@@ -70,17 +70,23 @@ var migrationsByOriginCode = {};
 
 var isPlural = function(v, exp) {
   var v = Math.abs(Math.round(v/exp));
-  return v > 1;
+  return v >= 2;
 }
 
 var numberFormat = (function() {
-  var fmt = d3.format(",.0f");
+  var nfmt = d3.format(",.1f");
+  var fmt = function(v) {  // remove trailing .0
+    var formatted = nfmt(v);
+    var m = formatted.match(/^(.*)\.0$/);
+    if (m !== null) formatted = m[1];
+    return formatted;
+  };
   return function(v) {
     if (v == null  ||  isNaN(v)) return msg("amount.not-available");
     if (isPlural(v, 1e9)) return msg("amount.billions",  fmt(v / 1e9));
-    if (v >= 0.5e9) return msg("amount.billions.singular",  fmt(v / 1e9));
+    if (v >= 1e9) return msg("amount.billions.singular",  fmt(v / 1e9));
     if (isPlural(v, 1e6)) return msg("amount.millions",  fmt(v / 1e6));
-    if (v >= 0.5e6) return msg("amount.millions.singular",  fmt(v / 1e6));
+    if (v >= 1e6) return msg("amount.millions.singular",  fmt(v / 1e6));
 //    if (v >= 1e3) return msg("amount.thousands", fmt(v / 1e3));
     return fmt(v);
   };
