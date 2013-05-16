@@ -74,6 +74,7 @@ var isPlural = function(v, exp) {
 }
 
 var numberFormat = (function() {
+  var short_fmt = d3.format(",.0f");
   var nfmt = d3.format(",.1f");
   var fmt = function(v) {  // remove trailing .0
     var formatted = nfmt(v);
@@ -88,7 +89,7 @@ var numberFormat = (function() {
     if (isPlural(v, 1e6)) return msg("amount.millions",  fmt(v / 1e6));
     if (v >= 1e6) return msg("amount.millions.singular",  fmt(v / 1e6));
 //    if (v >= 1e3) return msg("amount.thousands", fmt(v / 1e3));
-    return fmt(v);
+    return short_fmt(v);
   };
 })();
 
