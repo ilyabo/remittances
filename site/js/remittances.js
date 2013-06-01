@@ -8,20 +8,16 @@ $(function() {
 
 
 var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
-var width = $(document).width(),
-    height = $(document).height() - 40;
+var width = height = null;
+
+
 
 var visReady = false;
 
-//$("#guide aside").css("padding-top", (height * 0.15) + "px");
 
-var chart_svg = d3.select("#chart").append("svg")
-   .attr("width", width)
-   .attr("height", height);
+var chart_svg = d3.select("#chart").append("svg");
 
 var background = chart_svg.append("rect")
-  .attr("width", width)
-  .attr("height", height)
   .attr("fill", "#111");
 
 var migrationsColor =
@@ -35,7 +31,6 @@ var migrationsColor =
 
 var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
     .rotate([-10, -45])
-    .translate([width/2.3,height/2])
     .scale(180);
 
 //var projection = d3.geo.winkel3();
@@ -43,15 +38,27 @@ var projection = d3.geo.projection(d3.geo.hammer.raw(1.75, 2))
 var path = d3.geo.path()
     .projection(projection);
 
-var rscale = d3.scale.sqrt()
-  .range([0, height/45]);
+var rscale = d3.scale.sqrt();
+
+
+function initSizes() {
+  width = $(window).width();
+  height = $(window).height() - 40;
+  background
+    .attr("width", width)
+    .attr("height", height);
+  projection.translate([width/2.3,height/2]);
+  chart_svg
+    .attr("width", width)
+    .attr("height", height);
+  rscale.range([0, height/45]);
+};
+
+initSizes();
 
 
 var timelineMargins = {left:40,top:10,bottom:5,right:80};
-
-//var timelineWidth = Math.min(width - 250, 800),
-//    timelineHeight = Math.min(260, height * 0.3);
-var timelineWidth = 600,
+var timelineWidth = 550,
     timelineHeight = 180;
 
 
@@ -320,7 +327,7 @@ var mySwiper = new Swiper('#guide',{
 function showGuide() {
   $("#guide").fadeIn();
   $("#countrySelect").fadeOut();
-  $("#timeline .play").css("visibility", "hidden");
+  $("#timeline .play-parent").css("visibility", "hidden");
 //  $("#per-capita").fadeOut();
   yearAnimation.stop();
   slideSelected();
@@ -333,7 +340,7 @@ function hideGuide() {
   $("#countrySelect").fadeIn();
   $("#color-legend").fadeIn();
 //  $("#per-capita").fadeIn();
-  $("#timeline .play").css("visibility", "visible");
+  $("#timeline .play-parent").css("visibility", "visible");
   setPerMigrant(false);
   yearAnimation.stop();
   showAid();
@@ -998,7 +1005,7 @@ function initCountriesTypeahead() {
 
 function initCountryNames(remittances) {
   remittances.forEach(function(r) {
-    r.centroid = projection([+r.lon, +r.lat]);
+    r.centroid = [+r.lon, +r.lat];
     countryNamesByCode[r.iso3] = r[countryNameKey];
   });
   if (msg.lang() == "de") {
@@ -1209,7 +1216,13 @@ queue()
 
 
     var leftMargin = 350; // Math.max(100, width*0.4);
-    fitProjection(projection, world, [[leftMargin, 60], [width - 20, height-120]], true);
+    var fitMapProjection = function() {
+      fitProjection(projection, world, [[leftMargin, 60], [width - 20, height-120]], true);
+    };
+    fitMapProjection();
+
+
+
 
 
 
@@ -1232,13 +1245,17 @@ queue()
         .attr("class", "land")
         .attr("fill", landColor)
         .attr("data-code", function(d) { return d.id; })
-        .attr("d", path)
         .on("click", function(d) { selectCountry(d.id); })
         .on("mouseover", function(d) { highlightCountry(d.id); })
         .on("mouseout", function(d) { highlightCountry(null); });
 
 
+    var updateMap = function() {
+      chart_svg.selectAll("g.map path")
+        .attr("d", path);
+    };
 
+    updateMap();
 
 
 
@@ -1304,8 +1321,6 @@ queue()
       .enter().append("svg:circle")
         .attr("class", "country")
         .attr("r", "0")
-        .attr("cx", function(d) { if (d.centroid) return d.centroid[0] })
-        .attr("cy", function(d) { if (d.centroid) return d.centroid[1] })
         .attr("opacity", 1.0)
         .on("click", function(d) { selectCountry(d.iso3); })
         .on("mouseover", function(d) { highlightCountry(d.iso3); })
@@ -1314,6 +1329,20 @@ queue()
 //        .append("svg:title")
 //          .text(function(d) { return d.Name + ": " + moneyMillionsFormat(d[selectedYear]) + "M current US$"});
 
+
+    var updateBubblePositions = function() {
+      gcountries.selectAll("circle")
+//        .attr(function(d) {
+//          var c = projection(d.centroid);
+//          return {
+//            cx : c[0], cy : c[1]
+//          };
+//        });
+        .attr("cx", function(d) { if (d.centroid) return projection(d.centroid)[0] })
+        .attr("cy", function(d) { if (d.centroid) return projection(d.centroid)[1] });
+    }
+
+    updateBubblePositions();
 
 
 
@@ -1512,6 +1541,17 @@ queue()
     visReady = true;
     slideSelected();
 
+
+
+    var onResize = function() {
+      initSizes();
+      fitMapProjection();
+      updateMap();
+      updateBubblePositions();
+      updateBubbleSizes();
+      updateCircleLegend();
+    };
+    $(window).resize(onResize);
   });
 });
 
