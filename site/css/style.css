@@ -564,6 +564,9 @@ body {
 
 
  @media screen and (max-height:700px) {
+     /* if you change this change it below as well */
+
+
     h1 { font-size:14pt; }
     #guide aside {
         font-size:10pt;
@@ -572,7 +575,6 @@ body {
     #guide aside h2 { font-size:18pt; }
     #guide aside p { line-height:20px; padding-bottom:10px; }
     #guide .content { height:20em; }
-    /*#details { zoom:.7; left:42px; top:100px; }*/
     #details { top:60px; left:30px; }
     #details .country { font-size:15pt; }
     #details .year { font-size:16pt; }
@@ -593,7 +595,6 @@ body {
      #details .remittancesPerCapita .title {   font-size:10pt; }
      #details .title {  font-size:8pt;  }
      #details .comment { font-size:6pt; }
-    #countrySelect { zoom:.7; }
     #color-legend text { font-size:7pt; }
     #show-intro { font-size:8pt; }
     #guide .next, #guide .prev, #guide .last {
@@ -602,10 +603,37 @@ body {
         background-size:50px 50px;
         padding-left:55px;
     }
+     #countrySelect {
+         background-size: 15px 15px;
+         background-position: 5px 5px;
+         padding-left:21px;
+     }
+     .typeahead,
+     .tt-query,
+     .tt-hint {
+       width: 150px;
+       height: 15px;
+       padding: 4px 6px;
+       font-size: 12px;
+       line-height: 15px;
+     }
+
+     .tt-dropdown-menu {
+       width: 150px;
+       padding: 4px 0;
+     }
+
+     .tt-suggestion {
+       padding: 3px 10px;
+       font-size: 14px;
+       line-height: 15px;
+     }
  }
 
  @media screen and (max-width:1000px) {
      /* the content should be the same as above */
+
+
     h1 { font-size:14pt; }
     #guide aside {
         font-size:10pt;
@@ -614,7 +642,6 @@ body {
     #guide aside h2 { font-size:18pt; }
     #guide aside p { line-height:20px; padding-bottom:10px; }
     #guide .content { height:20em; }
-    /*#details { zoom:.7; left:42px; top:100px; }*/
     #details { top:60px; left:30px; }
     #details .country { font-size:15pt; }
     #details .year { font-size:16pt; }
@@ -635,7 +662,6 @@ body {
      #details .remittancesPerCapita .title {   font-size:10pt; }
      #details .title {  font-size:8pt;  }
      #details .comment { font-size:6pt; }
-    #countrySelect { zoom:.7; }
     #color-legend text { font-size:7pt; }
     #show-intro { font-size:8pt; }
     #guide .next, #guide .prev, #guide .last {
@@ -644,6 +670,31 @@ body {
         background-size:50px 50px;
         padding-left:55px;
     }
+     #countrySelect {
+         background-size: 15px 15px;
+         background-position: 5px 5px;
+         padding-left:21px;
+     }
+     .typeahead,
+     .tt-query,
+     .tt-hint {
+       width: 150px;
+       height: 15px;
+       padding: 4px 6px;
+       font-size: 12px;
+       line-height: 15px;
+     }
+
+     .tt-dropdown-menu {
+       width: 150px;
+       padding: 4px 0;
+     }
+
+     .tt-suggestion {
+       padding: 3px 10px;
+       font-size: 14px;
+       line-height: 15px;
+     }
  }
 
 
