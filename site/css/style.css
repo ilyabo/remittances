@@ -572,9 +572,29 @@ body {
     #guide aside h2 { font-size:18pt; }
     #guide aside p { line-height:20px; padding-bottom:10px; }
     #guide .content { height:20em; }
-    #details { zoom:.7; left:42px; top:100px; }
+    /*#details { zoom:.7; left:42px; top:100px; }*/
+    #details { top:60px; left:30px; }
+    #details .country { font-size:15pt; }
+    #details .year { font-size:16pt; }
+    #details .value {   font-size:14pt; }
+     #details .migrants .value {   font-size:10pt; }
+     #details .migrants {
+         background-size: 16px 15px;
+         background-position: 3px 5px;
+         padding-left:25px;
+     }
+     #details .remittances .value {   font-size:15pt; }
+     #details .remittances .title {   font-size:10pt; }
+     #details .remittancesPerCapita {
+         background-size: 20px;
+         padding-left:25px;
+     }
+     #details .remittancesPerCapita .value {   font-size:15pt; }
+     #details .remittancesPerCapita .title {   font-size:10pt; }
+     #details .title {  font-size:8pt;  }
+     #details .comment { font-size:6pt; }
     #countrySelect { zoom:.7; }
-    #color-legend { zoom:.7; bottom:300px; }
+    #color-legend text { font-size:7pt; }
     #show-intro { font-size:8pt; }
     #guide .next, #guide .prev, #guide .last {
         height: 50px;
@@ -585,6 +605,7 @@ body {
  }
 
  @media screen and (max-width:1000px) {
+     /* the content should be the same as above */
     h1 { font-size:14pt; }
     #guide aside {
         font-size:10pt;
@@ -593,7 +614,27 @@ body {
     #guide aside h2 { font-size:18pt; }
     #guide aside p { line-height:20px; padding-bottom:10px; }
     #guide .content { height:20em; }
-    #details { zoom:.7; left:42px; top:100px; }
+    /*#details { zoom:.7; left:42px; top:100px; }*/
+    #details { top:60px; left:30px; }
+    #details .country { font-size:15pt; }
+    #details .year { font-size:16pt; }
+    #details .value {   font-size:14pt; }
+     #details .migrants .value {   font-size:10pt; }
+     #details .migrants {
+         background-size: 16px 15px;
+         background-position: 3px 5px;
+         padding-left:25px;
+     }
+     #details .remittances .value {   font-size:15pt; }
+     #details .remittances .title {   font-size:10pt; }
+     #details .remittancesPerCapita {
+         background-size: 20px;
+         padding-left:25px;
+     }
+     #details .remittancesPerCapita .value {   font-size:15pt; }
+     #details .remittancesPerCapita .title {   font-size:10pt; }
+     #details .title {  font-size:8pt;  }
+     #details .comment { font-size:6pt; }
     #countrySelect { zoom:.7; }
     #color-legend text { font-size:7pt; }
     #show-intro { font-size:8pt; }
@@ -603,4 +644,9 @@ body {
         background-size:50px 50px;
         padding-left:55px;
     }
+ }
+
+
+ @media screen and (max-width:880px) and (max-height:650px) {
+     #sources { display:none; }
  }
