@@ -1,10 +1,5 @@
 
-
 $(function() {
-
-
-var isIE = /*@cc_on!@*/false;
-
 
 
 var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)

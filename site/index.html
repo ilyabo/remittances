@@ -3,6 +3,7 @@
   <head>
     <title data-msg="title"></title>
     <meta charset="utf-8"/>
+    <script src="lib/modernizr.svg.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/d3.geo.projection.v0.min.js"></script>
     <script src="lib/queue.min.js"></script>
@@ -15,7 +16,23 @@
   </head>
 
   <body>
+   <style>
+     .interactive { display:none; }
+     .svg .interactive { display:block; }
+     .static { text-align: center;   }
+     .static div { padding:10px; color:white; font-size:10pt; }
+     .static img { border:1px solid #ccc; width:80%; }
+     .svg .static { display:none; }
+   </style>
 
+   <section class="static">
+     <div data-msg="browser.not.supported">
+       Unfortunately, your browser does not support the interactive features required by this visualization. / <br>
+       Leider werden die interaktiven Inhalte dieser Visualisierung von Ihrem Browser nicht unterstützt.</div>
+     <img src="images/screenshot-en.png">
+   </section>
+
+   <section class="interactive">
     <div id="loading"><img src="images/loading.gif"></div>
 
     <div id="countrySelect">
@@ -219,5 +236,6 @@
       })();
 
     </script>
+   </section>
   </body>
 </html>
