@@ -87,7 +87,7 @@ body {
 
 
  #guide .content {
-     height:23em;
+     height:25em;
  }
 
  #guide aside h2 { margin-top:40px; font-size:22pt; font-weight: bold; }
@@ -426,7 +426,7 @@ body {
      backface-visibility:hidden;
      /* Fix of Webkit flickering */
 
-     background: url(../images/aside_bg.svg) repeat-y left;
+     background: url(../images/aside_bg.png) repeat-y left;
      background-size:430px 1px;
      /*background: url(../images/aside_bg_darker.png) repeat-y left;*/
      z-index:1;
@@ -463,7 +463,7 @@ body {
  }
  .swiper-slide {
      float: left;
-     background: url(../images/aside_bg.svg) repeat-y left;
+     background: url(../images/aside_bg.png) repeat-y left;
      background-size:430px 1px;
  }
 
