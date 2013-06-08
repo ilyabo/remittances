@@ -227,7 +227,7 @@ body {
 
 
 
- #chart .map .land:hover, .land.highlighted {
+ #chart .map .land.highlighted {
      /* fill: #67F7C1; */
      stroke:#F2D59A;
      stroke-width:1;
