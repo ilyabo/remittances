@@ -3,7 +3,7 @@
 $(function() {
 
 
-
+var isIE = /*@cc_on!@*/false;
 
 
 
@@ -427,10 +427,16 @@ function slideSelected() {
 
 };
 var next = function() {
-  if (visReady) mySwiper.swipeNext();
+  if (visReady) {
+    mySwiper.swipeNext();
+    if (isIE) slideSelected();  // swiper fails to generate this event in IE
+  }
 };
 var prev = function() {
-  if (visReady) mySwiper.swipePrev();
+  if (visReady) {
+    mySwiper.swipePrev();
+    if (isIE) slideSelected();
+  }
 };
 
 
@@ -1152,11 +1158,11 @@ function updateColorLegend() {
       .text(msg("legend.migrants.number"));
 
     g.append("text")
-      .attr({ "class":"axis", x : 0, y : h + 3, "text-anchor":"middle" })
+      .attr({ "class":"axis", x : 0, y : h + 13, "text-anchor":"middle" })
       .text(msg("legend.migrants.low"));
 
     g.append("text")
-      .attr({ "class":"axis", x : w, y : h + 3, "text-anchor":"middle" })
+      .attr({ "class":"axis", x : w, y : h + 13, "text-anchor":"middle" })
       .text(msg("legend.migrants.high"));
   }
 
