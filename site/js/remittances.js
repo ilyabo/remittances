@@ -429,13 +429,11 @@ function slideSelected() {
 var next = function() {
   if (visReady) {
     mySwiper.swipeNext();
-    if (isIE) slideSelected();  // swiper fails to generate this event in IE
   }
 };
 var prev = function() {
   if (visReady) {
     mySwiper.swipePrev();
-    if (isIE) slideSelected();
   }
 };
 
