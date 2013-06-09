@@ -1,12 +1,13 @@
 
 $(function() {
 
+if (!Modernizr.svg) { return; }
 
 var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
 var width = height = null;
 
 
-
+var countryNameKey = msg("country.name-key");
 var visReady = false;
 
 
@@ -244,69 +245,6 @@ var yearAnimation = (function() {
   return anim;
 })();
 
-
-
-var msg = (function() {
-  if (!String.prototype.format) {
-    String.prototype.format = function() {
-      var args = arguments;
-      return this.replace(/{(\d+)}/g, function(match, number) {
-        return typeof args[number] != 'undefined'
-          ? args[number]
-          : match
-        ;
-      });
-    };
-  }
-
-  var messages = null, lang = null;
-  var getter = function(id) {
-    if (messages !== null) {
-      var m = messages[lang][id];
-      if (m !== undefined  &&  arguments.length > 1) {
-        return m.format.apply(m, Array.prototype.slice.call(arguments).splice(1));
-      }
-      return m;
-    }
-  };
-
-  var update = function() {
-    if (messages !== null) {
-      $("[data-msg]").each(function() {
-        $(this).html(getter($(this).data("msg")));
-      });
-    }
-  };
-
-  getter.load = function(url) {
-    $.getJSON(url, function(data) {
-      messages = data; update(); });
-    return getter;
-  };
-  getter.update = update;
-  getter.lang = function(code) {
-    if (code === undefined) {
-      return lang;
-    } else {
-      lang = code; update();
-      return getter;
-    }
-  };
-
-  return getter;
-})();
-
-
-
-var language = window.location.search.substr(1,3);
-if (language.length == 0) language = "de";
-msg.lang(language).load("js/messages.json");
-var countryNameKey = "name"+(msg.lang() == "en" ? "" : "_"+msg.lang())
-
-
-$(function() {
-  msg.update();  // just to be sure the messages are set after the document is ready
-});
 
 
 

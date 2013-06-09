@@ -4,15 +4,15 @@
     <title data-msg="title"></title>
     <meta charset="utf-8"/>
     <script src="lib/modernizr.svg.js"></script>
+    <script src="lib/jquery-1.9.1.min.js"></script>
+    <script src="js/msg.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/d3.geo.projection.v0.min.js"></script>
     <script src="lib/queue.min.js"></script>
-    <script src="lib/jquery-1.9.1.min.js"></script>
     <script src="lib/typeahead.min.js" ></script>
     <script src="lib/idangerous.swiper-1.9.4.min.js" ></script>
     <link href='http://fonts.googleapis.com/css?family=Lato:300,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-
   </head>
 
   <body>
@@ -26,11 +26,16 @@
    </style>
 
    <section class="static">
-     <div data-msg="browser.not.supported">
-       Unfortunately, your browser does not support the interactive features required by this visualization. / <br>
-       Leider werden die interaktiven Inhalte dieser Visualisierung von Ihrem Browser nicht unterstützt.</div>
-     <img src="images/screenshot-en.png">
+     <div class="msg" data-msg="browser.not.supported"></div>
+     <div class="screenshot"></div>
+     <script>
+       $(function() {
+       if (!Modernizr.svg) {
+         $(".static .screenshot").append('<img src="images/screenshot-en.png" width="80%">');
+       }});
+     </script>
    </section>
+
 
    <section class="interactive">
     <div id="loading"><img src="images/loading.gif"></div>
@@ -155,7 +160,7 @@
       <div class="swiper-slide">
         <aside>
           <div class="content">
-            <h2 data-msg="intro.3.title">Pro Kopf</h2>
+            <h2 data-msg="intro.3.title"></h2>
             <p  data-msg="intro.3.text"></p>
             <a class="anim" data-msg="intro.animation.play"></a>
           </div>
@@ -218,7 +223,7 @@
           <a class="last" data-msg="intro.start-exploring"></a>
         </aside>
       </div>
-      
+
     </div>
   </section>
     <script src="lib/fit-projection.js"></script>

@@ -1,5 +1,7 @@
 {
   "de" : {
+    "browser.not.supported" : "Leider werden die interaktiven Inhalte dieser Visualisierung von Ihrem Browser nicht unterstützt.",
+    "country.name-key" : "name_de",
     "title" : "Geldsendungen von Migranten in ihre Heimat",
     "details.remittances.title.total" : "Geldsendungen von Migranten",
     "details.remittances.title.selected-country" : "von Migranten erhalten",
@@ -83,6 +85,8 @@
   },
 
   "en" : {
+    "browser.not.supported" : "Unfortunately, your browser does not support the interactive features required by this visualization.",
+    "country.name-key" : "name",
     "title" : "Worldwide remittance flows",
     "details.remittances.title.total" : "sent to home country by migrants",
     "details.remittances.title.selected-country" : "received from emigrants",
