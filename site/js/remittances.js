@@ -7,7 +7,7 @@ var landColor = d3.rgb("#666666");  //1e2b32 .brighter(2)
 var width = height = null;
 
 
-var countryNameKey = msg("country.name-key");
+var countryNameKey = (msg.lang() === "en" ? "name" : "name_" + msg.lang());
 var visReady = false;
 
 
