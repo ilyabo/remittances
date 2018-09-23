@@ -1,5 +1,6 @@
 {
   "de" : {
+    "browser.not.supported" : "Leider werden die interaktiven Inhalte dieser Visualisierung von Ihrem Browser nicht unterstützt.",
     "title" : "Geldsendungen von Migranten in ihre Heimat",
     "details.remittances.title.total" : "Geldsendungen von Migranten",
     "details.remittances.title.selected-country" : "von Migranten erhalten",
@@ -83,9 +84,10 @@
   },
 
   "en" : {
+    "browser.not.supported" : "Unfortunately, your browser does not support the interactive features required by this visualization.",
     "title" : "Worldwide remittance flows",
     "details.remittances.title.total" : "sent to home country by migrants",
-    "details.remittances.title.selected-country" : "sent to home country by emigrants",
+    "details.remittances.title.selected-country" : "received from emigrants",
     "details.remittances.units" : "inflation adjusted 2011 US $",
     "details.remittances.total" : "Total",
     "details.remittances.per-capita.title" : "per capita",
