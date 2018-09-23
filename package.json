@@ -1,0 +1,25 @@
+{
+  "name": "remittances",
+  "version": "1.0.0",
+  "description": "Interactive visualization of the world remittance flows",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "deploy": "gh-pages -d site"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilyabo/remittances.git"
+  },
+  "author": "Ilya Boyandin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ilyabo/remittances/issues"
+  },
+  "homepage": "https://github.com/ilyabo/remittances#readme",
+  "devDependencies": {
+    "gh-pages": "^2.0.0"
+  }
+}
